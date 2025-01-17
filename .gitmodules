@@ -1,0 +1,3 @@
+[submodule "bin/PGEcore"]
+	path = bin/PGEcore
+	url = git@github.com:PlasmoGenEpi/PGEcore.git
