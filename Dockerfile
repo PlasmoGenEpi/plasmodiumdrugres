@@ -34,12 +34,12 @@ RUN mkdir ~/.ssh/
 RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 
-# pmotools 
+# pmotools
 WORKDIR /opt
 RUN git clone https://github.com/PlasmoGenEpi/pmotools-python.git
 WORKDIR /opt/pmotools-python
 RUN git checkout develop
-RUN pip install --break-system-packages . 
+RUN pip install --break-system-packages .
 
 # R configuration
 RUN mkdir -p /usr/local/lib/R/etc/ /usr/lib/R/etc/
