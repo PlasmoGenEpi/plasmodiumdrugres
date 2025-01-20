@@ -29,8 +29,16 @@ jobs:
         with:
           install-pdiff: true
 
+      # - name: Run nf-test
+      #   run: |
+      #     source $(conda info --base)/etc/profile.d/conda.sh
+      #     conda activate nf-core-pipeline-env
+      #     nf-test test
+
       - name: Run nf-test
         run: |
-          source $(conda info --base)/etc/profile.d/conda.sh
-          conda activate nf-core-pipeline-env
-          nf-test test
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            nf-core-pipeline \
+            bash -c "nf-test test"
