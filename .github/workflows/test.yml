@@ -28,6 +28,7 @@ jobs:
       run: |
         conda env create -f environment.yml
         # Initialize Conda for non-interactive shell
+        conda init zsh
         conda activate nf-core-pipeline-env
 
     - name: Install nf-test
