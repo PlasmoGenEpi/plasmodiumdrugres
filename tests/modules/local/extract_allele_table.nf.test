@@ -4,7 +4,7 @@ nextflow_process {
     script "modules/local/extract_allele_table.nf"
     process "EXTRACT_ALLELE_TABLE"
 
-    test("Should run without failures") {
+    test("Should extract allele table without failures") {
 
         when {
             process {
