@@ -1,104 +1,11 @@
 #!/usr/bin/env nextflow
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    nf-core/plasmodiumdrugres
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/nf-core/plasmodiumdrugres
-    Website: https://nf-co.re/plasmodiumdrugres
-    Slack  : https://nfcore.slack.com/channels/plasmodiumdrugres
-----------------------------------------------------------------------------------------
-*/
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+nextflow.enable.dsl = 2
 
-include { PLASMODIUMDRUGRES  } from './workflows/plasmodiumdrugres'
-include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_plasmodiumdrugres_pipeline'
-include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_plasmodiumdrugres_pipeline'
-include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_plasmodiumdrugres_pipeline'
+include { COUNT_SAMPLES_BY_COI } from './modules/local/count_samples_by_coi'
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    GENOME PARAMETER VALUES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-// TODO nf-core: Remove this line if you don't need a FASTA file
-//   This is an example of how to use getGenomeAttribute() to fetch parameters
-//   from igenomes.config using `--genome`
-params.fasta = getGenomeAttribute('fasta')
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    NAMED WORKFLOWS FOR PIPELINE
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-//
-// WORKFLOW: Run main analysis pipeline depending on type of input
-//
-workflow NFCORE_PLASMODIUMDRUGRES {
-
-    take:
-    samplesheet // channel: samplesheet read in from --input
-
-    main:
-
-    //
-    // WORKFLOW: Run pipeline
-    //
-    PLASMODIUMDRUGRES (
-        samplesheet
-    )
-    emit:
-    multiqc_report = PLASMODIUMDRUGRES.out.multiqc_report // channel: /path/to/multiqc_report.html
-}
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    RUN MAIN WORKFLOW
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+params.coi_calls = "${projectDir}/bin/PGEcore/data/example_coi_table.tsv"
 
 workflow {
-
-    main:
-    //
-    // SUBWORKFLOW: Run initialisation tasks
-    //
-    PIPELINE_INITIALISATION (
-        params.version,
-        params.validate_params,
-        params.monochrome_logs,
-        args,
-        params.outdir,
-        params.input
-    )
-
-    //
-    // WORKFLOW: Run main workflow
-    //
-    NFCORE_PLASMODIUMDRUGRES (
-        PIPELINE_INITIALISATION.out.samplesheet
-    )
-    //
-    // SUBWORKFLOW: Run completion tasks
-    //
-    PIPELINE_COMPLETION (
-        params.email,
-        params.email_on_fail,
-        params.plaintext_email,
-        params.outdir,
-        params.monochrome_logs,
-        params.hook_url,
-        NFCORE_PLASMODIUMDRUGRES.out.multiqc_report
-    )
+    COUNT_SAMPLES_BY_COI(params.coi_calls)
 }
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    THE END
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/

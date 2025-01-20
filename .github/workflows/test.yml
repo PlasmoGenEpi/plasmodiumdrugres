@@ -1,0 +1,45 @@
+name: Run nf-test on PR to dev with Conda
+
+on:
+  pull_request:
+    branches:
+      - dev
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository with submodules
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive # Ensures submodules are fetched and updated
+          fetch-depth: 0 # Fetch all history to avoid shallow clones
+
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          miniconda-version: "latest"
+          auto-activate-base: false
+          conda-channels: conda-forge
+
+      - name: Create Conda environment from environment.yml
+        run: |
+          source $(conda info --base)/etc/profile.d/conda.sh
+          conda env create -f environment.yml
+          conda activate nf-core-pipeline-env
+
+      - name: Set up nf-test
+        uses: nf-core/setup-nf-test@v1
+        with:
+          install-pdiff: true
+
+      - name: Run nf-test
+        run: |
+          source $(conda info --base)/etc/profile.d/conda.sh
+          conda activate nf-core-pipeline-env
+          nf-test test
