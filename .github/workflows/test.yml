@@ -22,12 +22,12 @@ jobs:
         with:
           miniconda-version: "latest"
           auto-activate-base: false
-          conda-channe-s: conda-forge
+          conda-channels: conda-forge
 
       - name: Create Conda environment from environment.yml
         run: |
+          source $(conda info --base)/etc/profile.d/conda.sh
           conda env create -f environment.yml
-          # Initialize Conda for non-interactive shell
           conda activate nf-core-pipeline-env
 
       - name: Install nf-test
@@ -38,4 +38,6 @@ jobs:
 
       - name: Run nf-test
         run: |
+          source $(conda info --base)/etc/profile.d/conda.sh
+          conda activate nf-core-pipeline-env
           nf-test test
