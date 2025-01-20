@@ -30,11 +30,10 @@ jobs:
           conda env create -f environment.yml
           conda activate nf-core-pipeline-env
 
-      - name: Install nf-test
-        run: |
-          git clone https://github.com/nextflow-io/nf-test.git
-          cd nf-test
-          make install
+      - name: Set up nf-test
+        uses: nf-core/setup-nf-test@v1
+        with:
+          install-pdiff: true
 
       - name: Run nf-test
         run: |
