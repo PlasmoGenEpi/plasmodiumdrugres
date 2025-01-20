@@ -16,7 +16,7 @@ process COUNT_SAMPLES_BY_COI {
     script:
     """
     Rscript ${projectDir}/bin/PGEcore/scripts/count_samples_by_coi/count_samples_by_coi.R \\
-      --coi_calls ${coi_calls} \\
-      --output "sample_count_per_coi.tsv"
+        --coi_calls ${coi_calls} \\
+        --output "sample_count_per_coi.tsv"
     """
 }

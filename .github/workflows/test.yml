@@ -1,42 +1,47 @@
-name: Run nf-test on PR to dev with Conda
+name: NF-Core Linting and Testing
 
 on:
+  push:
+    branches:
+      - dev
+      - main
   pull_request:
     branches:
       - dev
-    types:
-      - opened
-      - synchronize
-      - reopened
+      - main
 
 jobs:
-  test:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Miniconda
-      uses: conda-incubator/setup-miniconda@v2
-      with:
-        miniconda-version: 'latest'
-        auto-activate-base: false
-        conda-channe-s: conda-forge
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-activate-base: false
 
-    - name: Create Conda environment from environment.yml
-      run: |
-        conda env create -f environment.yml
-        # Initialize Conda for non-interactive shell
-        conda init
-        conda activate $(head -n 1 environment.yml | cut -d' ' -f2)
+      - name: Initialize Conda
+        run: |
+          conda init bash
+          source ~/.bashrc
 
-    - name: Install nf-test
-      run: |
-        git clone https://github.com/nextflow-io/nf-test.git
-        cd nf-test
-        make install
+      - name: Create environment from environment.yml
+        run: |
+          conda env create -f environment.yml
+          conda activate $(head -n 1 environment.yml | cut -d' ' -f2)
 
-    - name: Run nf-test
-      run: |
-        nf-test test
+      - name: Install nf-core and Nextflow
+        run: |
+          conda install -c conda-forge nf-core nextflow
+
+      - name: Run nf-core linting
+        run: |
+          nf-core lint .
+
+      - name: Run nf-core tests
+        run: |
+          nf-core run-info .
+          nf-core tests .
