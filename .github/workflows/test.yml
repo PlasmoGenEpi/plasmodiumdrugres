@@ -14,8 +14,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repository with submodules
         uses: actions/checkout@v3
+        with:
+          submodules: recursive # Ensures submodules are fetched and updated
+          fetch-depth: 0        # Fetch all history to avoid shallow clones
 
       - name: Set up Miniconda
         uses: conda-incubator/setup-miniconda@v2
