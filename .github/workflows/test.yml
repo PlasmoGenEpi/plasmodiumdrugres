@@ -1,4 +1,4 @@
-name: Run nf-test on PR to dev with Docker
+name: Run nf-test on PR to dev with Conda
 
 on:
   pull_request:
@@ -14,16 +14,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
+    - name: Set up Miniconda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        miniconda-version: 'latest'
+        auto-activate-base: false
+        conda-channe-s: conda-forge
 
-      - name: Build Docker image from Dockerfile
-        run: |
-          docker build -t nf-test-image .
+    - name: Create Conda environment from environment.yml
+      run: |
+        conda env create -f environment.yml
+        # Initialize Conda for non-interactive shell
+        conda activate nf-core-pipeline-env
 
-      - name: Run nf-test inside Docker container
-        run: |
-          docker run --rm -v $(pwd):/workspace nf-test-image bash -c "nf-test test"
+    - name: Install nf-test
+      run: |
+        git clone https://github.com/nextflow-io/nf-test.git
+        cd nf-test
+        make install
+
+    - name: Run nf-test
+      run: |
+        nf-test test
