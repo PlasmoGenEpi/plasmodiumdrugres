@@ -27,6 +27,7 @@ jobs:
     - name: Create Conda environment from environment.yml
       run: |
         conda env create -f environment.yml
+        conda init
         conda activate nf-core-pipeline-env
 
     - name: Install nf-test
