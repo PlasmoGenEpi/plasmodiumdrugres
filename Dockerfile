@@ -17,7 +17,7 @@ RUN apt-get -yq dist-upgrade
 RUN apt-get install -yq --no-install-recommends autotools-dev autoconf libtool automake build-essential curl wget file git locales libssl-dev libcurl4-gnutls-dev ca-certificates xz-utils zlib1g-dev libbz2-dev liblzma5 liblzma-doc liblzma-dev openssh-client python3-dev python3-pip pipx
 
 # install common bio tools
-RUN apt-get install -yq --no-install-recommends lastz ncbi-blast+ ncbi-tools-bin hmmer minimap2 bwa bowtie2 cmake samtools mummer muscle r-base r-base-dev
+RUN apt-get install -yq --no-install-recommends muscle r-base r-base-dev
 
 # set environment locale
 RUN echo "$LANG UTF-8" >> /etc/locale.gen

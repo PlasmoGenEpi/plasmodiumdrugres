@@ -35,10 +35,17 @@ jobs:
       #     conda activate nf-core-pipeline-env
       #     nf-test test
 
+      # - name: Run nf-test
+      #   run: |
+      #     docker run --rm \
+      #       -v ${{ github.workspace }}:/workspace \
+      #       -w /workspace \
+      #       nf-core-pipeline \
+      #       bash -c "nf-test test"
+
+
       - name: Run nf-test
         run: |
-          docker run --rm \
-            -v ${{ github.workspace }}:/workspace \
-            -w /workspace \
-            nf-core-pipeline \
-            bash -c "nf-test test"
+          nf-test test \
+            --docker-image nf-core-pipeline
+
