@@ -12,7 +12,6 @@ process TRANSLATE_LOCI_OF_INTEREST {
   path ref_bed
   path loci_of_interest
   val extra_args
-
   output:
   path("trasnlated_loci/collapsed_amino_acid_calls.tsv.gz"), emit: collapsed_amino_acid_calls
 
