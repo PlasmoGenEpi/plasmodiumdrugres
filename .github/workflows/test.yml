@@ -1,47 +1,29 @@
-name: NF-Core Linting and Testing
+name: Run nf-test on PR to dev with Docker
 
 on:
-  push:
-    branches:
-      - dev
-      - main
   pull_request:
     branches:
       - dev
-      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 jobs:
-  lint:
+  test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Set up Miniconda
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          auto-activate-base: false
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
 
-      - name: Initialize Conda
+      - name: Build Docker image from Dockerfile
         run: |
-          conda init bash
-          source ~/.bashrc
+          docker build -t nf-test-image .
 
-      - name: Create environment from environment.yml
+      - name: Run nf-test inside Docker container
         run: |
-          conda env create -f environment.yml
-          conda activate $(head -n 1 environment.yml | cut -d' ' -f2)
-
-      - name: Install nf-core and Nextflow
-        run: |
-          conda install -c conda-forge nf-core nextflow
-
-      - name: Run nf-core linting
-        run: |
-          nf-core lint .
-
-      - name: Run nf-core tests
-        run: |
-          nf-core run-info .
-          nf-core tests .
+          docker run --rm -v $(pwd):/workspace nf-test-image bash -c "nf-test test"
