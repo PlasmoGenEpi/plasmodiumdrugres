@@ -1,4 +1,4 @@
-name: Run nf-test on PR to dev with Conda
+name: Run nf-test on PR to dev with Docker
 
 on:
   pull_request:
@@ -20,18 +20,12 @@ jobs:
           submodules: recursive # Ensures submodules are fetched and updated
           fetch-depth: 0 # Fetch all history to avoid shallow clones
 
-      - name: Set up Miniconda
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          miniconda-version: "latest"
-          auto-activate-base: false
-          conda-channels: conda-forge
+      - name: Set up Nextflow
+        uses: nf-core/setup-nextflow@v1
 
-      - name: Create Conda environment from environment.yml
+      - name: Set up Docker image
         run: |
-          source $(conda info --base)/etc/profile.d/conda.sh
-          conda env create -f environment.yml
-          conda activate nf-core-pipeline-env
+          docker build -t PlasmoGenEpi/plasmodiumdrugres .
 
       - name: Set up nf-test
         uses: nf-core/setup-nf-test@v1
@@ -40,6 +34,4 @@ jobs:
 
       - name: Run nf-test
         run: |
-          source $(conda info --base)/etc/profile.d/conda.sh
-          conda activate nf-core-pipeline-env
-          nf-test test
+          nf-test test --profile docker
