@@ -27,7 +27,8 @@ jobs:
     - name: Create Conda environment from environment.yml
       run: |
         conda env create -f environment.yml
-        conda init
+        # Initialize Conda for non-interactive shell
+        source ~/miniconda3/etc/profile.d/conda.sh
         conda activate nf-core-pipeline-env
 
     - name: Install nf-test
