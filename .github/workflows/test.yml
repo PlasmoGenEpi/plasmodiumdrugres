@@ -28,8 +28,7 @@ jobs:
       run: |
         conda env create -f environment.yml
         # Initialize Conda for non-interactive shell
-        source ~/miniconda3/etc/profile.d/conda.sh
-        conda activate nf-core-pipeline-env
+        conda activate $(head -n 1 environment.yml | cut -d' ' -f2)
 
     - name: Install nf-test
       run: |
