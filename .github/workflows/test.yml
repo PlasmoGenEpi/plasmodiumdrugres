@@ -20,18 +20,9 @@ jobs:
           submodules: recursive # Ensures submodules are fetched and updated
           fetch-depth: 0 # Fetch all history to avoid shallow clones
 
-      - name: Set up Miniconda
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          miniconda-version: "latest"
-          auto-activate-base: false
-          conda-channels: conda-forge
-
-      - name: Create Conda environment from environment.yml
+      - name: Set up Docker image
         run: |
-          source $(conda info --base)/etc/profile.d/conda.sh
-          conda env create -f environment.yml
-          conda activate nf-core-pipeline-env
+          docker build -t nf-core-pipeline .
 
       - name: Set up nf-test
         uses: nf-core/setup-nf-test@v1
