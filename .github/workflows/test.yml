@@ -14,29 +14,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Miniconda
-      uses: conda-incubator/setup-miniconda@v2
-      with:
-        miniconda-version: 'latest'
-        auto-activate-base: false
-        conda-channe-s: conda-forge
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          miniconda-version: "latest"
+          auto-activate-base: false
+          conda-channe-s: conda-forge
 
-    - name: Create Conda environment from environment.yml
-      run: |
-        conda env create -f environment.yml
-        # Initialize Conda for non-interactive shell
-        source ~/.bashrc
-        conda activate nf-core-pipeline-env
+      - name: Create Conda environment from environment.yml
+        run: |
+          conda env create -f environment.yml
+          # Initialize Conda for non-interactive shell
+          source ~/.bashrc
+          conda activate nf-core-pipeline-env
 
-    - name: Install nf-test
-      run: |
-        git clone https://github.com/nextflow-io/nf-test.git
-        cd nf-test
-        make install
+      - name: Install nf-test
+        run: |
+          git clone https://github.com/nextflow-io/nf-test.git
+          cd nf-test
+          make install
 
-    - name: Run nf-test
-      run: |
-        nf-test test
+      - name: Run nf-test
+        run: |
+          nf-test test

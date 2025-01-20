@@ -11,6 +11,6 @@ dependencies:
   - r-tidyr
   - r-data.table
   - r-stringr
-  - r-readr  # Add the readr package
+  - r-readr # Add the readr package
   - python=3.9 # Python version for compatibility
   - nextflow # Ensure Nextflow is available if testing locally
