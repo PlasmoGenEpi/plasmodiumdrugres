@@ -9,8 +9,6 @@ nextflow_process {
         when {
             params {
                 coi_calls = file("${projectDir}/tests/input/example_coi_table.tsv")
-                // define parameters here. Example:
-                // outdir = "tests/results"
             }
             process {
                 """
