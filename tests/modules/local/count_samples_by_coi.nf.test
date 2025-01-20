@@ -4,12 +4,9 @@ nextflow_process {
     script "modules/local/count_samples_by_coi.nf"
     process "COUNT_SAMPLES_BY_COI"
 
-    test("Should run without failures") {
+    test("Counting samples by coi should run without failures") {
 
         when {
-            params {
-                coi_calls = file("${projectDir}/tests/input/example_coi_table.tsv")
-            }
             process {
                 """
                 input[0] = file("${projectDir}/tests/input/example_coi_table.tsv")
