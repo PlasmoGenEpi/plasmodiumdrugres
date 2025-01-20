@@ -1,4 +1,4 @@
-name: Run nf-test on PR to dev with Conda
+name: Run nf-test on PR to dev with Docker
 
 on:
   pull_request:
