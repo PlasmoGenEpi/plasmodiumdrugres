@@ -25,7 +25,7 @@ jobs:
 
       - name: Set up Docker image
         run: |
-          docker build -t nf-core-pipeline .
+          docker build -t plasmodiumdrugres .
 
       - name: Set up nf-test
         uses: nf-core/setup-nf-test@v1
@@ -35,4 +35,3 @@ jobs:
       - name: Run nf-test
         run: |
           nf-test test --profile docker
-
