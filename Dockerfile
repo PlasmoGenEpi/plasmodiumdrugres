@@ -11,14 +11,14 @@ ARG TIME_ZONE=Etc/UTC
 
 RUN ulimit -n 10000
 
-# install wget for getting pubkey 
+# install wget for getting pubkey
 RUN apt-get update
-RUN apt-get -yq dist-upgrade wget 
+RUN apt-get -yq dist-upgrade wget
 
-# add packages source to install r 4.4 which is needed for BiocManager 3.19 which is needed pwalign 
+# add packages source to install r 4.4 which is needed for BiocManager 3.19 which is needed pwalign
 RUN echo "deb https://cloud.r-project.org/bin/linux/ubuntu noble-cran40/" > /etc/apt/sources.list.d/cran.list
 RUN echo "deb-src https://cloud.r-project.org/bin/linux/ubuntu noble-cran40/" >> /etc/apt/sources.list.d/cran.list
-RUN wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc 
+RUN wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
 
 # install basics
 RUN apt-get update
