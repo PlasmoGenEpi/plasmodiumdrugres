@@ -11,6 +11,9 @@ process TRANSLATE_LOCI_OF_INTEREST {
     val extra_args
     output:
     path("trasnlated_loci/collapsed_amino_acid_calls.tsv.gz"), emit: collapsed_amino_acid_calls
+    path("trasnlated_loci/amino_acid_calls.tsv.gz"), emit: amino_acid_calls
+    path("trasnlated_loci/loci_covered_by_target_samples_info.tsv"), emit: loci_covered_by_target_samples_info
+
     script:
     def extra_args = "${extra_args}"
     """
