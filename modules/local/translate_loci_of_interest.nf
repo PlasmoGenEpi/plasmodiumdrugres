@@ -3,7 +3,7 @@
  *
  */
 process TRANSLATE_LOCI_OF_INTEREST {
-    label 'process_medium'
+    label 'process_low'
     input:
     path allele_table
     path ref_bed
