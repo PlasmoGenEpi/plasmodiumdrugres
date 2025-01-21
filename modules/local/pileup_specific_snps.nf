@@ -1,5 +1,6 @@
 /*
- * pileup_specific_snps
+ * STEP - PILEUP_SPECIFIC_SNPS
+ * Count up a pileup count of specific SNPs from microhaplotypes
  *
  */
 process PILEUP_SPECIFIC_SNPS {
