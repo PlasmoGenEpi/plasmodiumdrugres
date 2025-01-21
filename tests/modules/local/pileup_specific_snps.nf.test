@@ -1,0 +1,35 @@
+nextflow_process {
+
+    name "Test Process PILEUP_SPECIFIC_SNPS"
+    script "modules/local/pileup_specific_snps.nf"
+    process "PILEUP_SPECIFIC_SNPS"
+
+    test("Should run without failures") {
+
+        when {
+            process {
+                """
+                // define inputs of the process here. Example:
+                input[0] = file("${projectDir}/tests/input/example2_allele_table.tsv")
+                input[1] = file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed")
+                input[2] = file("${projectDir}/tests/input/MAD4HATTER_coveredSnps.bed")
+                input[3] = ""
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            // channel exists
+            assert process.out.collapsed_snp_calls != null
+            assert process.out.snp_calls != null
+            assert process.out.snps_covered_by_target_samples_info != null
+            // output md5 check
+            assert path(process.out.collapsed_snp_calls.get(0)).md5 == "b7274bdd715eefbcb13d6cd0bf3de9de"
+            assert path(process.out.snp_calls.get(0)).md5 == "28c14953b486a9de32db6e89501e754c"
+            assert path(process.out.snps_covered_by_target_samples_info.get(0)).md5 == "5961d14764001ef9273b357bd29acf58"
+        }
+
+    }
+
+}
