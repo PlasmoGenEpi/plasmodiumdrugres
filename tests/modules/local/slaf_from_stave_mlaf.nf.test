@@ -17,7 +17,7 @@ nextflow_process {
         then {
             assert process.success
             assert process.out.slaf != null
-            assert path(process.out.slaf.get(0)).md5 == "efd53b5c6a3e29b11a49e08108c656d2"
+            assert path(process.out.slaf.get(0)).md5 == "fdcf3c02125b74cfc33375bedde63e5a"
         }
 
     }
