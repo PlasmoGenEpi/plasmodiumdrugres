@@ -100,3 +100,4 @@ RUN R -e 'library("pwalign")'
 
 # update path
 ENV PATH="/opt/pmotools-python/scripts:$PATH"
+

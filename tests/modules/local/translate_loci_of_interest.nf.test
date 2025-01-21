@@ -1,0 +1,33 @@
+nextflow_process {
+
+    name "Test Process TRANSLATE_LOCI_OF_INTEREST"
+    script "modules/local/translate_loci_of_interest.nf"
+    process "TRANSLATE_LOCI_OF_INTEREST"
+
+    test("Should run without failures") {
+
+        when {
+            process {
+                """
+                // define inputs of the process here. Example:
+                input[0] = file("${projectDir}/tests/input/example2_allele_table.tsv")
+                input[1] = file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed")
+                input[2] = file("${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed")
+                input[3] = ""
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            // channel exists
+            assert process.out.collapsed_amino_acid_calls != null
+            // output md5 check
+            assert path(process.out.collapsed_amino_acid_calls.get(0)).md5 == "437dd6ee4a0d49668d0a172fa0a68e5c"
+            assert path(process.out.amino_acid_calls.get(0)).md5 == "a64e815a2226e25b2266bc554e7bcc8c"
+            assert path(process.out.loci_covered_by_target_samples_info.get(0)).md5 == "729c87140204f7b70818bdaee034b980"
+        }
+
+    }
+
+}
