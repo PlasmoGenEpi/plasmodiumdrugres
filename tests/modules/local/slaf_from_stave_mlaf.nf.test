@@ -1,0 +1,25 @@
+nextflow_process {
+
+    name "Test Process SLAF_FROM_STAVE_MLAF"
+    script "modules/local/slaf_from_stave_mlaf.nf"
+    process "SLAF_FROM_STAVE_MLAF"
+
+    test("Test for successful execution and output checksum") {
+
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example_mlaf.tsv")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.slaf != null
+            assert path(process.out.slaf.get(0)).md5 == "fdcf3c02125b74cfc33375bedde63e5a"
+        }
+
+    }
+
+}
