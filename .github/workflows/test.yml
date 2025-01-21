@@ -25,7 +25,7 @@ jobs:
 
       - name: Set up Docker image
         run: |
-          docker build -t PlasmoGenEpi/plasmodiumdrugres .
+          docker build -t plasmogenepi/plasmodiumdrugres .
 
       - name: Set up nf-test
         uses: nf-core/setup-nf-test@v1

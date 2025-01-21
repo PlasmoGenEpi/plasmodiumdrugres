@@ -1,0 +1,26 @@
+nextflow_process {
+
+    name "Test Process EXTRACT_ALLELE_TABLE"
+    script "modules/local/extract_allele_table.nf"
+    process "EXTRACT_ALLELE_TABLE"
+
+    test("Should extract allele table without failures") {
+
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example_PMO.json")
+                input[1] = "ReducedMAD4HATTERSim-SeekDeep"
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.allele_table != null
+            assert path(process.out.allele_table.get(0)).md5 == "8674845d7346158644617c46bbc7b76b"
+        }
+
+    }
+
+}
