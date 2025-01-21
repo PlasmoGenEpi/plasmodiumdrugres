@@ -53,10 +53,9 @@ RUN pip install --break-system-packages .
 # R configuration
 RUN mkdir -p /usr/local/lib/R/etc/ /usr/lib/R/etc/
 RUN echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl', Ncpus = ${CPU_COUNT})" | tee /usr/local/lib/R/etc/Rprofile.site | tee /usr/lib/R/etc/Rprofile.site
-RUN R -e 'install.packages(c("remotes", "devtools"))'
+RUN R -e 'install.packages(c("remotes"))'
 ## attempt to load libraries to make sure they installed
 RUN R -e 'library("remotes")'
-RUN R -e 'library("devtools")'
 
 
 # R packages
@@ -85,7 +84,7 @@ RUN R -e 'library("rngtools")'
 
 
 RUN R -e "install.packages(c('dcifer', 'moire'), repos = c('https://plasmogenepi.r-universe.dev', 'https://cloud.r-project.org'))"
-RUN R -e "devtools::install_github('mrc-ide/variantstring@develop')"
+RUN R -e "remotes::install_github('mrc-ide/variantstring@1.7.0')"
 ## attempt to load libraries to make sure they installed
 RUN R -e 'library("dcifer")'
 RUN R -e 'library("moire")'
