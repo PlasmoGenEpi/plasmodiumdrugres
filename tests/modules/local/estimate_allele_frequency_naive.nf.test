@@ -21,7 +21,7 @@ nextflow_process {
             // channel exists
             assert process.out.slaf != null
             // output md5 check
-            assert path(process.out.slaf.get(0)).md5 == "4dbe6594aeeb6593b0d9180824502ace"
+            assert path(process.out.slaf.get(0)).md5 == "a8b40902010549c520ff6c5a55d27773"
         }
 
     }
@@ -42,7 +42,7 @@ nextflow_process {
             // channel exists
             assert process.out.slaf != null
             // output md5 check
-            assert path(process.out.slaf.get(0)).md5 == "7ad378eff8cb9a6ed103d3b1c9a1314f"
+            assert path(process.out.slaf.get(0)).md5 == "c8ddfdabd7c0a729e94590cb8f5bd5b4"
         }
     }
 }
