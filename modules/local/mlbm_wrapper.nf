@@ -16,7 +16,7 @@ process MLBM_WRAPPER {
 
     script:
     """
-    Rscript ${projectDir}/bin/PGEcore/scripts/MLBM_wrapper/MLBM_wrapper.R \\
+    Rscript ${projectDir}/bin/PGEcore/scripts/MultiLociBiallelicModel_wrapper/MultiLociBiallelicModel_wrapper.R \\
         --aa_calls ${aa_calls} --loci_group_table ${loci_group_table}
     """
 }
