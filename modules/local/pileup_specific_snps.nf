@@ -3,7 +3,7 @@
  *
  */
 process PILEUP_SPECIFIC_SNPS {
-    label 'process_medium'
+    label 'process_low'
     input:
     path allele_table
     path ref_bed
