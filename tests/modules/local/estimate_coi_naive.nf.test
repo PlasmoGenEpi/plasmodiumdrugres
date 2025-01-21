@@ -90,5 +90,5 @@ nextflow_process {
     }
 }
 
-// Test integer method fails with 0.1, -1, and 0
-// Test quantile method fails with 0, 1, -0.2
+// TODO: Test integer method fails with 0.1, -1, and 0
+// TODO: Test quantile method fails with 0, 1, -0.2
