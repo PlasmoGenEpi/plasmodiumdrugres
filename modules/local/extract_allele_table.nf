@@ -1,6 +1,6 @@
 /*
  * STEP - EXTRACT_ALLELE_TABLE
- * Count the number of samples with each COI in the distribution
+ * Extract allele table from PMO file given a bioinformatics ID
  */
 
 process EXTRACT_ALLELE_TABLE {
