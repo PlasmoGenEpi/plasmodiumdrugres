@@ -13,7 +13,7 @@ process IDM_WRAPPER {
     path aa_calls_input
 
     output:
-    path "$slaf_output", emit: slaf_output
+    path "$slaf_output", emit: slaf
 
     script:
     """
