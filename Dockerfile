@@ -23,7 +23,7 @@ RUN wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc |
 # install basics
 RUN apt-get update
 RUN apt-get -yq dist-upgrade
-RUN apt-get install -yq --no-install-recommends autotools-dev autoconf libtool automake build-essential curl wget file git locales libssl-dev libcurl4-gnutls-dev ca-certificates xz-utils zlib1g-dev libbz2-dev liblzma5 liblzma-doc liblzma-dev openssh-client python3-dev python3-pip libxml2-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
+RUN apt-get install -yq --no-install-recommends autotools-dev autoconf libtool automake build-essential curl wget file git locales libssl-dev libcurl4-gnutls-dev ca-certificates xz-utils zlib1g-dev libbz2-dev liblzma5 liblzma-doc liblzma-dev openssh-client python3-dev python3-pip libxml2-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libmpfr-dev libgmp3-dev
 
 # install common bio tools
 RUN apt-get install -yq --no-install-recommends muscle r-base r-base-dev
@@ -53,19 +53,50 @@ RUN pip install --break-system-packages .
 # R configuration
 RUN mkdir -p /usr/local/lib/R/etc/ /usr/lib/R/etc/
 RUN echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl', Ncpus = ${CPU_COUNT})" | tee /usr/local/lib/R/etc/Rprofile.site | tee /usr/lib/R/etc/Rprofile.site
-RUN R -e 'install.packages(c("remotes", "devtools"))'
+RUN R -e 'install.packages(c("remotes"))'
+## attempt to load libraries to make sure they installed
+RUN R -e 'library("remotes")'
+
 
 # R packages
 RUN Rscript -e 'remotes::install_cran(c("tibble", "dplyr", "stringr", "readr", "optparse", "ggplot2", "tidyr", "data.table", "validate", "openxlsx", "Rmpfr", "rlang", "doParallel", "magrittr", "checkmate", "pegas", "ape", "rngtools"))'
 
+## attempt to load libraries to make sure they installed
+RUN R -e 'library("tibble")'
+RUN R -e 'library("dplyr")'
+RUN R -e 'library("stringr")'
+RUN R -e 'library("readr")'
+RUN R -e 'library("optparse")'
+RUN R -e 'library("ggplot2")'
+RUN R -e 'library("tidyr")'
+RUN R -e 'library("data.table")'
+RUN R -e 'library("validate")'
+RUN R -e 'library("openxlsx")'
+RUN R -e 'library("Rmpfr")'
+RUN R -e 'library("rlang")'
+RUN R -e 'library("doParallel")'
+RUN R -e 'library("magrittr")'
+RUN R -e 'library("checkmate")'
+RUN R -e 'library("pegas")'
+RUN R -e 'library("ape")'
+RUN R -e 'library("rngtools")'
+
+
+
 RUN R -e "install.packages(c('dcifer', 'moire'), repos = c('https://plasmogenepi.r-universe.dev', 'https://cloud.r-project.org'))"
-RUN R -e "devtools::install_github('mrc-ide/variantstring@develop')"
+RUN R -e "remotes::install_github('mrc-ide/variantstring@1.7.0')"
+## attempt to load libraries to make sure they installed
+RUN R -e 'library("dcifer")'
+RUN R -e 'library("moire")'
+RUN R -e 'library("variantstring")'
 
 # Bioconductor packages (have to install 3.19 because that's needed for pwalign)
 RUN Rscript -e 'if (!require("BiocManager", quietly = TRUE)) { install.packages("BiocManager"); }; BiocManager::install(version = "3.19", ask = FALSE);'
 RUN Rscript -e 'BiocManager::install("Biostrings", ask = FALSE)'
 RUN Rscript -e 'BiocManager::install("pwalign", ask = FALSE)'
-
+## attempt to load libraries to make sure they installed
+RUN R -e 'library("Biostrings")'
+RUN R -e 'library("pwalign")'
 
 # update path
 ENV PATH="/opt/pmotools-python/scripts:$PATH"

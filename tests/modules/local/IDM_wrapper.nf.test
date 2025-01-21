@@ -1,0 +1,25 @@
+nextflow_process {
+
+    name "Test Process IDM_WRAPPER"
+    script "modules/local/IDM_wrapper.nf"
+    process "IDM_WRAPPER"
+
+    test("Test for failures and output file checksums") {
+
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example_amino_acid_calls.tsv")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.slaf_output != null
+            assert path(process.out.slaf_output.get(0)).md5 == "786aa95eeb428d968a833ee5067f8962"
+        }
+
+    }
+
+}

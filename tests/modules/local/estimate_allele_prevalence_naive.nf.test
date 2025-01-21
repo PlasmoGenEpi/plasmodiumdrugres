@@ -1,0 +1,27 @@
+nextflow_process {
+
+    name "Test Process ESTIMATE_ALLELE_PREVALENCE_NAIVE"
+    script "modules/local/estimate_allele_prevalence_naive.nf"
+    process "ESTIMATE_ALLELE_PREVALENCE_NAIVE"
+
+    test("Estimate allele prev should run without failures") {
+
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example_amino_acid_calls.tsv")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            // channel exists
+            assert process.out.allele_prevalence != null
+            // output md5 check
+            assert path(process.out.allele_prevalence.get(0)).md5 == "5cbd2d06e41856899e4a4ae74cee3d47"
+        }
+
+    }
+
+}
