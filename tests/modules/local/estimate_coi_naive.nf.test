@@ -88,6 +88,24 @@ nextflow_process {
         }
 
     }
+
+    test("Estimating coi with large allele table with quantile method with inappropriate") {
+
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example2_allele_table.tsv")
+                input[1] = "quantile_method"
+                input[2] = -0.2
+                """
+            }
+        }
+
+        then {
+            // assert that it failed
+            assert !process.success
+        }
+    }
 }
 
 // TODO: Test integer method fails with 0.1, -1, and 0
