@@ -12,19 +12,17 @@ process EXTRACT_ALLELE_TABLE {
     input:
     path pmo
     val bioinfoid
-    val representative_haps_fields = "seq"
-    val microhap_fields = "read_count"
 
     output:
     path "${output_filename}.tsv", emit: allele_table
 
     script:
     """
-    python3 pmotools-runner.py extract_allele_table \
+    pmotools-runner.py extract_allele_table \
         --file ${pmo} \
         --bioid ${bioinfoid} \
-        --representative_haps_fields ${representative_haps_fields} \
-        --microhap_fields ${microhap_fields} \
+        --representative_haps_fields "seq" \
+        --microhap_fields "read_count" \
         --output ${output_filename}
     """
 }
