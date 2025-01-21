@@ -14,7 +14,7 @@ process ESTIMATE_ALLELE_FREQUENCY_NAIVE {
     val method
 
     output:
-    path "${output_filename}", emit: allele_frequencies
+    path "${output_filename}", emit: slaf
 
     script:
     """

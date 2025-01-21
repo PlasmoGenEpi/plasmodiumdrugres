@@ -19,9 +19,9 @@ nextflow_process {
         then {
             assert process.success
             // channel exists
-            assert process.out.allele_frequencies != null
+            assert process.out.slaf != null
             // output md5 check
-            assert path(process.out.allele_frequencies.get(0)).md5 == "4dbe6594aeeb6593b0d9180824502ace"
+            assert path(process.out.slaf.get(0)).md5 == "4dbe6594aeeb6593b0d9180824502ace"
         }
 
     }
@@ -40,9 +40,9 @@ nextflow_process {
         then {
             assert process.success
             // channel exists
-            assert process.out.allele_frequencies != null
+            assert process.out.slaf != null
             // output md5 check
-            assert path(process.out.allele_frequencies.get(0)).md5 == "7ad378eff8cb9a6ed103d3b1c9a1314f"
+            assert path(process.out.slaf.get(0)).md5 == "7ad378eff8cb9a6ed103d3b1c9a1314f"
         }
     }
 }
