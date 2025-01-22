@@ -19,7 +19,7 @@ nextflow_process {
             // channel exists
             assert process.out.allele_prevalence != null
             // output md5 check
-            assert path(process.out.allele_prevalence.get(0)).md5 == "5cbd2d06e41856899e4a4ae74cee3d47"
+            assert path(process.out.allele_prevalence.get(0)).md5 == "693c94726e88b159f8bff05708dc3e52"
         }
 
     }
