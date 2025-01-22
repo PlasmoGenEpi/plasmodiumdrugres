@@ -1,0 +1,33 @@
+nextflow_process {
+
+    name "Test Process ADD_REF_SEQS_WITH_GENOME"
+    script "modules/local/add_ref_seqs_with_genome.nf"
+    process "ADD_REF_SEQS_WITH_GENOME"
+
+    test("Should run without failures") {
+
+        when {
+            params {
+                // define parameters here. Example:
+                // outdir = "tests/results"
+            }
+            process {
+                """
+                // define inputs of the process here. Example:
+                input[0] = file("${projectDir}/tests/input/testing_extract_from_genome_bed.bed")
+                input[1] = file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel_refseqs.fasta")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            // channel exists
+            assert process.out.ref_bed_with_seqs != null
+            // output md5 check
+            assert path(process.out.ref_bed_with_seqs.get(0)).md5 == "c656756a46d1ffc44828a29e5fc36e9e"
+        }
+
+    }
+
+}
