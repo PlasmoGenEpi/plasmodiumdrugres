@@ -59,7 +59,7 @@ RUN R -e 'library("remotes")'
 
 
 # R packages
-RUN Rscript -e 'remotes::install_cran(c("tibble", "dplyr", "stringr", "readr", "optparse", "ggplot2", "tidyr", "data.table", "validate", "openxlsx", "Rmpfr", "rlang", "doParallel", "magrittr", "checkmate", "pegas", "ape", "rngtools", "parallelly"), Ncpus = ${CPU_COUNT})'
+RUN Rscript -e "remotes::install_cran(c('tibble', 'dplyr', 'stringr', 'readr', 'optparse', 'ggplot2', 'tidyr', 'data.table', 'validate', 'openxlsx', 'Rmpfr', 'rlang', 'doParallel', 'magrittr', 'checkmate', 'pegas', 'ape', 'rngtools', 'parallelly'), Ncpus = ${CPU_COUNT})"
 
 ## attempt to load libraries to make sure they installed
 RUN R -e 'library("tibble")'
