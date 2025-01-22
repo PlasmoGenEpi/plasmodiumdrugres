@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process IDM_WRAPPER"
-    script "modules/local/IDM_wrapper.nf"
+    script "modules/local/idm_wrapper.nf"
     process "IDM_WRAPPER"
 
     test("Test for failures and output file checksums") {
@@ -17,7 +17,7 @@ nextflow_process {
         then {
             assert process.success
             assert process.out.slaf != null
-            assert path(process.out.slaf.get(0)).md5 == "786aa95eeb428d968a833ee5067f8962"
+            assert path(process.out.slaf.get(0)).md5 == "52cb67a7afe69a8a68a109a6be0a7cc7"
         }
 
     }

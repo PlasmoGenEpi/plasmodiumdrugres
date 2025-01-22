@@ -1,0 +1,26 @@
+nextflow_process {
+
+    name "Test Process MLBM_WRAPPER"
+    script "modules/local/mlbm_wrapper.nf"
+    process "MLBM_WRAPPER"
+
+    test("Test for failures and output file checksums") {
+
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example_amino_acid_calls.tsv")
+                input[1] = file("${projectDir}/tests/input/example_loci_groups.tsv")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.mlaf != null
+            assert path(process.out.mlaf.get(0)).md5 == "10a5aeddf660ad6379e1dfab72a53c12"
+        }
+
+    }
+
+}
