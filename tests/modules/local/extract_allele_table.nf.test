@@ -18,7 +18,7 @@ nextflow_process {
         then {
             assert process.success
             assert process.out.allele_table != null
-            assert path(process.out.allele_table.get(0)).md5 == "8674845d7346158644617c46bbc7b76b"
+            assert path(process.out.allele_table.get(0)).md5 == "9e887f1332c8a129687cde915f6921bb"
         }
 
     }

@@ -23,6 +23,7 @@ process EXTRACT_ALLELE_TABLE {
         --bioid ${bioinfoid} \
         --representative_haps_fields "seq" \
         --microhap_fields "read_count" \
+        --default_base_col_names specimen_id,target_id,allele \
         --output ${output_filename}
     """
 }
