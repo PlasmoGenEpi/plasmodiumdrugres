@@ -1,0 +1,48 @@
+nextflow_process {
+
+    name "Test Process ESTIMATE_ALLELE_FREQUENCY_NAIVE"
+    script "modules/local/estimate_allele_frequency_naive.nf"
+    process "ESTIMATE_ALLELE_FREQUENCY_NAIVE"
+
+    test("Estimating allele frequencies naively should run without failures with read_count_prop method") {
+
+        when {
+            process {
+                """
+                // define inputs of the process here. Example:
+                input[0] = file("${projectDir}/tests/input/example_amino_acid_calls.tsv")
+                input[1] = "read_count_prop"
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            // channel exists
+            assert process.out.slaf != null
+            // output md5 check
+            assert path(process.out.slaf.get(0)).md5 == "a8b40902010549c520ff6c5a55d27773"
+        }
+
+    }
+    test("Estimating allele frequencies naively should run without failures with presence_absence method") {
+
+        when {
+            process {
+                """
+                // define inputs of the process here. Example:
+                input[0] = file("${projectDir}/tests/input/example_amino_acid_calls.tsv")
+                input[1] = "presence_absence"
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            // channel exists
+            assert process.out.slaf != null
+            // output md5 check
+            assert path(process.out.slaf.get(0)).md5 == "c8ddfdabd7c0a729e94590cb8f5bd5b4"
+        }
+    }
+}
