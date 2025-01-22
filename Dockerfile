@@ -59,7 +59,7 @@ RUN R -e 'library("remotes")'
 
 
 # R packages
-RUN Rscript -e 'remotes::install_cran(c("tibble", "dplyr", "stringr", "readr", "optparse", "ggplot2", "tidyr", "data.table", "validate", "openxlsx", "Rmpfr", "rlang", "doParallel", "magrittr", "checkmate", "pegas", "ape", "rngtools"))'
+RUN Rscript -e 'remotes::install_cran(c("tibble", "dplyr", "stringr", "readr", "optparse", "ggplot2", "tidyr", "data.table", "validate", "openxlsx", "Rmpfr", "rlang", "doParallel", "magrittr", "checkmate", "pegas", "ape", "rngtools", "parallelly"))'
 
 ## attempt to load libraries to make sure they installed
 RUN R -e 'library("tibble")'
@@ -80,7 +80,7 @@ RUN R -e 'library("checkmate")'
 RUN R -e 'library("pegas")'
 RUN R -e 'library("ape")'
 RUN R -e 'library("rngtools")'
-
+RUN R -e 'library("parallelly")'
 
 
 RUN R -e "install.packages(c('dcifer', 'moire'), repos = c('https://plasmogenepi.r-universe.dev', 'https://cloud.r-project.org'))"
@@ -96,9 +96,11 @@ RUN R -e 'library("variantstring")'
 RUN Rscript -e 'if (!require("BiocManager", quietly = TRUE)) { install.packages("BiocManager"); }; BiocManager::install(version = "3.19", ask = FALSE);'
 RUN Rscript -e 'BiocManager::install("Biostrings", ask = FALSE)'
 RUN Rscript -e 'BiocManager::install("pwalign", ask = FALSE)'
+RUN Rscript -e 'BiocManager::install("msa", ask = FALSE)'
 ## attempt to load libraries to make sure they installed
 RUN R -e 'library("Biostrings")'
 RUN R -e 'library("pwalign")'
+RUN R -e 'library("msa")'
 
 # update path
 ENV PATH="/opt/pmotools-python/scripts:$PATH"
