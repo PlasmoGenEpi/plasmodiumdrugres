@@ -84,7 +84,9 @@ RUN R -e 'library("rngtools")'
 
 
 RUN R -e "install.packages(c('dcifer', 'moire'), repos = c('https://plasmogenepi.r-universe.dev', 'https://cloud.r-project.org'))"
-RUN R -e "remotes::install_github('mrc-ide/variantstring@1.7.0')"
+#RUN R -e "remotes::install_github('mrc-ide/variantstring@1.7.0')"
+RUN R -e "remotes::install_github('nickjhathaway/variantstring@develop')"
+
 ## attempt to load libraries to make sure they installed
 RUN R -e 'library("dcifer")'
 RUN R -e 'library("moire")'

@@ -1,0 +1,43 @@
+nextflow_process {
+
+    name "Test Process ESTIMATE_ML_PREVFREQ_NAIVE"
+    script "modules/local/estimate_multilocus_prevfreq_naive.nf"
+    process "ESTIMATE_ML_PREVFREQ_NAIVE"
+
+    test("Estimating multilocus prev and frequency naively large example file, should run without failures") {
+
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example2_amino_acid_calls.tsv")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.ml_prevfreq != null
+            assert path(process.out.ml_prevfreq.get(0)).md5 == "c19effc6596e691fa08d0739dc652e34"
+        }
+
+    }
+
+    test("Estimating multilocus prev and frequency naively small example file, should run without failures") {
+
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example_amino_acid_calls.tsv")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.ml_prevfreq != null
+            assert path(process.out.ml_prevfreq.get(0)).md5 == "43f48466ffba2b7e85001a6d53402a99"
+        }
+
+    }
+
+}
