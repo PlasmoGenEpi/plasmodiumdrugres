@@ -213,7 +213,11 @@ workflow SLAF {
 
 workflow GENERATE_REF_BED {
     if (params.targeted_reference) {
-        
+        // generate bed file and add to it using add_ref_seqs_with_fasta.nf
+    } else if (params.targeted_reference) {
+        // generate bed file and add to it using add add_ref_seqs_with_genome.nf
+    } else {
+        // generate bed file extracting from pmo at the same time
     }
 }
     // Reference handling 
