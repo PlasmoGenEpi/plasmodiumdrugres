@@ -19,7 +19,7 @@ params.pmo = null
 params.allele_table = "${projectDir}/tests/input/example2_allele_table.tsv"
 
 params.bioinformatics_id = "ReducedMAD4HATTERSim-SeekDeep"
-params.reference_bed = "${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed"
+params.reference_bed = "${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed"  // TODO: this needs to be replaced by being extracted from pmo
 params.loci_of_interest_bed = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
 params.translate_loci_extra_args = ""
 params.naive_coi_threshold = 1
@@ -40,14 +40,82 @@ params.outdir = "/Users/kmurie/Documents/git_projects/plasmodiumdrugres/output"
 params.genome_reference = null
 params.targeted_reference = null
 
-workflow {
+params.help = null 
 
-    // TODO: Add help message 
+def helpMessage() {
+  log.info """
+    Usage:
+        nextflow run main.nf 
+            --pmo <PMO_FILE> 
+            --allele_table <ALLELE_TABLE_FILE> 
+            --bioinformatics_id <BIOINFORMATICS_ID> 
+            --loci_of_interest_bed <LOCI_BED_FILE> 
+            --loci_groups <LOCI_GROUPS_FILE>
+            --outdir <OUTPUT_DIRECTORY>
+            [--genome_reference <GENOME_REFERENCE>] [--targeted_reference <TARGETED_REFERENCE>] 
+            [--coi_method <COI_METHOD>] [--naive_coi_threshold <THRESHOLD_INT>]
+            [--mlaf_method <MLAF_METHOD>] 
+            [--slaf_method <SLAF_METHOD>]
+            [--translate_loci_extra_args <STRING_OF_EXTRA_FLAGS>]
+
+    Description:
+        This workflow processes microhaplotype data to estimate single- and multi-locus allele prevalence and frequency, as well as the complexity of infection (COI), using various bioinformatics methods.
+
+    Inputs:
+        --pmo <FILE>                   Portable microhaplotype object (JSON format). Required unless --allele_table is provided.
+        --allele_table <FILE>          Allele table file (TSV format). Required unless --pmo is provided.
+        --bioinformatics_id <STRING>   Identifier for bioinformatics analysis. Required if --pmo is set.
+        --outdir <DIRECTORY>           Directory to store workflow outputs. Required. 
+
+        (Loci of interest flags)
+        --loci_of_interest_bed <FILE>  BED file specifying resistance markers of interest. 
+        --loci_groups <FILE>           TSV file specifying loci groups for MLAF estimation. 
+
+        (Method flags)
+        --coi_method <STRING>          COI estimation method. Options: NAIVE_INT_METHOD (default), NAIVE_QUANTILE_METHOD.
+        --naive_coi_threshold <INT>    Threshold for naive COI estimation (Default: 1).
+        --mlaf_method <STRING>         MLAF estimation method. Options: MLBM (default).
+        --slaf_method <STRING>         SLAF estimation method. Options: IDM (default).
+
+        (Reference flags)
+        --genome_reference <FILE>      Reference genome file (FASTA format). Required unless --targeted_reference is provided or reference in pmo.
+        --targeted_reference <FILE>    Targeted reference file (FASTA format). Required unless --genome_reference is provided or reference in pmo.
+
+        (Extra flags)
+        --translate_loci_extra_args <STRING> Additional arguments for translating loci of interest. (Default: "").
+
+    Examples:
+        Running from PMO that has reference sequences for targets included
+        nextflow run main.nf --pmo PATH/TO/PMO.json --bioinformatics_id bioinformatics_run1 --loci_of_interest_bed PATH/TO/LOCI_INFO.bed --loci_groups PATH/TO/LOCI_GROUPS.tsv --outdir PATH/TO/OUTPUT_DIR
+
+        Running from PMO, extracting reference for targets from full genome
+        nextflow run main.nf --pmo PATH/TO/PMO.json --bioinformatics_id bioinformatics_run1 --loci_of_interest_bed PATH/TO/LOCI_INFO.bed --loci_groups PATH/TO/LOCI_GROUPS.tsv --genome_reference 3D7.fasta --outdir PATH/TO/OUTPUT_DIR
+
+        Running from PMO and fasta with reference for targets
+        nextflow run main.nf --pmo PATH/TO/PMO.json --bioinformatics_id bioinformatics_run1 --loci_of_interest_bed PATH/TO/LOCI_INFO.bed --loci_groups PATH/TO/LOCI_GROUPS.tsv --targeted_reference referece_for_targets.fasta --outdir PATH/TO/OUTPUT_DIR
+
+        Running from allele table, extracting reference for targets from full genome
+        nextflow run main.nf --allele_table PATH/TO/ALLELE_TABLE.tsv --loci_of_interest_bed PATH/TO/LOCI_INFO.bed --loci_groups PATH/TO/LOCI_GROUPS.tsv --genome_reference 3D7.fasta --outdir PATH/TO/OUTPUT_DIR
+
+        Running from allele table and fasta with reference for targets
+        nextflow run main.nf --allele_table PATH/TO/ALLELE_TABLE.tsv --loci_of_interest_bed PATH/TO/LOCI_INFO.bed --loci_groups PATH/TO/LOCI_GROUPS.tsv --targeted_reference referece_for_targets.fasta --outdir PATH/TO/OUTPUT_DIR
+
+    For more details, refer to the documentation or source code.
+        """.stripIndent()
+}
+
+workflow {
+    // Print help if requested
+    if (params.help) {
+      helpMessage()
+      exit 0
+    }
+    
     
     VALIDATE_INPUTS()
 
     if (params.pmo) {
-        // TODO: Filter to population option 
+        // TODO: Filter to population option - have population_field flag and split pmo by it and run the rest on pmo channel
         EXTRACT_ALLELE_TABLE(params.pmo, params.bioinformatics_id)
         allele_table = EXTRACT_ALLELE_TABLE.out.allele_table
     } else if (params.allele_table) {
@@ -55,11 +123,6 @@ workflow {
     }
 
     // TODO: Add step if reference_bed is null to generate targeted reference
-    // Reference handling 
-    // Extract target locations from pmo into bed file
-    // If seq in pmo use those 
-    // If fasta file suplied for full reference pull from that 
-    // If tareted reference supplies use that 
 
     TRANSLATE_LOCI_OF_INTEREST(allele_table, params.reference_bed, params.loci_of_interest_bed, params.translate_loci_extra_args)
 
@@ -69,7 +132,7 @@ workflow {
     ESTIMATE_ALLELE_PREVALENCE_NAIVE(TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls)
 
     // Multi Loci Allele Frequency 
-     // TODO: add in multi locus prev 
+    // TODO: add in multi locus prev 
     MLAF(params.mlaf_method,TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls, params.loci_groups)
 
     // Single locus allele frequency 
@@ -88,6 +151,7 @@ workflow VALIDATE_INPUTS {
     def validation_errors = []
 
     // Ensure only one type of reference is set
+    // TODO: Add check that if allele table is set one of these must be 
     if (params.genome_reference && params.targeted_reference) {
         validation_errors.add("Only one of 'genome_reference' or 'targeted_reference' can be set, but not both.")
     }
@@ -214,16 +278,18 @@ workflow SLAF {
 workflow GENERATE_REF_BED {
     if (params.targeted_reference) {
         // generate bed file and add to it using add_ref_seqs_with_fasta.nf
+
     } else if (params.targeted_reference) {
         // generate bed file and add to it using add add_ref_seqs_with_genome.nf
     } else {
         // generate bed file extracting from pmo at the same time
     }
 }
-    // Reference handling 
-    // Extract target locations from pmo into bed file
-    // If seq in pmo use those 
-    // If fasta file suplied for full reference pull from that 
-    // If tareted reference supplies use that 
+// Reference handling 
+// Extract target locations from pmo into bed file
+// If seq in pmo use those 
+// If fasta file suplied for full reference pull from that 
+// If tareted reference supplies use that 
+
 // TODO: test workflows 
 // TODO: Put into nf-core template 
