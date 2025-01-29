@@ -2,7 +2,7 @@
 // Estimate multi locus allele frequencies using choice of tool/method
 //
 
-include { MLBM_WRAPPER } from './modules/local/mlbm_wrapper'
+include { MLBM_WRAPPER } from '../../../modules/local/mlbm_wrapper'
 
 workflow ESTIMATE_MLAF {
 

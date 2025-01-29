@@ -2,7 +2,7 @@
 // Estimate COI using choice of tool/method
 //
 
-include { ESTIMATE_COI_NAIVE } from './modules/local/estimate_coi_naive'
+include { ESTIMATE_COI_NAIVE } from '../../../modules/local/estimate_coi_naive'
 
 workflow ESTIMATE_COI {
 

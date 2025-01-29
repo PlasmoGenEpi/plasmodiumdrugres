@@ -2,8 +2,8 @@
 // Estimate single locus allele frequency using choice of tool/method
 //
 
-include { SLAF_FROM_STAVE_MLAF } from './modules/local/slaf_from_stave_mlaf'
-include { IDM_WRAPPER } from './modules/local/idm_wrapper'
+include { SLAF_FROM_STAVE_MLAF } from '../../../modules/local/slaf_from_stave_mlaf'
+include { IDM_WRAPPER } from '../../../modules/local/idm_wrapper'
 
 workflow ESTIMATE_SLAF {
 
