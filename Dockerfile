@@ -45,7 +45,7 @@ RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 # pmotools
 WORKDIR /opt
-RUN git clone https://github.com/PlasmoGenEpi/pmotools-python.git
+RUN git clone  https://github.com/PlasmoGenEpi/pmotools-python.git
 WORKDIR /opt/pmotools-python
 RUN git checkout develop
 RUN pip install --break-system-packages .
@@ -84,8 +84,7 @@ RUN R -e 'library("rngtools")'
 
 
 RUN R -e "install.packages(c('dcifer', 'moire'), repos = c('https://plasmogenepi.r-universe.dev', 'https://cloud.r-project.org'))"
-#RUN R -e "remotes::install_github('mrc-ide/variantstring@1.7.0')"
-RUN R -e "remotes::install_github('nickjhathaway/variantstring@develop')"
+RUN R -e "remotes::install_github('mrc-ide/variantstring@1.8.0')"
 
 ## attempt to load libraries to make sure they installed
 RUN R -e 'library("dcifer")'

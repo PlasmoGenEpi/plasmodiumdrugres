@@ -1,0 +1,45 @@
+nextflow_process {
+
+    name "Test Process EXTRACT_PANEL_INFO_TO_BED"
+    script "modules/local/extract_panel_info_to_bed.nf"
+    process "EXTRACT_PANEL_INFO_TO_BED"
+
+    test("Should extract panel info without failures") {
+
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example_PMO.json")
+                input[1] = "FALSE"
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.panel_info_bed != null
+            assert path(process.out.panel_info_bed.get(0)).md5 == "9c4fa0925fa5777e422a7af1a831d919"
+        }
+
+    }
+
+    test("Should extract panel info with add_ref_seqs without failures") {
+
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example_PMO.json")
+                input[1] = "TRUE"
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.panel_info_bed != null
+            assert path(process.out.panel_info_bed.get(0)).md5 == "6fae4e12b3a01c3c25374b73d75fdd64"
+        }
+
+    }
+
+}
