@@ -18,8 +18,8 @@ process ADD_REF_SEQS_WITH_FASTA {
 
     script:
     """
-    Rscript ${projectDir}/bin/PGEcore/scripts/add_ref_seq_to_ref_bed_table/add_ref_seqs_with_fasta.R \
-        --fasta ${fasta} \
+    Rscript ${projectDir}/bin/PGEcore/scripts/add_ref_seq_to_ref_bed_table/add_ref_seqs_with_targeted_ref_fasta.R \
+        --target_fasta ${fasta} \
         --ref_bed ${ref_bed} \
         --out ${output_fnp}
     """
