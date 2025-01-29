@@ -13,26 +13,30 @@ include { SLAF_FROM_STAVE_MLAF } from './modules/local/slaf_from_stave_mlaf'
 include { CREATE_OUTPUT } from './modules/local/create_output'
 
 // Inputs
+
+// example command 
+// nextflow run main.nf -profile docker --loci_of_interest_bed /Users/kmurie/Documents/git_projects/plasmodiumdrugres/tests/input/example_principal_resistance_marker_info_table.bed --loci_groups /Users/kmurie/Documents/git_projects/plasmodiumdrugres/tests/input/example_loci_groups.tsv --allele_table /Users/kmurie/Documents/git_projects/plasmodiumdrugres/tests/input/example2_allele_table.tsv --reference_bed /Users/kmurie/Documents/git_projects/plasmodiumdrugres/tests/input/example_PMO_insert_locs_of_panel.bed --genome_reference something
+
 // params.pmo = "${projectDir}/tests/input/example_PMO.json"
 // params.allele_table = null
-params.pmo = null
-params.allele_table = "${projectDir}/tests/input/example2_allele_table.tsv"
+// params.bioinformatics_id = "ReducedMAD4HATTERSim-SeekDeep"
+// params.pmo = null
+// params.allele_table = "${projectDir}/tests/input/example2_allele_table.tsv"
 
-params.bioinformatics_id = "ReducedMAD4HATTERSim-SeekDeep"
-params.reference_bed = "${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed"  // TODO: this needs to be replaced by being extracted from pmo
-params.loci_of_interest_bed = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
-params.translate_loci_extra_args = ""
-params.naive_coi_threshold = 1
-params.loci_groups = "${projectDir}/tests/input/example_loci_groups.tsv"
+// params.reference_bed = "${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed"  // TODO: this needs to be replaced by being extracted from pmo
+// params.loci_of_interest_bed = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
+// params.translate_loci_extra_args = ""
+// params.naive_coi_threshold = 1
+// params.loci_groups = "${projectDir}/tests/input/example_loci_groups.tsv"
 
 // TODO: extract to config
-params.coi_method_options = ["NAIVE_INT_METHOD", "NAIVE_QUANTILE_METHOD"]
-params.mlaf_method_options = ["MLBM"]
-params.slaf_method_options = ["IDM"]
+// params.coi_method_options = ["NAIVE_INT_METHOD", "NAIVE_QUANTILE_METHOD"]
+// params.mlaf_method_options = ["MLBM"]
+// params.slaf_method_options = ["IDM"]
 
-params.coi_method = "NAIVE_INT_METHOD"
-params.mlaf_method = "MLBM"
-params.slaf_method = "IDM"
+// params.coi_method = "NAIVE_INT_METHOD"
+// params.mlaf_method = "MLBM"
+// params.slaf_method = "IDM"
 
 params.outdir = "/Users/kmurie/Documents/git_projects/plasmodiumdrugres/output"
 
@@ -111,7 +115,6 @@ workflow {
       exit 0
     }
     
-    
     VALIDATE_INPUTS()
 
     if (params.pmo) {
@@ -149,6 +152,8 @@ workflow {
 workflow VALIDATE_INPUTS {
     // Collect validation errors
     def validation_errors = []
+
+    // TODO: Add check required fields are included 
 
     // Ensure only one type of reference is set
     // TODO: Add check that if allele table is set one of these must be 
@@ -278,18 +283,12 @@ workflow SLAF {
 workflow GENERATE_REF_BED {
     if (params.targeted_reference) {
         // generate bed file and add to it using add_ref_seqs_with_fasta.nf
-
-    } else if (params.targeted_reference) {
+    } else if (params.genome_reference) {
         // generate bed file and add to it using add add_ref_seqs_with_genome.nf
     } else {
         // generate bed file extracting from pmo at the same time
     }
 }
-// Reference handling 
-// Extract target locations from pmo into bed file
-// If seq in pmo use those 
-// If fasta file suplied for full reference pull from that 
-// If tareted reference supplies use that 
 
 // TODO: test workflows 
 // TODO: Put into nf-core template 

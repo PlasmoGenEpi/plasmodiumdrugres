@@ -153,7 +153,71 @@ workflow PIPELINE_COMPLETION {
 // Check and validate pipeline parameters
 //
 def validateInputParameters() {
-    genomeExistsError()
+    // Collect validation errors
+    def validation_errors = []
+
+    // TODO: Add check required fields are included 
+
+    // Ensure only one type of reference is set
+    // TODO: Add check that if allele table is set one of these must be 
+    if (params.genome_reference && params.targeted_reference) {
+        validation_errors.add("Only one of 'genome_reference' or 'targeted_reference' can be set, but not both.")
+    }
+
+    // Check if `coi_method` is valid
+    if (!params.coi_method_options.contains(params.coi_method)) {
+        validation_errors.add("Invalid coi_method specified: '${params.coi_method}'. Allowed methods are: ${params.coi_method_options}.")
+    }
+
+    // Check if `mlaf_method` is valid
+    if (!params.mlaf_method_options.contains(params.mlaf_method)) {
+        validation_errors.add("Invalid mlaf_method specified: '${params.mlaf_method}'. Allowed methods are: ${params.mlaf_method_options}.")
+    }
+
+    // Check if `slaf_method` is valid
+    if (!params.slaf_method_options.contains(params.slaf_method)) {
+        validation_errors.add("Invalid slaf_method specified: '${params.slaf_method}'. Allowed methods are: ${params.slaf_method_options}.")
+    }
+
+    // Ensure only one of `pmo` or `allele_table` is set
+    if (params.pmo && params.allele_table) {
+        validation_errors.add("Only one of 'pmo' or 'allele_table' can be set, but not both.")
+    }
+    // If pmo set check bioinformatics_id is set
+    if (params.pmo) {
+        if (!params.pmo) {
+            validation_errors.add("Missing required parameter: '${file_label}' is not set.")
+        }
+    }
+    // If allele_table set check that a reference is set 
+    if (params.allele_table) {
+        if (!params.genome_reference && !params.targeted_reference) {
+            validation_errors.add("When 'allele_table' is set either 'genome_reference' or 'targeted_reference' must also be set.")
+        }
+    }
+    // Check required files: `reference_bed`, `loci_of_interest_bed`, `loci_groups`
+    def required_files = [
+        'reference_bed': params.reference_bed,
+        'loci_of_interest_bed': params.loci_of_interest_bed,
+        'loci_groups': params.loci_groups
+    ]
+
+    required_files.each { file_label, file_path ->
+        if (!file_path) {
+            validation_errors.add("Missing required file parameter: '${file_label}' is not set.")
+        } else if (!file(file_path).exists()) {
+            validation_errors.add("File not found: '${file_label}' at path '${file_path}'.")
+        }
+    }
+
+    // Report all errors at once
+    if (validation_errors.size() > 0) {
+        log.error "Input validation failed with the following errors:\n" +
+            validation_errors.collect { "- ${it}" }.join("\n")
+        exit 1
+    }
+
+    log.info "All input validations passed successfully."
 }
 
 //
