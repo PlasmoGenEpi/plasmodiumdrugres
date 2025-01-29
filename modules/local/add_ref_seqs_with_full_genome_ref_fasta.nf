@@ -1,9 +1,9 @@
 /*
- * STEP - ADD_REF_SEQS_WITH_GENOME
+ * STEP - ADD_REF_SEQS_WITH_FULL_GENOME_REF_FASTA
  * add a column with the ref sequence pulled from a genome file using the coordinates of the bed file
  */
 
-process ADD_REF_SEQS_WITH_GENOME {
+process ADD_REF_SEQS_WITH_FULL_GENOME_REF_FASTA {
 
     label 'process_single'
 

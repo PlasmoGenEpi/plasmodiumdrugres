@@ -1,9 +1,9 @@
 /*
- * STEP - ADD_REF_SEQS_WITH_FASTA
+ * STEP - ADD_REF_SEQS_WITH_TARGETED_REF_FASTA
  * add a column with the ref sequence pulled from a fasta file
  */
 
-process ADD_REF_SEQS_WITH_FASTA {
+process ADD_REF_SEQS_WITH_TARGETED_REF_FASTA {
 
     label 'process_single'
 
