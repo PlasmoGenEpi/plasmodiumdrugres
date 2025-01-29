@@ -1,9 +1,9 @@
 /*
- * STEP - ADD_REF_SEQS_WITH_GENOME
+ * STEP - ADD_REF_SEQS_WITH_FULL_GENOME_REF_FASTA
  * add a column with the ref sequence pulled from a genome file using the coordinates of the bed file
  */
 
-process ADD_REF_SEQS_WITH_GENOME {
+process ADD_REF_SEQS_WITH_FULL_GENOME_REF_FASTA {
 
     label 'process_single'
 
@@ -18,7 +18,7 @@ process ADD_REF_SEQS_WITH_GENOME {
 
     script:
     """
-    Rscript ${projectDir}/bin/PGEcore/scripts/add_ref_seq_to_ref_bed_table/add_ref_seqs_with_genome.R \
+    Rscript ${projectDir}/bin/PGEcore/scripts/add_ref_seq_to_ref_bed_table/add_ref_seqs_with_full_genome_ref_fasta.R \
         --genome ${genome} \
         --ref_bed ${ref_bed} \
         --out ${output_fnp}

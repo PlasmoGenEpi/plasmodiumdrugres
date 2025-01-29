@@ -1,9 +1,9 @@
 /*
- * STEP - ADD_REF_SEQS_WITH_FASTA
+ * STEP - ADD_REF_SEQS_WITH_TARGETED_REF_FASTA
  * add a column with the ref sequence pulled from a fasta file
  */
 
-process ADD_REF_SEQS_WITH_FASTA {
+process ADD_REF_SEQS_WITH_TARGETED_REF_FASTA {
 
     label 'process_single'
 
@@ -18,7 +18,7 @@ process ADD_REF_SEQS_WITH_FASTA {
 
     script:
     """
-    Rscript ${projectDir}/bin/PGEcore/scripts/add_ref_seq_to_ref_bed_table/add_ref_seqs_with_fasta.R \
+    Rscript ${projectDir}/bin/PGEcore/scripts/add_ref_seq_to_ref_bed_table/add_ref_seqs_with_targeted_ref_fasta.R \
         --fasta ${fasta} \
         --ref_bed ${ref_bed} \
         --out ${output_fnp}
