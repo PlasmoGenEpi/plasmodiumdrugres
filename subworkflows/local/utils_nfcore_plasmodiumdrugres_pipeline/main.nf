@@ -16,7 +16,8 @@ include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
 include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
-
+include { EXTRACT_ALLELE_TABLE      } from '../../../modules/local/extract_allele_table'
+include { GENERATE_REFERENCE_BED_FILE} from '../../../subworkflows/local/generate_reference_bed_file'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     SUBWORKFLOW TO INITIALISE PIPELINE
@@ -49,18 +50,19 @@ workflow PIPELINE_INITIALISATION {
     //
     // Validate parameters and generate parameter summary to stdout
     //
-    UTILS_NFSCHEMA_PLUGIN (
-        workflow,
-        validate_params,
-        null
-    )
+    // TODO: Update schema with our inputs 
+    // UTILS_NFSCHEMA_PLUGIN (
+    //     workflow,
+    //     validate_params,
+    //     null
+    // )
 
     //
     // Check config provided to the pipeline
     //
-    // UTILS_NFCORE_PIPELINE (
-    //     nextflow_cli_args
-    // )
+    UTILS_NFCORE_PIPELINE (
+        nextflow_cli_args
+    )
 
     //
     // Custom validation for pipeline parameters
@@ -68,32 +70,26 @@ workflow PIPELINE_INITIALISATION {
     validateInputParameters()
 
     //
-    // Create channel from input file provided through params.input
+    // Create allele table input for pipeline 
     //
+    // TODO: Add allele table entry point 
+    // TODO: add option to split pmo and then run it in chunks 
+    EXTRACT_ALLELE_TABLE(params.pmo, params.bioinformatics_id)
+    allele_table = EXTRACT_ALLELE_TABLE.out.allele_table
 
-    // TODO: Set this up to create a pmo or allele table chanel? 
-    // Channel
-    //     .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
-    //     .map {
-    //         meta, fastq_1, fastq_2 ->
-    //             if (!fastq_2) {
-    //                 return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-    //             } else {
-    //                 return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-    //             }
-    //     }
-    //     .groupTuple()
-    //     .map { samplesheet ->
-    //         validateInputSamplesheet(samplesheet)
-    //     }
-    //     .map {
-    //         meta, fastqs ->
-    //             return [ meta, fastqs.flatten() ]
-    //     }
-    //     .set { ch_samplesheet }
+    //
+    // Extract panel information and add reference
+    //
+    def ref_type = params.targeted_reference ? "targeted_reference" : 
+                params.genome_reference ? "genome_reference" : "none"
+
+    def fasta = params.targeted_reference ?: params.genome_reference ?: ""
+    GENERATE_REFERENCE_BED_FILE(params.pmo, ref_type, fasta)
+
 
     emit:
-    // samplesheet = ch_samplesheet
+    allele_table = allele_table 
+    panel_info_bed = GENERATE_REFERENCE_BED_FILE.out.panel_info_bed 
     versions    = ch_versions
 }
 
@@ -185,8 +181,8 @@ def validateInputParameters() {
     }
     // If pmo set check bioinformatics_id is set
     if (params.pmo) {
-        if (!params.pmo) {
-            validation_errors.add("Missing required parameter: '${file_label}' is not set.")
+        if (!params.bioinformatics_id) {
+            validation_errors.add("Missing required parameter: '--bioinformatics_id' is not set.")
         }
     }
     // If allele_table set check that a reference is set 
@@ -197,7 +193,7 @@ def validateInputParameters() {
     }
     // Check required files: `reference_bed`, `loci_of_interest_bed`, `loci_groups`
     def required_files = [
-        'reference_bed': params.reference_bed,
+        // 'reference_bed': params.reference_bed,
         'loci_of_interest_bed': params.loci_of_interest_bed,
         'loci_groups': params.loci_groups
     ]
