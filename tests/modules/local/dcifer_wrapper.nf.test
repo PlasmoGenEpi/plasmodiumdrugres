@@ -4,7 +4,25 @@ nextflow_process {
     script "modules/local/dcifer_wrapper.nf"
     process "DCIFER_WRAPPER"
 
-    test("Test for failures and output file checksums") {
+    test("Test for failures and output file checksums with example_allele_table") {
+
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example_allele_table.tsv")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.btwn_host_rel != null
+            assert path(process.out.btwn_host_rel.get(0)).md5 == "84d67414cb1870109403fecbe217533e"
+        }
+
+    }
+
+    test("Test for failures and output file checksums with example2_allele_table") {
 
         when {
             process {

@@ -18,7 +18,7 @@ process DCIFER_WRAPPER {
     script:
     """
     Rscript ${projectDir}/bin/PGEcore/scripts/dcifer_wrapper/dcifer_wrapper.R \
-        --allele_table ${allele_table} --btwn_host_rel_output \
-        "$btwn_host_rel_output"
+        --allele_table ${allele_table} --threads ${task.cpus} \
+        --btwn_host_rel_output "$btwn_host_rel_output"
     """
 }
