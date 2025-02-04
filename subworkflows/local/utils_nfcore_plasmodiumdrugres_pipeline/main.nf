@@ -17,7 +17,7 @@ include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
 include { EXTRACT_ALLELE_TABLE      } from '../../../modules/local/extract_allele_table'
-include { GENERATE_REFERENCE_BED_FILE} from '../../../subworkflows/local/generate_reference_bed_file'
+include { EXTRACT_BED_FILE_FROM_PMO } from '../../../subworkflows/local/generate_reference_bed_file'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     SUBWORKFLOW TO INITIALISE PIPELINE
@@ -72,25 +72,24 @@ workflow PIPELINE_INITIALISATION {
     //
     // Create allele table input for pipeline 
     //
-    // TODO: Add allele table entry point 
     // TODO: add option to split pmo and then run it in chunks 
-    EXTRACT_ALLELE_TABLE(params.pmo, params.bioinformatics_id)
-    allele_table = EXTRACT_ALLELE_TABLE.out.allele_table
-
-    //
-    // Extract panel information and add reference
-    //
     def ref_type = params.targeted_reference ? "targeted_reference" : 
-                params.genome_reference ? "genome_reference" : "none"
-
+        params.genome_reference ? "genome_reference" : "none"
     def fasta = params.targeted_reference ?: params.genome_reference ?: ""
-    GENERATE_REFERENCE_BED_FILE(params.pmo, ref_type, fasta)
-
+    if (params.pmo) {
+        EXTRACT_ALLELE_TABLE(params.pmo, params.bioinformatics_id)
+        allele_table = EXTRACT_ALLELE_TABLE.out.allele_table
+        EXTRACT_BED_FILE_FROM_PMO(params.pmo, ref_type, fasta)
+        panel_info_bed = EXTRACT_BED_FILE_FROM_PMO.out.panel_info_bed 
+    } else if (params.allele_table) {
+        allele_table = params.allele_table 
+        panel_info_bed = params.panel_info_bed
+    }
 
     emit:
-    allele_table = allele_table 
-    panel_info_bed = GENERATE_REFERENCE_BED_FILE.out.panel_info_bed 
-    versions    = ch_versions
+    allele_table    = allele_table 
+    panel_info_bed  = panel_info_bed
+    versions        = ch_versions
 }
 
 /*
@@ -151,13 +150,34 @@ workflow PIPELINE_COMPLETION {
 def validateInputParameters() {
     // Collect validation errors
     def validation_errors = []
-
-    // TODO: Add check required fields are included 
-
+    def validation_warnings = []
+    
+    // Ensure only one of `pmo` or `allele_table` is set
+    if (params.pmo && params.allele_table) {
+        validation_errors.add("Only one of 'pmo' or 'allele_table' can be set, but not both.")
+    }
+    // If pmo set check bioinformatics_id is set
+    if (params.pmo) {
+        if (!params.bioinformatics_id) {
+            validation_errors.add("Missing required parameter: '--bioinformatics_id' is not set and is required with --pmo.")
+        }
+        if (params.genome_reference && params.targeted_reference) {
+            validation_warnings.add("WARNING: Both 'genome_reference' or 'targeted_reference' set, 'targeted_reference' will be used.")
+        }
+    } else if (params.allele_table) {
+        if (!params.panel_info_bed) {
+            validation_errors.add("Missing required parameter: '--panel_info_bed' is not set and is required with --allele_table.")
+        }
+        if (params.genome_reference || params.targeted_reference) {
+            validation_warnings.add("WARNING: Either 'genome_reference' or 'targeted_reference' set, but neither will be used.")
+        }
+    } else {
+        validation_errors.add("Missing required parameter: Either '--pmo' or '--allele_table' must be set, but neither were.")
+    }
+    
     // Ensure only one type of reference is set
-    // TODO: Add check that if allele table is set one of these must be 
     if (params.genome_reference && params.targeted_reference) {
-        validation_errors.add("Only one of 'genome_reference' or 'targeted_reference' can be set, but not both.")
+        validation_warnings.add("WARNING: Both 'genome_reference' or 'targeted_reference' set, 'targeted_reference' will be used.")
     }
 
     // Check if `coi_method` is valid
@@ -175,25 +195,8 @@ def validateInputParameters() {
         validation_errors.add("Invalid slaf_method specified: '${params.slaf_method}'. Allowed methods are: ${params.slaf_method_options}.")
     }
 
-    // Ensure only one of `pmo` or `allele_table` is set
-    if (params.pmo && params.allele_table) {
-        validation_errors.add("Only one of 'pmo' or 'allele_table' can be set, but not both.")
-    }
-    // If pmo set check bioinformatics_id is set
-    if (params.pmo) {
-        if (!params.bioinformatics_id) {
-            validation_errors.add("Missing required parameter: '--bioinformatics_id' is not set.")
-        }
-    }
-    // If allele_table set check that a reference is set 
-    if (params.allele_table) {
-        if (!params.genome_reference && !params.targeted_reference) {
-            validation_errors.add("When 'allele_table' is set either 'genome_reference' or 'targeted_reference' must also be set.")
-        }
-    }
-    // Check required files: `reference_bed`, `loci_of_interest_bed`, `loci_groups`
+    // Check other required files: `loci_of_interest_bed`, `loci_groups`
     def required_files = [
-        // 'reference_bed': params.reference_bed,
         'loci_of_interest_bed': params.loci_of_interest_bed,
         'loci_groups': params.loci_groups
     ]
@@ -204,6 +207,12 @@ def validateInputParameters() {
         } else if (!file(file_path).exists()) {
             validation_errors.add("File not found: '${file_label}' at path '${file_path}'.")
         }
+    }
+
+    // Print warnings if any
+    if (validation_warnings.size() > 0) {
+        log.warn "Input validation warnings:\n" +
+            validation_warnings.collect { "- ${it}" }.join("\n")
     }
 
     // Report all errors at once

@@ -1,0 +1,44 @@
+{
+    "pmo": null,
+    "allele_table": "/Users/kmurie/Documents/git_projects/plasmodiumdrugres/tests/input/example2_allele_table.tsv",
+    "bioinformatics_id": null,
+    "loci_of_interest_bed": "/Users/kmurie/Documents/git_projects/plasmodiumdrugres/tests/input/example_principal_resistance_marker_info_table.bed",
+    "loci_groups": "/Users/kmurie/Documents/git_projects/plasmodiumdrugres/tests/input/example_loci_groups.tsv",
+    "genome_reference": null,
+    "targeted_reference": null,
+    "translate_loci_extra_args": "",
+    "outdir": "output",
+    "publish_dir_mode": "copy",
+    "email": null,
+    "email_on_fail": null,
+    "plaintext_email": false,
+    "monochrome_logs": false,
+    "hook_url": null,
+    "help": false,
+    "help_full": false,
+    "show_hidden": false,
+    "version": false,
+    "pipelines_testdata_base_path": "https://raw.githubusercontent.com/nf-core/test-datasets/",
+    "config_profile_name": null,
+    "config_profile_description": null,
+    "custom_config_version": "master",
+    "panel_info_bed": "/Users/kmurie/Documents/git_projects/plasmodiumdrugres/tests/input/example_PMO_insert_locs_of_panel.bed",
+    "custom_config_base": "https://raw.githubusercontent.com/nf-core/configs/master",
+    "config_profile_contact": null,
+    "config_profile_url": null,
+    "validate_params": true,
+    "coi_method_options": [
+        "NAIVE_INT_METHOD",
+        "NAIVE_QUANTILE_METHOD"
+    ],
+    "coi_method": "NAIVE_INT_METHOD",
+    "naive_coi_threshold": 1,
+    "mlaf_method_options": [
+        "MLBM"
+    ],
+    "mlaf_method": "MLBM",
+    "slaf_method_options": [
+        "IDM"
+    ],
+    "slaf_method": "IDM"
+}

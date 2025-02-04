@@ -6,7 +6,7 @@ include { EXTRACT_PANEL_INFO_TO_BED } from '../../../modules/local/extract_panel
 include { ADD_REF_SEQS_WITH_TARGETED_REF_FASTA } from '../../../modules/local/add_ref_seqs_with_targeted_ref_fasta'
 include { ADD_REF_SEQS_WITH_FULL_GENOME_REF_FASTA } from '../../../modules/local/add_ref_seqs_with_full_genome_ref_fasta'
 
-workflow GENERATE_REFERENCE_BED_FILE {
+workflow EXTRACT_BED_FILE_FROM_PMO {
     take: 
     pmo
     ref_type

@@ -4,6 +4,8 @@
 
 include { ESTIMATE_COI_NAIVE } from '../../../modules/local/estimate_coi_naive'
 
+// TODO: Add in moire 
+
 workflow ESTIMATE_COI {
 
     take: 
