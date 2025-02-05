@@ -47,7 +47,11 @@ workflow PLASMODIUMDRUGRES {
     ESTIMATE_MLAF(mlaf_method, TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls, loci_groups)
 
     // Single locus allele frequency 
-    ESTIMATE_SLAF(slaf_method, TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls)
+    if (slaf_method == 'from_mlaf') {
+        ESTIMATE_SLAF(slaf_method, ESTIMATE_MLAF.out.mlaf_output)
+    } else {
+        ESTIMATE_SLAF(slaf_method, TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls)
+    }
 
     // OUTPUT
     CREATE_OUTPUT(ESTIMATE_SLAF.out.slaf_output, ESTIMATE_ALLELE_PREVALENCE_NAIVE.out.allele_prevalence, ESTIMATE_MLAF.out.mlaf_output, TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls,  ESTIMATE_COI.out.coi_output)

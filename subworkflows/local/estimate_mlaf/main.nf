@@ -3,6 +3,7 @@
 //
 
 include { MLBM_WRAPPER } from '../../../modules/local/mlbm_wrapper'
+include { ESTIMATE_ML_PREVFREQ_NAIVE } from '../../../modules/local/estimate_multilocus_prevfreq_naive'
 
 workflow ESTIMATE_MLAF {
 
