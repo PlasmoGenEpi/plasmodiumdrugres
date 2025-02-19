@@ -1,0 +1,32 @@
+nextflow_process {
+
+    name "Test Process RUN_MOIRE"
+    script "modules/local/run_moire.nf"
+    process "RUN_MOIRE"
+
+    test("Should run without failures") {
+
+        when {
+            params {
+                // define parameters here. Example:
+                // outdir = "tests/results"
+                moire_seed = 10
+            }
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example2_allele_table.tsv")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert path(process.out.coi_summary.get(0)).md5 == "f25415fccac022306b6268dcf800939b"
+            assert path(process.out.he_summary.get(0)).md5 == "c3c16accd702bebb448e33de12b693d3"
+            assert path(process.out.allele_freq_summary.get(0)).md5 == "092f1c1b279709bb228bad8196b90ff7"
+            assert path(process.out.relatedness_summary.get(0)).md5 == "4ac778716f14fd930bc9e8c0909cfd75"
+            assert path(process.out.effective_coi_summary.get(0)).md5 == "550bf7ad9708cfba9a7519053c815b1b"
+
+        }
+    }
+}
