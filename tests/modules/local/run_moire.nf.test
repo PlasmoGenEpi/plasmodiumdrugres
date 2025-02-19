@@ -1,0 +1,30 @@
+nextflow_process {
+
+    name "Test Process RUN_MOIRE"
+    script "modules/local/run_moire.nf"
+    process "RUN_MOIRE"
+
+    test("Should run without failures") {
+
+        when {
+            params {
+                // define parameters here
+            }
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example2_allele_table.tsv")
+                """
+            }
+        }
+        then {
+            assert process.success
+            //check if channel exists
+            assert process.out.coi_summary != null
+            assert process.out.he_summary != null
+            assert process.out.allele_freq_summary != null
+            assert process.out.relatedness_summary != null
+            assert process.out.effective_coi_summary != null
+            //will give slightly different answer each time so can't check output
+        }
+    }
+}
