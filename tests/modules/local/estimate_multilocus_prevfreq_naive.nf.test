@@ -10,6 +10,7 @@ nextflow_process {
             process {
                 """
                 input[0] = file("${projectDir}/tests/input/example2_amino_acid_calls.tsv")
+                input[1] = file("${projectDir}/tests/input/example_loci_groups.tsv")
                 """
             }
         }
@@ -17,7 +18,7 @@ nextflow_process {
         then {
             assert process.success
             assert process.out.ml_prevfreq != null
-            assert path(process.out.ml_prevfreq.get(0)).md5 == "c19effc6596e691fa08d0739dc652e34"
+            assert path(process.out.ml_prevfreq.get(0)).md5 == "bf3b0428138b93ca692c463fbf26c0a1"
         }
 
     }
@@ -28,6 +29,7 @@ nextflow_process {
             process {
                 """
                 input[0] = file("${projectDir}/tests/input/example_amino_acid_calls.tsv")
+                input[1] = file("${projectDir}/tests/input/example_loci_groups.tsv")
                 """
             }
         }
@@ -35,7 +37,7 @@ nextflow_process {
         then {
             assert process.success
             assert process.out.ml_prevfreq != null
-            assert path(process.out.ml_prevfreq.get(0)).md5 == "43f48466ffba2b7e85001a6d53402a99"
+            assert path(process.out.ml_prevfreq.get(0)).md5 == "671e9698607534da84e2101cb9ebeb6f"
         }
 
     }
