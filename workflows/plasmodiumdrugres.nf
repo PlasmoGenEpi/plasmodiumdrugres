@@ -8,7 +8,6 @@
 // include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 // include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_plasmodiumdrugres_pipeline'
 
-include { ESTIMATE_COI } from '../subworkflows/local/estimate_coi'
 include { ESTIMATE_ALLELE_PREVALENCE_NAIVE } from '../modules/local/estimate_allele_prevalence_naive'
 include { TRANSLATE_LOCI_OF_INTEREST } from '../modules/local/translate_loci_of_interest'
 include { ESTIMATE_MLAF } from '../subworkflows/local/estimate_mlaf'
@@ -35,9 +34,6 @@ workflow PLASMODIUMDRUGRES {
     main:
 
     TRANSLATE_LOCI_OF_INTEREST(allele_table, panel_info_bed_with_ref, loci_of_interest_bed, translate_loci_extra_args)
-
-    // Estimate_COI
-    ESTIMATE_COI(coi_method, allele_table)
 
     // Estimate single locus allele prevalence
     ESTIMATE_ALLELE_PREVALENCE_NAIVE(TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls)
