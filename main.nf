@@ -60,7 +60,7 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        NFCORE_PLASMODIUMDRUGRES.out.sl_summary_table,
+        NFCORE_PLASMODIUMDRUGRES.out.sl_summary,
     )
 }
 
@@ -101,5 +101,6 @@ workflow NFCORE_PLASMODIUMDRUGRES {
     )
 
     emit:
-    sl_summary_table = PLASMODIUMDRUGRES.out.sl_summary_table // channel: /path/to/sl_summary_table.tsv
+    sl_summary = PLASMODIUMDRUGRES.out.sl_summary // channel: /path/to/sl_summary.tsv
+    ml_summary = PLASMODIUMDRUGRES.out.ml_summary // channel: /path/to/ml_summary.tsv
 }

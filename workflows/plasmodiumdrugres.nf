@@ -23,7 +23,7 @@ include { CREATE_OUTPUT } from '../modules/local/create_output'
 
 workflow PLASMODIUMDRUGRES {
     take:
-    allele_table // channel: samplesheet read in from --input
+    allele_table
     panel_info_bed_with_ref 
     loci_of_interest_bed
     translate_loci_extra_args
@@ -43,7 +43,6 @@ workflow PLASMODIUMDRUGRES {
     ESTIMATE_ALLELE_PREVALENCE_NAIVE(TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls)
 
     // Estimate Multi Loci Allele Frequency 
-    // TODO: add in multi locus prev 
     ESTIMATE_MLAF(mlaf_method, TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls, loci_groups)
 
     // Single locus allele frequency 
@@ -54,7 +53,7 @@ workflow PLASMODIUMDRUGRES {
     }
 
     // OUTPUT
-    CREATE_OUTPUT(ESTIMATE_SLAF.out.slaf_output, ESTIMATE_ALLELE_PREVALENCE_NAIVE.out.allele_prevalence, ESTIMATE_MLAF.out.mlaf_output, TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls,  ESTIMATE_COI.out.coi_output)
+    CREATE_OUTPUT(ESTIMATE_SLAF.out.slaf_output, ESTIMATE_ALLELE_PREVALENCE_NAIVE.out.allele_prevalence, ESTIMATE_MLAF.out.mlaf_output)
 
 
     //
@@ -70,6 +69,7 @@ workflow PLASMODIUMDRUGRES {
     //     .set { ch_collated_versions }
 
     emit:
-    sl_summary_table = CREATE_OUTPUT.out.sl_summary_table
+    sl_summary = CREATE_OUTPUT.out.sl_summary
+    ml_summary = CREATE_OUTPUT.out.ml_summary
     // versions = ch_versions // channel: [ path(versions.yml) ]
 }

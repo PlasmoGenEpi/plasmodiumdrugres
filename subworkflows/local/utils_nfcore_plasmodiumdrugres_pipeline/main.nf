@@ -174,11 +174,6 @@ def validateInputParameters() {
     } else {
         validation_errors.add("Missing required parameter: Either '--pmo' or '--allele_table' must be set, but neither were.")
     }
-    
-    // Ensure only one type of reference is set
-    if (params.genome_reference && params.targeted_reference) {
-        validation_warnings.add("WARNING: Both 'genome_reference' or 'targeted_reference' set, 'targeted_reference' will be used.")
-    }
 
     // Check if `coi_method` is valid
     if (!params.coi_method_options.contains(params.coi_method)) {
