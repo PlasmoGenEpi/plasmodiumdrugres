@@ -45,7 +45,6 @@ workflow {
         PIPELINE_INITIALISATION.out.panel_info_bed, 
         params.loci_of_interest_bed,
         params.translate_loci_extra_args,
-        params.coi_method,
         params.mlaf_method,
         params.loci_groups,
         params.slaf_method 
@@ -60,7 +59,7 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        NFCORE_PLASMODIUMDRUGRES.out.sl_summary,
+        "multiqcreport",
     )
 }
 
@@ -79,7 +78,6 @@ workflow NFCORE_PLASMODIUMDRUGRES {
     panel_info_bed_with_ref 
     loci_of_interest_bed
     translate_loci_extra_args
-    coi_method
     mlaf_method
     loci_groups
     slaf_method 
@@ -94,7 +92,6 @@ workflow NFCORE_PLASMODIUMDRUGRES {
         panel_info_bed_with_ref, 
         loci_of_interest_bed,
         translate_loci_extra_args,
-        coi_method,
         mlaf_method,
         loci_groups,
         slaf_method

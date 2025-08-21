@@ -26,7 +26,6 @@ workflow PLASMODIUMDRUGRES {
     panel_info_bed_with_ref 
     loci_of_interest_bed
     translate_loci_extra_args
-    coi_method
     mlaf_method
     loci_groups
     slaf_method

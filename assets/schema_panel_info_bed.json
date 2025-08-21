@@ -1,0 +1,71 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/plasmodiumdrugres/master/assets/schema_input.json",
+    "title": "nf-core/plasmodiumdrugres pipeline - params.panel_info_bed schema",
+    "description": "Schema for the file provided with params.panel_info_bed",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "#chrom": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Chromosome that is targeted.",
+                "meta": [
+                    "id"
+                ]
+            },
+            "start": {
+                "type": "integer",
+                "errorMessage": "Zero-based start coordinate of target.",
+                "meta": [
+                    "id"
+                ]
+            },
+            "end": {
+                "type": "integer",
+                "errorMessage": "Zero-based end coordinate of target",
+                "meta": [
+                    "id"
+                ]
+            },
+            "length": {
+                "type": "integer",
+                "errorMessage": "Length must be an integer, but is optional.",
+                "meta": [
+                    "id"
+                ]
+            },
+            "strand": {
+                "type": "string",
+                "pattern": "^[+-]$",
+                "errorMessage": "Strand of the target of interest.",
+                "meta": [
+                    "id"
+                ]
+            },
+            "extra_info": {
+                "type": "string",
+                "errorMessage": "Extra information about target, but is optional.",
+                "meta": [
+                    "id"
+                ]
+            },
+            "ref_seq": {
+                "type": "string",
+                "errorMessage": "Sequence of reference for target.",
+                "pattern": "^[ATCG]+$",
+                "meta": [
+                    "id"
+                ]
+            }
+        },
+        "required": [
+            "#chrom",
+            "start",
+            "end",
+            "target_id",
+            "strand"
+        ]
+    }
+}

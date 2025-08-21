@@ -1,4 +1,4 @@
 [submodule "bin/PGEcore"]
     path = bin/PGEcore
     url = git@github.com:PlasmoGenEpi/PGEcore.git
-    branch = hotfix/update_scripts_to_output_stave
+	branch = develop

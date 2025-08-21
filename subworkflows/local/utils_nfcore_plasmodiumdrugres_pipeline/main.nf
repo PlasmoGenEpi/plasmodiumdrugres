@@ -175,11 +175,6 @@ def validateInputParameters() {
         validation_errors.add("Missing required parameter: Either '--pmo' or '--allele_table' must be set, but neither were.")
     }
 
-    // Check if `coi_method` is valid
-    if (!params.coi_method_options.contains(params.coi_method)) {
-        validation_errors.add("Invalid coi_method specified: '${params.coi_method}'. Allowed methods are: ${params.coi_method_options}.")
-    }
-
     // Check if `mlaf_method` is valid
     if (!params.mlaf_method_options.contains(params.mlaf_method)) {
         validation_errors.add("Invalid mlaf_method specified: '${params.mlaf_method}'. Allowed methods are: ${params.mlaf_method_options}.")
@@ -268,8 +263,9 @@ def toolCitationText() {
     // Uncomment function in methodsDescriptionText to render in MultiQC report
     def citation_text = [
             "Tools used in the workflow included:",
-            "FastQC (Andrews 2010),",
-            "MultiQC (Ewels et al. 2016)",
+            "IDM (Hashemi M, Schneider KA (2024)),",
+            "MultiLocusBiallelicModel (Tsoungui Obama and Schneider 2022)",
+            "PGEcore (PlasmoGenEpi)",
             "."
         ].join(' ').trim()
 
@@ -313,8 +309,8 @@ def methodsDescriptionText(mqc_methods_yaml) {
     meta["tool_bibliography"] = ""
 
     // TODO nf-core: Only uncomment below if logic in toolCitationText/toolBibliographyText has been filled!
-    // meta["tool_citations"] = toolCitationText().replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
-    // meta["tool_bibliography"] = toolBibliographyText()
+    meta["tool_citations"] = toolCitationText().replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
+    meta["tool_bibliography"] = toolBibliographyText()
 
 
     def methods_text = mqc_methods_yaml.text

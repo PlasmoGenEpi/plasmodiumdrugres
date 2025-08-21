@@ -1,0 +1,87 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/plasmodiumdrugres/master/assets/schema_input.json",
+    "title": "nf-core/plasmodiumdrugres pipeline - params.loci_of_interest_bed schema",
+    "description": "Schema for the file provided with params.loci_of_interest_bed",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "#chrom": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Chromosome that the loci of interest is on.",
+                "meta": [
+                    "id"
+                ]
+            },
+            "start": {
+                "type": "integer",
+                "errorMessage": "Zero-based codon start coordinate.",
+                "meta": [
+                    "id"
+                ]
+            },
+            "end": {
+                "type": "integer",
+                "errorMessage": "Zero-based codon end coordinate.",
+                "meta": [
+                    "id"
+                ]
+            },
+            "length": {
+                "type": "integer",
+                "errorMessage": "Length of codon. Should be 3.",
+                "meta": [
+                    "id"
+                ]
+            },
+            "strand": {
+                "type": "string",
+                "pattern": "^[+-]$",
+                "errorMessage": "Strand that the codon of interest is on.",
+                "meta": [
+                    "id"
+                ]
+            },
+            "name": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Codon name, but is optional.",
+                "meta": [
+                    "id"
+                ]
+            },
+            "gene": {
+                "type": "string",
+                "errorMessage": "Gene name.",
+                "pattern": "^\\S+$",
+                "meta": [
+                    "id"
+                ]
+            },
+            "gene_id": {
+                "type": "string",
+                "errorMessage": "ID of the gene the codon is on.",
+                "pattern": "^\\S+$",
+                "meta": [
+                    "id"
+                ]
+            },
+            "aa_position": {
+                "type": "integer",
+                "errorMessage": "Amino acid position.",
+                "meta": [
+                    "id"
+                ]
+            }
+        },
+        "required": [
+            "#chrom",
+            "start",
+            "end",
+            "gene_id",
+            "strand"
+        ]
+    }
+}
