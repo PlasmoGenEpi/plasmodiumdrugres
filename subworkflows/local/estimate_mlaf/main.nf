@@ -3,6 +3,7 @@
 //
 
 include { MLBM_WRAPPER } from '../../../modules/local/mlbm_wrapper'
+include { FEM_WRAPPER } from '../../../modules/local/fem_wrapper'
 include { ESTIMATE_ML_PREVFREQ_NAIVE } from '../../../modules/local/estimate_multilocus_prevfreq_naive'
 
 workflow ESTIMATE_MLAF {
@@ -18,6 +19,9 @@ workflow ESTIMATE_MLAF {
     if (method == "MLBM") {
         MLBM_WRAPPER(amino_acid_calls, loci_groups)
         mlaf_output = MLBM_WRAPPER.out.mlaf
+    } else if (method == "FEM") {
+        FEM_WRAPPER(amino_acid_calls, loci_groups)
+        mlaf_output = FEM_WRAPPER.out.mlaf
     } else {
         throw new IllegalArgumentException("Error: 'mlaf_method' must be one of ${params.mlaf_method_options} Provided value: ${method}.")
     }

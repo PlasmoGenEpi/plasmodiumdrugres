@@ -42,7 +42,6 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=$TIME_ZONE apt-get -y install tzdata
 RUN mkdir ~/.ssh/
 RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-
 # pmotools
 WORKDIR /opt
 RUN git clone  https://github.com/PlasmoGenEpi/pmotools-python.git
@@ -86,10 +85,15 @@ RUN R -e 'library("parallelly")'
 RUN R -e "install.packages(c('dcifer', 'moire'), repos = c('https://plasmogenepi.r-universe.dev', 'https://cloud.r-project.org'))"
 RUN R -e "remotes::install_github('mrc-ide/variantstring@1.8.0')"
 
+# Install FEM 
+RUN R -e "install.packages(c('devtools'))"
+RUN R -e "devtools::install_github('aimeertaylor/FreqEstimationModel', build_vignettes = TRUE, dependencies = TRUE)"
+
 ## attempt to load libraries to make sure they installed
 RUN R -e 'library("dcifer")'
 RUN R -e 'library("moire")'
 RUN R -e 'library("variantstring")'
+RUN R -e 'library(FreqEstimationModel)'
 
 # Bioconductor packages (have to install 3.19 because that's needed for pwalign)
 RUN Rscript -e 'if (!require("BiocManager", quietly = TRUE)) { install.packages("BiocManager"); }; BiocManager::install(version = "3.19", ask = FALSE);'
