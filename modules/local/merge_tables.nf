@@ -8,9 +8,6 @@ process MERGE_TABLES {
     label 'process_single'
 
     input:
-    // path slaf_table
-    // path slap_table 
-    // path mlaf_table
     tuple val(pop), path(pop_files)
 
     output:

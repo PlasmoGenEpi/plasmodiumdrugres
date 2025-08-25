@@ -13,7 +13,7 @@ include { SPLIT_AA_TABLE_BY_POP } from '../modules/local/split_aa_table_by_popul
 include { ESTIMATE_ALLELE_PREVALENCE_NAIVE } from '../modules/local/estimate_allele_prevalence_naive'
 include { ESTIMATE_MLAF } from '../subworkflows/local/estimate_mlaf'
 include { ESTIMATE_SLAF } from '../subworkflows/local/estimate_slaf'
-include { MERGE_TABLES } from '../modules/local/merge_outputs'
+include { MERGE_TABLES } from '../modules/local/merge_tables'
 include { CONCAT_TABLES } from '../modules/local/concat_tables'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -37,8 +37,12 @@ workflow PLASMODIUMDRUGRES {
     
     // split allele table 
     // TODO: include if statement here for when population_map is not supplied 
-    SPLIT_AA_TABLE_BY_POP(TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls, params.population_map)
-    aa_table_ch = (SPLIT_AA_TABLE_BY_POP.out.per_pop_tables).flatten()
+    if (params.population_map) {
+        SPLIT_AA_TABLE_BY_POP(TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls, params.population_map)
+        aa_table_ch = (SPLIT_AA_TABLE_BY_POP.out.per_pop_tables).flatten()
+    } else {
+        aa_table_ch = TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls
+    }
 
     // // // Estimate single locus allele prevalence
     ESTIMATE_ALLELE_PREVALENCE_NAIVE(aa_table_ch)
@@ -56,10 +60,18 @@ workflow PLASMODIUMDRUGRES {
     // Create tuple of output files by population
     all_outputs = ESTIMATE_ALLELE_PREVALENCE_NAIVE.out.allele_prevalence.mix(ESTIMATE_MLAF.out.mlaf_output, ESTIMATE_SLAF.out.slaf_output)
     outputs_per_population = all_outputs.groupTuple()
-
+    outputs_per_population.view()
     // OUTPUT
     // TODO: sort out mlaf and the prevelances 
-    MERGE_TABLES(outputs_per_population)
+    if (params.population_map) {
+        MERGE_TABLES(outputs_per_population)
+    } else {
+        updated_ch = outputs_per_population.map { tuple ->
+            tuple[0] = params.population_label   // replace first element
+            return tuple
+        }
+        MERGE_TABLES(updated_ch)
+    }
     
     all_sl_summary = MERGE_TABLES.out.sl_summary.collect()
     all_ml_summary = MERGE_TABLES.out.ml_summary.collect()
