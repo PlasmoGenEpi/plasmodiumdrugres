@@ -7,17 +7,20 @@ process SLAF_FROM_STAVE_MLAF {
 
     label 'process_single'
 
-    def output = 'slaf.tsv'
+    // def output = 'slaf.tsv'
 
     input:
     path mlaf_input
 
     output:
-    path "$output", emit: slaf
+    // path "$output", emit: slaf
+    // path "*allele_freqs.tsv", emit: slaf
+    // val "${mlaf_input.getBaseName(3)}", emit: population 
+    tuple val("${mlaf_input.getBaseName(3)}"), path("${mlaf_input.getBaseName(3)}.allele_freqs.tsv"), emit: slaf
 
     script:
     """
     Rscript ${projectDir}/bin/PGEcore/scripts/slaf_from_stave_mlaf/slaf_from_stave_mlaf.R \\
-        --mlaf_input ${mlaf_input} --output "$output"
+        --mlaf_input ${mlaf_input} --output "${mlaf_input.getBaseName(3)}.allele_freqs.tsv"
     """
 }

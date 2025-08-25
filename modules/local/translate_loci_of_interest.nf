@@ -19,6 +19,8 @@ process TRANSLATE_LOCI_OF_INTEREST {
     path ("${output_dir}/amino_acid_calls.tsv.gz"), emit: amino_acid_calls
     path ("${output_dir}/loci_covered_by_target_samples_info.tsv"), emit: loci_covered_by_target_samples_info
 
+    publishDir "${params.outdir}", mode: "${params.publish_dir_mode}", overwrite: true
+
     script:
     def extra_args = "${extra_args}"
     """

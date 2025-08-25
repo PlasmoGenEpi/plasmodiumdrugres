@@ -11,12 +11,12 @@ process ESTIMATE_ALLELE_PREVALENCE_NAIVE {
     path aa_calls
 
     output:
-    path "allele_prev.tsv", emit: allele_prevalence
+    tuple val("${aa_calls.getBaseName(3)}"), path("${aa_calls.getBaseName(3)}.allele_prev.tsv"), emit: allele_prevalence
 
     script:
     """
     Rscript ${projectDir}/bin/PGEcore/scripts/estimate_allele_prevalence_naive/estimate_allele_prevalence_naive.R \
         --aa_calls ${aa_calls} \
-        --output allele_prev.tsv
+        --output "${aa_calls.getBaseName(3)}.allele_prev.tsv"
     """
 }

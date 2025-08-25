@@ -97,7 +97,7 @@ workflow NFCORE_PLASMODIUMDRUGRES {
         slaf_method
     )
 
-    emit:
+    // emit:
     sl_summary = PLASMODIUMDRUGRES.out.sl_summary // channel: /path/to/sl_summary.tsv
     ml_summary = PLASMODIUMDRUGRES.out.ml_summary // channel: /path/to/ml_summary.tsv
 }
