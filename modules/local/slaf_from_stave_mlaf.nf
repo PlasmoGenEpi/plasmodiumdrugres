@@ -13,9 +13,6 @@ process SLAF_FROM_STAVE_MLAF {
     path mlaf_input
 
     output:
-    // path "$output", emit: slaf
-    // path "*allele_freqs.tsv", emit: slaf
-    // val "${mlaf_input.getBaseName(3)}", emit: population 
     tuple val("${mlaf_input.getBaseName(3)}"), path("${mlaf_input.getBaseName(3)}.allele_freqs.tsv"), emit: slaf
 
     script:

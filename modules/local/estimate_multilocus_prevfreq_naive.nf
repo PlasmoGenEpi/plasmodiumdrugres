@@ -3,6 +3,7 @@
  * Estimate multilocus prev/freq naively
  */
 
+// TODO: add this as option in the workflow
 process ESTIMATE_ML_PREVFREQ_NAIVE {
 
     label 'process_single'
@@ -11,14 +12,17 @@ process ESTIMATE_ML_PREVFREQ_NAIVE {
 
     input:
     path aa_calls
+    path loci_group_table
 
     output:
-    path "${output_filename}", emit: ml_prevfreq
+    // path "${output_filename}", emit: ml_prevfreq
+    tuple val("${aa_calls.getBaseName(3)}"), path("${aa_calls.getBaseName(3)}.ml_prevfreq.tsv"), emit: ml_prevfreq
 
     script:
     """
     Rscript ${projectDir}/bin/PGEcore/scripts/multilocus_prevfreq_naive/multilocus_prevfreq_naive.R \
-        --input_path $aa_calls \
-        --output_path $output_filename
+        --aa_table $aa_calls \
+        --loci_groups_input $loci_group_table \
+        --output_path "${aa_calls.getBaseName(3)}.ml_prevfreq.tsv"
     """
 }

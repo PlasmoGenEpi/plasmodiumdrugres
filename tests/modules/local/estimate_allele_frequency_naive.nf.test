@@ -20,8 +20,14 @@ nextflow_process {
             assert process.success
             // channel exists
             assert process.out.slaf != null
+            
+            // unpack tuple output 
+            def (pop, outFile) = process.out.slaf.get(0)
+
+            assert pop == 'example_amino_acid_calls'
+
             // output md5 check
-            assert path(process.out.slaf.get(0)).md5 == "a8b40902010549c520ff6c5a55d27773"
+            assert path(outFile).md5 == "89b47eda7ee9cb74636744b80ea79902"
         }
 
     }
@@ -41,8 +47,15 @@ nextflow_process {
             assert process.success
             // channel exists
             assert process.out.slaf != null
+           
+            // unpack tuple output 
+            def (pop, outFile) = process.out.slaf.get(0)
+
+            assert pop == 'example_amino_acid_calls'
+
             // output md5 check
-            assert path(process.out.slaf.get(0)).md5 == "c8ddfdabd7c0a729e94590cb8f5bd5b4"
+            assert path(outFile).md5 == "0d33f37c57e6ebb402fecd859af9ccf9"
+
         }
     }
 }
