@@ -26,7 +26,7 @@ RUN apt-get -yq dist-upgrade
 RUN apt-get install -yq --no-install-recommends autotools-dev autoconf libtool automake build-essential curl wget file git locales libssl-dev libcurl4-gnutls-dev ca-certificates xz-utils zlib1g-dev libbz2-dev liblzma5 liblzma-doc liblzma-dev openssh-client python3-dev python3-pip libxml2-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libmpfr-dev libgmp3-dev
 
 # install common bio tools
-RUN apt-get install -yq --no-install-recommends muscle r-base r-base-dev
+RUN apt-get install -yq --no-install-recommends muscle r-recommended=4.4* r-base=4.4.* r-base-core=4.4.* r-base-dev=4.4.*
 
 # set environment locale
 RUN echo "$LANG UTF-8" >> /etc/locale.gen
@@ -41,6 +41,7 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=$TIME_ZONE apt-get -y install tzdata
 # add github key so can git clone from github
 RUN mkdir ~/.ssh/
 RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
+
 
 # pmotools
 WORKDIR /opt
@@ -81,19 +82,18 @@ RUN R -e 'library("ape")'
 RUN R -e 'library("rngtools")'
 RUN R -e 'library("parallelly")'
 
+# R Install FEM
+RUN R -e "remotes::install_github('aimeertaylor/FreqEstimationModel', build_vignettes = FALSE, dependencies = TRUE)"
+RUN R -e 'library("FreqEstimationModel")'
 
+# R install dcifer, moire, variantstring
 RUN R -e "install.packages(c('dcifer', 'moire'), repos = c('https://plasmogenepi.r-universe.dev', 'https://cloud.r-project.org'))"
 RUN R -e "remotes::install_github('mrc-ide/variantstring@1.8.0')"
-
-# Install FEM 
-RUN R -e "install.packages(c('devtools'))"
-RUN R -e "devtools::install_github('aimeertaylor/FreqEstimationModel', build_vignettes = TRUE, dependencies = TRUE)"
 
 ## attempt to load libraries to make sure they installed
 RUN R -e 'library("dcifer")'
 RUN R -e 'library("moire")'
 RUN R -e 'library("variantstring")'
-RUN R -e 'library(FreqEstimationModel)'
 
 # Bioconductor packages (have to install 3.19 because that's needed for pwalign)
 RUN Rscript -e 'if (!require("BiocManager", quietly = TRUE)) { install.packages("BiocManager"); }; BiocManager::install(version = "3.19", ask = FALSE);'
