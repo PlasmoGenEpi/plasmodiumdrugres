@@ -1,4 +1,12 @@
-process CONCAT_TABLES {
+/*
+ * STEP - CONCAT_TABLES
+ * concatenate output tables 
+ */
+ 
+ process CONCAT_TABLES {
+    
+    label 'process_single'
+
     input:
     path sl_files
     path ml_files

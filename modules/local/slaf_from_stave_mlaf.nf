@@ -7,8 +7,6 @@ process SLAF_FROM_STAVE_MLAF {
 
     label 'process_single'
 
-    // def output = 'slaf.tsv'
-
     input:
     path mlaf_input
 
