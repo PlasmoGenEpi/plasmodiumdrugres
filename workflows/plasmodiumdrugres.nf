@@ -59,8 +59,7 @@ workflow PLASMODIUMDRUGRES {
     // Create tuple of output files by population
     all_outputs = ESTIMATE_ALLELE_PREVALENCE_NAIVE.out.allele_prevalence.mix(ESTIMATE_MLAF.out.mlaf_output, ESTIMATE_SLAF.out.slaf_output)
     outputs_per_population = all_outputs.groupTuple()
-    outputs_per_population.view()
-
+    
     // OUTPUT
     // TODO: sort out mlaf and the prevelances 
     if (params.population_map) {
