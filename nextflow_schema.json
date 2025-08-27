@@ -12,6 +12,7 @@
             "description": "Define where the pipeline should find input data and save output data.",
             "required": [
                 "loci_of_interest_bed",
+                "loci_groups",
                 "outdir"
             ],
             "properties": {
@@ -29,10 +30,9 @@
                     "type": "string",
                     "format": "file-path",
                     "exists": true,
-                    "schema": "assets/schema_allele_data.json",
                     "mimetype": "text/tsv",
                     "pattern": "^\\S+\\.[ct]sv$",
-                    "description": "Path to tab separated file containing microhaplotypes for samples.",
+                    "description": "Path to tab separated file containing microhaplotypes for specimens.",
                     "help_text": "This parameter is *mandatory* if `--pmo` is not specified. You will need to create a TSV file before running the pipeline. Use this parameter to specify its location. It has to be tab separated and include columns specimen_id, target_id, and seq. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#allele-table-input).",
                     "fa_icon": "fas fa-file-csv"
                 },
@@ -68,6 +68,17 @@
                     "help_text": "This file is used to define coordinates for the targets in the panel. Use this parameter to specify its location. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#panel-info-bed).",
                     "fa_icon": "fas fa-file-csv"
                 },
+                "population_map": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "schema": "assets/schema_population_map.json",
+                    "mimetype": "text/tsv",
+                    "pattern": "^\\S+\\.[ct]sv$",
+                    "description": "Path to tab separated file containing population assignment for each specimen_id.",
+                    "help_text": "This file is used to split specimens into separate populations to calculate metrics for each. It has to be tab separated and include columns specimen_id, population. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#population-map-input).",
+                    "fa_icon": "fas fa-file-csv"
+                },
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
@@ -93,6 +104,7 @@
                     "type": "string",
                     "description": "Name of iGenomes reference.",
                     "fa_icon": "fas fa-book",
+                    "hidden": true,
                     "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
                 },
                 "genome_reference": {
@@ -141,6 +153,12 @@
                 "naive_slaf_method"
             ],
             "properties": {
+                "bioinformatics_id": {
+                    "type": "string",
+                    "description": "bioinformatics_id of data stored within pmo.",
+                    "help_text": "This parameter is *mandatory* if `--pmo` is specified.",
+                    "fa_icon": "fas fa-users-cog"
+                },
                 "mlaf_method": {
                     "type": "string",
                     "description": "method for multi locus allele frequency estimates.",
@@ -153,32 +171,39 @@
                     "default": "IDM",
                     "fa_icon": "fas fa-users-cog"
                 },
-                "slaf_method_options": {
+                "translate_loci_extra_args": {
                     "type": "string",
-                    "description": "method options for single locus allele frequency estimates.",
+                    "description": "Extra arguments supplied when translating loci of interest",
+                    "help_text": "See https://github.com/PlasmoGenEpi/PGEcore/tree/develop/scripts/translate_loci_of_interest",
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "naive_slaf_method": {
+                    "type": "string",
+                    "description": "method options for single locus allele frequency estimates with naive method. read_count_prop or presence_absence.",
+                    "default": "read_count_prop",
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "population_label": {
+                    "type": "string",
+                    "description": "label for population/ this individual pipeline run.",
+                    "help_text": "If --population_map is not set this can be used to label the population these estimates are for.",
+                    "default": "pop1",
                     "fa_icon": "fas fa-users-cog"
                 },
                 "mlaf_method_options": {
                     "type": "string",
                     "description": "method options for multi locus allele frequency estimates.",
+                    "default": "[MLBM, FEM]",
+                    "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
-                "bioinformatics_id": {
+                "slaf_method_options": {
                     "type": "string",
-                    "description": "method options for multi locus allele frequency estimates.",
+                    "description": "method options for single locus allele frequency estimates.",
+                    "default": "[IDM, naive, from_mlaf]",
+                    "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
-                "translate_loci_extra_args": {
-                    "type": "string",
-                    "description": "method options for multi locus allele frequency estimates.",
-                    "fa_icon": "fas fa-users-cog"
-                },
-                "naive_slaf_method": {
-                    "type": "string",
-                    "description": "method options for multi locus allele frequency estimates.",
-                    "default": "read_count_prop",
-                    "fa_icon": "fas fa-users-cog"
-                }
             }
         },
         "institutional_config_options": {

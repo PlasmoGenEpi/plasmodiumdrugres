@@ -2,25 +2,8 @@
  * STEP - SPLIT_AA_TABLE_BY_POP
  * Split amino acid tables into seperate populations based on specimen_id
  */
-// process SPLIT_ALLELE_TABLE_BY_POP {
-//     input:
-//     path allele_table
-//     path population_map
 
-//     output:
-//     tuple val(pop), path("${pop}.allele_table.tsv") into per_pop_tables
-//     path "unmapped_specimens.txt", optional: true, emit: unmapped_report
-
-//     script:
-//     """
-//     Rscript split_allele_by_pop.R \
-//         --allele_table ${allele_table} \
-//         --population_map ${population_map} \
-//         --output_dir . \
-//         > pop_file_map.txt
-//     """
-// }
-
+// TODO: update this to work off of column names 
 process SPLIT_AA_TABLE_BY_POP {
     label 'process_single'
     
@@ -58,40 +41,3 @@ process SPLIT_AA_TABLE_BY_POP {
     rm -f "collapsed_amino_acid_calls.tsv"
     """
 }
-
-
-// process SPLIT_ALLELE_TABLE_BY_POP {
-//     input:
-//     path allele_table
-//     path population_map
-
-//     output:
-//     tuple val(pop), path(file) from population_outputs
-
-//     script:
-//     """
-//     Rscript -e '
-//     library(dplyr)
-
-//     allele <- read.table("$allele_table", header=TRUE, sep="\\t", stringsAsFactors=FALSE)
-//     popmap <- read.table("$population_map", header=TRUE, sep="\\t", stringsAsFactors=FALSE)
-
-//     merged <- dplyr::left_join(allele, popmap, by="specimen_id")
-
-//     pops <- unique(merged\$population)
-
-//     manifest <- file("population_outputs.txt", "w")
-
-//     for (p in pops) {
-//       subset <- merged %>% filter(population == p) %>% select(-population)
-//       outfile <- paste0(p, ".alleles.tsv")
-//       write.table(subset, file=outfile, sep="\\t", quote=FALSE, row.names=FALSE)
-//       writeLines(paste(p, outfile, sep="\\t"), manifest)
-//     }
-
-//     close(manifest)
-//     '
-
-//     """
-// }
-

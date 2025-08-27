@@ -175,6 +175,10 @@ def validateInputParameters() {
         validation_errors.add("Missing required parameter: Either '--pmo' or '--allele_table' must be set, but neither were.")
     }
 
+    // Warn if both population_map and population_label is set 
+    if ((params.population_map) && (params.population_label!='pop1')) {
+        validation_warnings.add("WARNING: both '--population_map' and --'population_label' set. '--population_map' will be used.")
+    }
     // Check if `mlaf_method` is valid
     if (!params.mlaf_method_options.contains(params.mlaf_method)) {
         validation_errors.add("Invalid mlaf_method specified: '${params.mlaf_method}'. Allowed methods are: ${params.mlaf_method_options}.")
