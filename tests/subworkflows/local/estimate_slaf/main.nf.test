@@ -1,0 +1,78 @@
+nextflow_workflow {
+
+    name "Test Workflow ESTIMATE_SLAF"
+    script "subworkflows/local/estimate_slaf/main.nf"
+    workflow "ESTIMATE_SLAF"
+
+    test("Should run without failures for IDM") {
+
+        when {
+            workflow {
+                """
+                input[0] = "IDM"
+                input[1] = file("${projectDir}/tests/input/example_amino_acid_calls.tsv")
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 1
+        }
+
+    }
+
+    test("Should run without failures for naive method") {
+
+        when {
+            workflow {
+                """
+                input[0] = "naive"
+                input[1] = file("${projectDir}/tests/input/example_amino_acid_calls.tsv")
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 1
+        }
+
+    }
+
+    test("Should run without failures for from_mlaf method") {
+
+        when {
+            workflow {
+                """
+                input[0] = "from_mlaf"
+                input[1] = file("${projectDir}/tests/input/example_mlaf.tsv")
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 1
+        }
+
+    }
+    
+    test("Should fail with incorrect method") {
+
+        when {
+            workflow {
+                """
+                input[0] = "BAD_METHOD"
+                input[1] = file("${projectDir}/tests/input/example_amino_acid_calls.tsv")
+                """
+            }
+        }
+        then {
+            // assert that it failed
+            assert !workflow.success
+        }
+
+    }
+
+}

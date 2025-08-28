@@ -1,0 +1,61 @@
+nextflow_workflow {
+
+    name "Test Workflow ESTIMATE_MLAF"
+    script "subworkflows/local/estimate_mlaf/main.nf"
+    workflow "ESTIMATE_MLAF"
+
+    test("Should run without failures with MLBM method") {
+
+        when {
+            workflow {
+                """
+                input[0] = "MLBM"
+                input[1] = file("${projectDir}/tests/input/example_amino_acid_calls.tsv")
+                input[2] = file("${projectDir}/tests/input/example_loci_groups.tsv")
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 1
+        }
+
+    }
+    test("Should run without failures with FEM method") {
+
+        when {
+            workflow {
+                """
+                input[0] = "FEM"
+                input[1] = file("${projectDir}/tests/input/example_amino_acid_calls.tsv")
+                input[2] = file("${projectDir}/tests/input/example_loci_groups.tsv")
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 1
+        }
+
+    }
+    test("Should fail with incorrect method") {
+
+        when {
+            workflow {
+                """
+                input[0] = "BAD_METHOD"
+                input[1] = file("${projectDir}/tests/input/example_amino_acid_calls.tsv")
+                input[2] = file("${projectDir}/tests/input/example_loci_groups.tsv")
+                """
+            }
+        }
+        then {
+            // assert that it failed
+            assert !workflow.success
+        }
+
+    }
+
+}
