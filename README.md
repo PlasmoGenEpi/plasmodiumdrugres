@@ -26,10 +26,10 @@
 1. Translate loci of interest ([`PGEcore`](https://github.com/PlasmoGenEpi/PGEcore))
 2. Split by population
 3. Estimate alelle prevalence ([`PGEcore`](https://github.com/PlasmoGenEpi/PGEcore))
-4. Estimate multilocus allele frequency. Choice of tool between: 
+4. Estimate multilocus allele frequency. Choice of method between: 
     1. [MultiLociBiallelicModel](https://www.frontiersin.org/articles/10.3389/fepid.2022.943625/full) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
     2. [FreqEstimationModel](https://doi.org/10.1186/1475-2875-13-102) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
-5. Estimate single locus allele frequency 
+5. Estimate single locus allele frequency. Choice of method between: 
     1. [Incomplete data model (IDM)](https://doi.org/10.1371/journal.pone.0287161) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
     2. [Naive `PGEcore` method]((https://github.com/PlasmoGenEpi/PGEcore))
     3. [`PGEcore` from multi-locus estimates]((https://github.com/PlasmoGenEpi/PGEcore))
@@ -41,9 +41,9 @@
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-The most simple way to run this pipeline is by using a Portable Microhaplotype Object (PMO) file. However, to make this as flexible as possible we have included other options which include supplying a PMO with reference sequences separately, and supplying an allele table with panel information supplied as a separate file. 
+The most simple way to run this pipeline is by using a [Portable Microhaplotype Object (PMO)](https://plasmogenepi.github.io/PMO_Docs/) file. To maximize flexibility, the pipeline also allows users to provide a PMO with reference sequences separately, or to supply an allele table with panel information in a separate file. 
 
-For either option you will first need to create two of the required inputs: [loci of interest](#loci-of-interest) and [loci groups](#loci-groups). 
+For either option, you will first need to prepare two required inputs: [loci of interest](#loci-of-interest) and [loci groups](#loci-groups). 
 
 ### Loci of interest
 
@@ -177,6 +177,7 @@ Now you can run the pipeline like this
 nextflow run nf-core/plasmodiumdrugres \
    -profile <docker/singularity/.../institute> \
    --pmo input_file.pmo \
+   --bioinformatics_id bioinfo_run1 \
    --loci_of_interest_bed loci_of_interest.bed \ 
    --loci_groups loci_groups.tsv \
    --outdir <OUTDIR>
@@ -188,6 +189,7 @@ If you are supplying a reference the add the `--genome_reference` flag.
 nextflow run nf-core/plasmodiumdrugres \
    -profile <docker/singularity/.../institute> \
    --pmo input_file.pmo \
+   --bioinformatics_id bioinfo_run1 \
    --loci_of_interest_bed loci_of_interest.bed \ 
    --loci_groups loci_groups.tsv \
    --genome_reference genome_reference.fasta
@@ -200,6 +202,7 @@ If you are supplying a targeted reference the add the `--targeted_reference` fla
 nextflow run nf-core/plasmodiumdrugres \
    -profile <docker/singularity/.../institute> \
    --pmo input_file.pmo \
+   --bioinformatics_id bioinfo_run1 \
    --loci_of_interest_bed loci_of_interest.bed \ 
    --loci_groups loci_groups.tsv \
    --targeted_reference genome_reference.fasta
