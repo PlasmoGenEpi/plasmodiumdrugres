@@ -171,6 +171,12 @@
                     "default": "IDM",
                     "fa_icon": "fas fa-users-cog"
                 },
+                "coi_method": {
+                    "type": "string",
+                    "description": "method for coi estimates.",
+                    "default": "NAIVE_INT_METHOD",
+                    "fa_icon": "fas fa-users-cog"
+                },
                 "translate_loci_extra_args": {
                     "type": "string",
                     "description": "Extra arguments supplied when translating loci of interest",
@@ -193,17 +199,24 @@
                 "mlaf_method_options": {
                     "type": "string",
                     "description": "method options for multi locus allele frequency estimates.",
-                    "default": "[MLBM, FEM]",
+                    "default": "['MLBM', 'FEM']",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
                 "slaf_method_options": {
                     "type": "string",
                     "description": "method options for single locus allele frequency estimates.",
-                    "default": "[IDM, naive, from_mlaf]",
+                    "default": "['IDM', 'naive', 'from_mlaf']",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
+                "coi_method_options": {
+                    "type": "string",
+                    "description": "method options for coi estimates.",
+                    "default": "['NAIVE_INT_METHOD', 'NAIVE_QUANTILE_METHOD']",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                }
             }
         },
         "institutional_config_options": {
@@ -339,6 +352,9 @@
         },
         {
             "$ref": "#/$defs/generic_options"
+        },
+        {
+            "$ref": "#/$defs/method_options"
         }
     ]
 }
