@@ -1,0 +1,31 @@
+nextflow_process {
+
+    name "Test Process MERGE_TABLES"
+    script "modules/local/merge_tables.nf"
+    process "MERGE_TABLES"
+
+    test("Should run without failures") {
+
+        when {
+            process {
+                """
+                input[0] = tuple('pop1', [file("${projectDir}/tests/input/example_allele_prev.tsv"), file("${projectDir}/tests/input/example_aa_mlaf.tsv"), file("${projectDir}/tests/input/example_aa_slaf.tsv")])
+                """
+            }
+        }
+
+        then {
+            assert process.success
+
+            // channel exists
+            assert process.out.sl_summary != null
+            assert process.out.ml_summary != null
+            
+            // output md5 check
+            assert path(process.out.sl_summary.get(0)).md5 == "5f89a56121d17bd001bc2d7d6df8d13c"
+            assert path(process.out.ml_summary.get(0)).md5 == "2e0bf2b7c79b5475f81a6f37b30de1e3"
+        }
+
+    }
+
+}

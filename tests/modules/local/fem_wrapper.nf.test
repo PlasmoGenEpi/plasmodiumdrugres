@@ -1,0 +1,32 @@
+nextflow_process {
+
+    name "Test Process FEM_WRAPPER"
+    script "modules/local/fem_wrapper.nf"
+    process "FEM_WRAPPER"
+
+    test("Should run without failures") {
+
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example_amino_acid_calls.tsv")
+                input[1] = file("${projectDir}/tests/input/example_loci_groups.tsv")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.mlaf != null
+            // unpack tuple output 
+            def (pop, outFile) = process.out.mlaf.get(0)
+
+            assert pop == 'example_amino_acid_calls'
+
+            // output md5 check
+            assert path(outFile).md5 == "09b753971dd84f57645a431f84b7f4db"
+        }
+
+    }
+
+}
