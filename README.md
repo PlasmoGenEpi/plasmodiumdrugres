@@ -21,7 +21,7 @@
 
 **nf-core/plasmodiumdrugres** is a bioinformatics pipeline for analyzing drug resistance markers from microhaplotype data. It translates variants into amino acid changes at drug resistance loci and estimates allele frequencies and prevalences at both single-locus and multi-locus levels. Microhaplotype data can be supplied in the form of an allele table or a [PMO](https://plasmogenepi.github.io/PMO_Docs/) file. 
 
-![metro_map](/Users/kmurie/Documents/git_projects/plasmodiumdrugres/assets/plasmodiumdrugres_metromap.svg)
+![metro_map](./assets/plasmodiumdrugres_metromap.svg)
 
 1. Translate loci of interest ([`PGEcore`](https://github.com/PlasmoGenEpi/PGEcore))
 2. Split by population
