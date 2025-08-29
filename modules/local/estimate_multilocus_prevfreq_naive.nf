@@ -19,7 +19,7 @@ process ESTIMATE_ML_PREVFREQ_NAIVE {
     """
     Rscript ${projectDir}/bin/PGEcore/scripts/multilocus_prevfreq_naive/multilocus_prevfreq_naive.R \
         --aa_table $aa_calls \
-        --loci_groups_input $loci_group_table \
+        --loci_groups_input $loci_groups \
         --output_path "${aa_calls.getBaseName(3)}.ml_prevfreq.tsv"
     """
 }

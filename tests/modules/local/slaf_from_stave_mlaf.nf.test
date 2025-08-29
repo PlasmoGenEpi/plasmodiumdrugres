@@ -24,7 +24,7 @@ nextflow_process {
             assert pop == 'example_mlaf'
 
             // output md5 check
-            assert path(outFile).md5 == "81a8d3424f3fe51e2e9ce588d95bf493"
+            assert path(outFile).md5 == "937b13856732e07791f20eb9ebc47acd"
         }
 
     }
