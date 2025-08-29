@@ -8,14 +8,11 @@ process ESTIMATE_ML_PREVFREQ_NAIVE {
 
     label 'process_single'
 
-    def output_filename = "mlafp.tsv"
-
     input:
     path aa_calls
-    path loci_group_table
+    path loci_groups
 
     output:
-    // path "${output_filename}", emit: ml_prevfreq
     tuple val("${aa_calls.getBaseName(3)}"), path("${aa_calls.getBaseName(3)}.ml_prevfreq.tsv"), emit: ml_prevfreq
 
     script:

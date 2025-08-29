@@ -17,6 +17,7 @@ nextflow_process {
         then {
             assert process.success
             assert process.out.slaf != null
+
             // unpack tuple output 
             def (pop, outFile) = process.out.slaf.get(0)
 

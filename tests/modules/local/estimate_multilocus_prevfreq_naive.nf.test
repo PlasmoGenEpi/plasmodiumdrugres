@@ -18,7 +18,7 @@ nextflow_process {
         then {
             assert process.success
             assert process.out.ml_prevfreq != null
-            
+
             // unpack tuple output 
             def (pop, outFile) = process.out.ml_prevfreq.get(0)
 
@@ -44,6 +44,7 @@ nextflow_process {
         then {
             assert process.success
             assert process.out.ml_prevfreq != null
+            
             // unpack tuple output 
             def (pop, outFile) = process.out.ml_prevfreq.get(0)
 
@@ -51,6 +52,7 @@ nextflow_process {
 
             // output md5 check
             assert path(outFile).md5 == "671e9698607534da84e2101cb9ebeb6f"
+
         }
 
     }
