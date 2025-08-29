@@ -1,4 +1,4 @@
 [submodule "bin/PGEcore"]
     path = bin/PGEcore
-    url = git@github.com:PlasmoGenEpi/PGEcore.git
+    url = https://github.com/PlasmoGenEpi/PGEcore.git
     branch = hotfix/use_readr_in_MLBM
