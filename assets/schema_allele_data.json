@@ -11,38 +11,26 @@
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "Specimen ID must be provided and cannot contain spaces.",
-                "meta": [
-                    "id"
-                ]
+                "meta": ["id"]
             },
             "target_id": {
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "Target ID must be provided and cannot contain spaces.",
-                "meta": [
-                    "id"
-                ]
+                "meta": ["id"]
             },
             "seq": {
                 "type": "string",
                 "errorMessage": "Sequence of microhaplotypes must be provided and only contain A,C,T,G.",
                 "pattern": "^[ATCG]+$",
-                "meta": [
-                    "id"
-                ]
+                "meta": ["id"]
             },
             "read_count": {
                 "type": "integer",
                 "errorMessage": "Read count must be an integer, but is optional.",
-                "meta": [
-                    "id"
-                ]
+                "meta": ["id"]
             }
         },
-        "required": [
-            "specimen_id",
-            "target_id",
-            "seq"
-        ]
+        "required": ["specimen_id", "target_id", "seq"]
     }
 }

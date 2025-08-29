@@ -14,7 +14,7 @@
 
 - [IDM](https://doi.org/10.1371/journal.pone.0287161)
 
->  Hashemi M, Schneider KA (2024) Estimating multiplicity of infection, allele frequencies, and prevalences accounting for incomplete data. PLoS ONE 19(3): e0287161.
+> Hashemi M, Schneider KA (2024) Estimating multiplicity of infection, allele frequencies, and prevalences accounting for incomplete data. PLoS ONE 19(3): e0287161.
 
 - [MultiLociBiallelicModel](https://www.frontiersin.org/articles/10.3389/fepid.2022.943625/full)
 
@@ -22,8 +22,7 @@
 
 - [FreqEstimationModel](https://doi.org/10.1186/1475-2875-13-102)
 
-> Taylor, A.R., Flegg, J.A., Nsobya, S.L. et al. Estimation of malaria haplotype and genotype frequencies: a statistical approach to overcome the challenge associated with multiclonal infections. Malar J 13, 102 (2014). 
-
+> Taylor, A.R., Flegg, J.A., Nsobya, S.L. et al. Estimation of malaria haplotype and genotype frequencies: a statistical approach to overcome the challenge associated with multiclonal infections. Malar J 13, 102 (2014).
 
 ## Software packaging/containerisation tools
 

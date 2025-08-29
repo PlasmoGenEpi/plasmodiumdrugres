@@ -18,7 +18,7 @@ nextflow_process {
         then {
             assert process.success
             assert process.out.mlaf != null
-            // unpack tuple output 
+            // unpack tuple output
             def (pop, outFile) = process.out.mlaf.get(0)
 
             assert pop == 'example_amino_acid_calls'

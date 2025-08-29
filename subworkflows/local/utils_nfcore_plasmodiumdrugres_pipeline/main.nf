@@ -50,7 +50,7 @@ workflow PIPELINE_INITIALISATION {
     //
     // Validate parameters and generate parameter summary to stdout
     //
-    // TODO: Update schema with our inputs 
+    // TODO: Update schema with our inputs
     UTILS_NFSCHEMA_PLUGIN (
         workflow,
         validate_params,
@@ -70,24 +70,24 @@ workflow PIPELINE_INITIALISATION {
     validateInputParameters()
 
     //
-    // Create allele table input for pipeline 
+    // Create allele table input for pipeline
     //
-    // TODO: add option to split pmo and then run it in chunks 
-    def ref_type = params.targeted_reference ? "targeted_reference" : 
+    // TODO: add option to split pmo and then run it in chunks
+    def ref_type = params.targeted_reference ? "targeted_reference" :
         params.genome_reference ? "genome_reference" : "none"
     def fasta = params.targeted_reference ?: params.genome_reference ?: ""
     if (params.pmo) {
         EXTRACT_ALLELE_TABLE(params.pmo, params.bioinformatics_id)
         allele_table = EXTRACT_ALLELE_TABLE.out.allele_table
         EXTRACT_BED_FILE_FROM_PMO(params.pmo, ref_type, fasta)
-        panel_info_bed = EXTRACT_BED_FILE_FROM_PMO.out.panel_info_bed 
+        panel_info_bed = EXTRACT_BED_FILE_FROM_PMO.out.panel_info_bed
     } else if (params.allele_table) {
-        allele_table = params.allele_table 
+        allele_table = params.allele_table
         panel_info_bed = params.panel_info_bed
     }
 
     emit:
-    allele_table    = allele_table 
+    allele_table    = allele_table
     panel_info_bed  = panel_info_bed
     versions        = ch_versions
 }
@@ -151,7 +151,7 @@ def validateInputParameters() {
     // Collect validation errors
     def validation_errors = []
     def validation_warnings = []
-    
+
     // Ensure only one of `pmo` or `allele_table` is set
     if (params.pmo && params.allele_table) {
         validation_errors.add("Only one of 'pmo' or 'allele_table' can be set, but not both.")
@@ -175,7 +175,7 @@ def validateInputParameters() {
         validation_errors.add("Missing required parameter: Either '--pmo' or '--allele_table' must be set, but neither were.")
     }
 
-    // Warn if both population_map and population_label is set 
+    // Warn if both population_map and population_label is set
     if ((params.population_map) && (params.population_label!='pop1')) {
         validation_warnings.add("WARNING: both '--population_map' and --'population_label' set. '--population_map' will be used.")
     }

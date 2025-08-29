@@ -19,37 +19,38 @@
 
 ## Introduction
 
-**nf-core/plasmodiumdrugres** is a bioinformatics pipeline for analyzing drug resistance markers from microhaplotype data. It translates variants into amino acid changes at drug resistance loci and estimates allele frequencies and prevalences at both single-locus and multi-locus levels. Microhaplotype data can be supplied in the form of an allele table or a [PMO](https://plasmogenepi.github.io/PMO_Docs/) file. 
+**nf-core/plasmodiumdrugres** is a bioinformatics pipeline for analyzing drug resistance markers from microhaplotype data. It translates variants into amino acid changes at drug resistance loci and estimates allele frequencies and prevalences at both single-locus and multi-locus levels. Microhaplotype data can be supplied in the form of an allele table or a [PMO](https://plasmogenepi.github.io/PMO_Docs/) file.
 
 ![metro_map](./assets/plasmodiumdrugres_metromap.svg)
 
 1. Translate loci of interest ([`PGEcore`](https://github.com/PlasmoGenEpi/PGEcore))
 2. Split by population
 3. Estimate alelle prevalence ([`PGEcore`](https://github.com/PlasmoGenEpi/PGEcore))
-4. Estimate multilocus allele frequency. Choice of method between: 
-    1. [MultiLociBiallelicModel](https://www.frontiersin.org/articles/10.3389/fepid.2022.943625/full) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
-    2. [FreqEstimationModel](https://doi.org/10.1186/1475-2875-13-102) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
-5. Estimate single locus allele frequency. Choice of method between: 
-    1. [Incomplete data model (IDM)](https://doi.org/10.1371/journal.pone.0287161) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
-    2. [Naive `PGEcore` method]((https://github.com/PlasmoGenEpi/PGEcore))
-    3. [`PGEcore` from multi-locus estimates]((https://github.com/PlasmoGenEpi/PGEcore))
-6. Merge prevalence and frequency outputs 
-7. Concatenate population outputs 
+4. Estimate multilocus allele frequency. Choice of method between:
+   1. [MultiLociBiallelicModel](https://www.frontiersin.org/articles/10.3389/fepid.2022.943625/full) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
+   2. [FreqEstimationModel](https://doi.org/10.1186/1475-2875-13-102) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
+5. Estimate single locus allele frequency. Choice of method between:
+   1. [Incomplete data model (IDM)](https://doi.org/10.1371/journal.pone.0287161) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
+   2. [Naive `PGEcore` method](<(https://github.com/PlasmoGenEpi/PGEcore)>)
+   3. [`PGEcore` from multi-locus estimates](<(https://github.com/PlasmoGenEpi/PGEcore)>)
+6. Merge prevalence and frequency outputs
+7. Concatenate population outputs
 
 ## Usage
 
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-The most simple way to run this pipeline is by using a [Portable Microhaplotype Object (PMO)](https://plasmogenepi.github.io/PMO_Docs/) file. To maximize flexibility, the pipeline also allows users to provide a PMO with reference sequences separately, or to supply an allele table with panel information in a separate file. 
+The most simple way to run this pipeline is by using a [Portable Microhaplotype Object (PMO)](https://plasmogenepi.github.io/PMO_Docs/) file. To maximize flexibility, the pipeline also allows users to provide a PMO with reference sequences separately, or to supply an allele table with panel information in a separate file.
 
-For either option, you will first need to prepare two required inputs: [loci of interest](#loci-of-interest) and [loci groups](#loci-groups). 
+For either option, you will first need to prepare two required inputs: [loci of interest](#loci-of-interest) and [loci groups](#loci-groups).
 
 ### Loci of interest
 
-You will need to create a file defining the loci that you are interested in. 
+You will need to create a file defining the loci that you are interested in.
 
-**loci_of_interest.bed** 
+**loci_of_interest.bed**
+
 ```bed
 #chrom  start end name  length  strand  gene  aa_position gene_id
 Pf3D7_04_v3 748237  748240  PF3D7_0417200.1-AA51  3 + dhfr-ts 51  PF3D7_0417200.1
@@ -62,11 +63,12 @@ Pf3D7_05_v3 961624  961627  PF3D7_0523000.1-AA1246  3 + mdr1  1246  PF3D7_052300
 Pf3D7_07_v3 403623  403626  PF3D7_0709000.1-AA76  3 + crt 76  PF3D7_0709000.1
 ```
 
-### Loci groups 
+### Loci groups
 
-You will also need to define groups of loci you would like to estimate multi-locus allele frequencies for. 
+You will also need to define groups of loci you would like to estimate multi-locus allele frequencies for.
 
 **loci_groups.tsv**
+
 ```tsv
 group_id  gene_id aa_position
 crt PF3D7_0709000.1 76
@@ -80,20 +82,22 @@ pfdhfr_pfdhps PF3D7_0417200.1 108
 pfdhfr_pfdhps PF3D7_0417200.1 164
 ```
 
-Decide if you will be running the pipeline from a [PMO file](#pmo-inputs) or an [allele table](#allele-table-inputs) as other required inputs will depend on this. 
+Decide if you will be running the pipeline from a [PMO file](#pmo-inputs) or an [allele table](#allele-table-inputs) as other required inputs will depend on this.
 
-### Allele Table Inputs 
+### Allele Table Inputs
 
-When running with an allele table you should create the following inputs: 
-* [allele table](#allele-table)
-* [panel info bed file](#panel-info)
-* [population map (optional)](#population-map-optional)
+When running with an allele table you should create the following inputs:
+
+- [allele table](#allele-table)
+- [panel info bed file](#panel-info)
+- [population map (optional)](#population-map-optional)
 
 #### Allele Table
 
-First, prepare an allele table with the following columns: `specimen_id`, `target_id`, `seq`, and optionally `read_count`. Each row represents a microhaplotype called for a specimen at a specific target. 
+First, prepare an allele table with the following columns: `specimen_id`, `target_id`, `seq`, and optionally `read_count`. Each row represents a microhaplotype called for a specimen at a specific target.
 
 **allele_table.tsv**
+
 ```tsv
 specimen_id  target_id  seq read_count
 specimen_1  target1 TTATTTTTTTTGTCAATAGATAAATGATCAATATTTTCTATATTTAATCTATCAAGTATTTTTATATATCTATTATTTCTTTCTTCGATGGAT 93
@@ -104,16 +108,19 @@ specimen_3  target1 AATAAAGAAGAAGATAAATATGGAAAAAATGAAAAAAACGAAAAATATGACAAATATGAC
 ```
 
 #### Panel Info
-Next, prepare a panel info bed file with the following columns: 
-* `#chrom` the chromosome of the targeted region the microhaplotype is being called for
-* `start` the start position of the targeted region the microhaplotype is being called for 
-* `end` the end position of the targeted region the microhaplotype is being called for 
-* `target_id` the identifier of the target. This should match the target_id in the allele table
-* `length` the length of the targeted region the microhaplotype is being called for  
-* `strand` (+ or -) 
-* `ref_seq` the reference sequence for the targeted region the microhaplotype is being called for
+
+Next, prepare a panel info bed file with the following columns:
+
+- `#chrom` the chromosome of the targeted region the microhaplotype is being called for
+- `start` the start position of the targeted region the microhaplotype is being called for
+- `end` the end position of the targeted region the microhaplotype is being called for
+- `target_id` the identifier of the target. This should match the target_id in the allele table
+- `length` the length of the targeted region the microhaplotype is being called for
+- `strand` (+ or -)
+- `ref_seq` the reference sequence for the targeted region the microhaplotype is being called for
 
 **panel_info.bed**
+
 ```bed
 #chrom  start   end     target_id       length  strand  ref_seq
 Pf3D7_01_v3     145421  145629  Pf3D7_01_v3-145388-145662-1A    208     +       GATATGTTTAAATATATGATTCTCGAAAAAACTTTTTTTATTTTTTTTGTCAATAGATAAATGATCAATATTTTCTATATTTAATCTATCAAGTATTTTTATATATCTATTATTTCTTTCTTCGATGGATAAATTATAAGAATCAATATCCTTTCTTTCATCAACAAACTTTTTTATTGTTAACTCCATTTTTTTATTTAAGATACCA
@@ -124,10 +131,10 @@ Pf3D7_01_v3     455827  456020  Pf3D7_01_v3-455794-456054-1A    193     +       
 
 #### Population Map (optional)
 
-If you would like to estimate prevalences and frequencies for several populations you need to provide a population map which assigns specimens to individual populations. The file only contains two columns `specimen_id` which should match the unique specimen_ids in the allele table, and `population` which contains identifiers for populations. The population identifier will be included in output tables. 
-
+If you would like to estimate prevalences and frequencies for several populations you need to provide a population map which assigns specimens to individual populations. The file only contains two columns `specimen_id` which should match the unique specimen_ids in the allele table, and `population` which contains identifiers for populations. The population identifier will be included in output tables.
 
 **population_map.tsv**
+
 ```tsv
 specimen_id population
 specimen_1  pop1
@@ -135,23 +142,22 @@ specimen_2  pop2
 specimen_3  pop2
 ```
 
-### PMO Inputs 
+### PMO Inputs
 
-Generate a PMO file using [this documentation](https://plasmogenepi.github.io/PMO_Docs/). If you include reference sequences in your PMO then this is all you need. If you don't then you should provide a reference with either `--genome_reference` or `--targeted_reference`. `--genome_reference` can be a fasta file including a full genome. `--targeted_reference` is a fasta file where sequence names match up with target_ids.  
+Generate a PMO file using [this documentation](https://plasmogenepi.github.io/PMO_Docs/). If you include reference sequences in your PMO then this is all you need. If you don't then you should provide a reference with either `--genome_reference` or `--targeted_reference`. `--genome_reference` can be a fasta file including a full genome. `--targeted_reference` is a fasta file where sequence names match up with target_ids.
 
+## Running the pipeline
 
-## Running the pipeline 
+### Running from an allele table
 
-### Running from an allele table 
-
-Now you can run the pipeline like this  
+Now you can run the pipeline like this
 
 ```bash
 nextflow run nf-core/plasmodiumdrugres \
    -profile <docker/singularity/.../institute> \
    --allele_table allele_table.tsv \
    --panel_info_bed panel_info.bed \
-   --loci_of_interest_bed loci_of_interest.bed \ 
+   --loci_of_interest_bed loci_of_interest.bed \
    --loci_groups loci_groups.tsv \
    --outdir <OUTDIR>
 ```
@@ -163,47 +169,47 @@ nextflow run nf-core/plasmodiumdrugres \
    -profile <docker/singularity/.../institute> \
    --allele_table allele_table.tsv \
    --panel_info_bed panel_info.bed \
-   --loci_of_interest_bed loci_of_interest.bed \ 
+   --loci_of_interest_bed loci_of_interest.bed \
    --loci_groups loci_groups.tsv \
    --population_map population_map.tsv
    --outdir <OUTDIR>
 ```
 
-### Running from a PMO file 
+### Running from a PMO file
 
-Now you can run the pipeline like this  
+Now you can run the pipeline like this
 
 ```bash
 nextflow run nf-core/plasmodiumdrugres \
    -profile <docker/singularity/.../institute> \
    --pmo input_file.pmo \
    --bioinformatics_id bioinfo_run1 \
-   --loci_of_interest_bed loci_of_interest.bed \ 
+   --loci_of_interest_bed loci_of_interest.bed \
    --loci_groups loci_groups.tsv \
    --outdir <OUTDIR>
 ```
 
-If you are supplying a reference the add the `--genome_reference` flag. 
+If you are supplying a reference the add the `--genome_reference` flag.
 
 ```bash
 nextflow run nf-core/plasmodiumdrugres \
    -profile <docker/singularity/.../institute> \
    --pmo input_file.pmo \
    --bioinformatics_id bioinfo_run1 \
-   --loci_of_interest_bed loci_of_interest.bed \ 
+   --loci_of_interest_bed loci_of_interest.bed \
    --loci_groups loci_groups.tsv \
    --genome_reference genome_reference.fasta
    --outdir <OUTDIR>
 ```
 
-If you are supplying a targeted reference the add the `--targeted_reference` flag. 
+If you are supplying a targeted reference the add the `--targeted_reference` flag.
 
 ```bash
 nextflow run nf-core/plasmodiumdrugres \
    -profile <docker/singularity/.../institute> \
    --pmo input_file.pmo \
    --bioinformatics_id bioinfo_run1 \
-   --loci_of_interest_bed loci_of_interest.bed \ 
+   --loci_of_interest_bed loci_of_interest.bed \
    --loci_groups loci_groups.tsv \
    --targeted_reference genome_reference.fasta
    --outdir <OUTDIR>
@@ -225,13 +231,13 @@ For more details about the output files and reports, please refer to the
 nf-core/plasmodiumdrugres was originally written by PlasmoGenEpi.
 
 We specifically thank the following people for their extensive assistance in the development of this pipeline:
-* Kathryn Murie 
-* Nicholas Hathaway 
-* Alfred Hubbard 
-* Jorge Amaya-Romero 
 
-A special thanks to everyone in the community who contributes to PGEcore and continues to do so. 
+- Kathryn Murie
+- Nicholas Hathaway
+- Alfred Hubbard
+- Jorge Amaya-Romero
 
+A special thanks to everyone in the community who contributes to PGEcore and continues to do so.
 
 ## Contributions and Support
 

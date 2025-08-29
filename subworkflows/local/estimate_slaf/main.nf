@@ -8,7 +8,7 @@ include { ESTIMATE_ALLELE_FREQUENCY_NAIVE } from '../../../modules/local/estimat
 
 workflow ESTIMATE_SLAF {
 
-    take: 
+    take:
     method
     method_input
 

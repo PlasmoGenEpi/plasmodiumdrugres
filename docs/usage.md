@@ -6,12 +6,13 @@
 
 ## Introduction
 
-**nf-core/plasmodiumdrugres** is a bioinformatics pipeline for analyzing drug resistance markers from microhaplotype data. It translates variants into amino acid changes at drug resistance loci and estimates allele frequencies and prevalences at both single-locus and multi-locus levels. Microhaplotype data can be supplied in the form of an allele table or a [PMO](https://plasmogenepi.github.io/PMO_Docs/) file. 
+**nf-core/plasmodiumdrugres** is a bioinformatics pipeline for analyzing drug resistance markers from microhaplotype data. It translates variants into amino acid changes at drug resistance loci and estimates allele frequencies and prevalences at both single-locus and multi-locus levels. Microhaplotype data can be supplied in the form of an allele table or a [PMO](https://plasmogenepi.github.io/PMO_Docs/) file.
 
-Key words 
-* population
-* locus 
-* multi-locus 
+Key words
+
+- population
+- locus
+- multi-locus
 
 ## Loci of Interest Input
 
@@ -21,7 +22,7 @@ You will need to create a bed file including the locations of the loci that you 
 --loci_of_interest_bed '[path to loci of interest file]'
 ```
 
-### Full loci of interest bed file 
+### Full loci of interest bed file
 
 This file will be used to call amino acids from your data and caluclate frequencies and prevalences for the single loci. You can include as many single loci as you like, however the pipeline will fail if a locus is completely missing from the input data for a population.
 
@@ -45,21 +46,21 @@ Pf3D7_08_v3 550115  550118  PF3D7_0810800.1-AA581 3 + dhps  581 PF3D7_0810800.1
 Pf3D7_08_v3 550211  550214  PF3D7_0810800.1-AA613 3 + dhps  613 PF3D7_0810800.1
 ```
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `#chrom`  | Chromosome that the locus is found on. You may have multiple loci with the same #chrom. This should match with the reference information. |
-| `start` | Genomic start position of the locus (0-based).                                                             |
-| `end` | Genomic end position of the locus (0-based).                                                             |
-| `name` | Unique identifier for the locus.                                       |
-| `length` | Length in base pairs. (e.g. 3 for a standard codon)                                                     |
-| `strand` | Strand orientation (+ or -) relative to the reference genome.                                                           |
-| `gene` | Short gene name or symbol (e.g., dhfr-ts, mdr1, crt).                                                             |
-| `gene_id` | Full PlasmoDB gene model identifier (e.g., PF3D7_0417200.1).                                                            |
-| `aa_position` | Amino acid position within the protein where the codon is located.                                                             |
+| Column        | Description                                                                                                                               |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `#chrom`      | Chromosome that the locus is found on. You may have multiple loci with the same #chrom. This should match with the reference information. |
+| `start`       | Genomic start position of the locus (0-based).                                                                                            |
+| `end`         | Genomic end position of the locus (0-based).                                                                                              |
+| `name`        | Unique identifier for the locus.                                                                                                          |
+| `length`      | Length in base pairs. (e.g. 3 for a standard codon)                                                                                       |
+| `strand`      | Strand orientation (+ or -) relative to the reference genome.                                                                             |
+| `gene`        | Short gene name or symbol (e.g., dhfr-ts, mdr1, crt).                                                                                     |
+| `gene_id`     | Full PlasmoDB gene model identifier (e.g., PF3D7_0417200.1).                                                                              |
+| `aa_position` | Amino acid position within the protein where the codon is located.                                                                        |
 
-An [example loci of interest bed file](../assets/loci_of_interest.bed) has been provided with the pipeline. It provides an extensive set of loci for *Plasmodium falciparum*, so you can simply filter for the loci relevant to your work rather than starting from scratch. If you identify a locus that should be added, [please let us know](Contributions and Support).
+An [example loci of interest bed file](../assets/loci_of_interest.bed) has been provided with the pipeline. It provides an extensive set of loci for _Plasmodium falciparum_, so you can simply filter for the loci relevant to your work rather than starting from scratch. If you identify a locus that should be added, [please let us know](Contributions and Support).
 
-## Loci groups 
+## Loci groups
 
 Before running the pipeline, you will need to create a BED file that defines the groups of loci for which you want to generate multi-locus estimates. It has to be a tab-separated file with 3 columns, and a header row as shown in the examples below.
 
@@ -67,7 +68,7 @@ Before running the pipeline, you will need to create a BED file that defines the
 --loci_groups '[path to loci groups file]'
 ```
 
-### Full loci groups file 
+### Full loci groups file
 
 This file specifies which loci from the loci of interest file should be grouped together for generating multi-locus estimates. You can include as many groups as you like, however some tools are limitted as to how many loci you can put in one group. Any gene_id, position combination listed in this file should also be defined in the locus of interest table.
 
@@ -80,7 +81,7 @@ crt PF3D7_0709000.1 97
 mdr1  PF3D7_0523000.1 86
 mdr1  PF3D7_0523000.1 184
 mdr1  PF3D7_0523000.1 1246
-pfdhfr_pfdhps PF3D7_0417200.1 51      
+pfdhfr_pfdhps PF3D7_0417200.1 51
 pfdhfr_pfdhps PF3D7_0417200.1 59
 pfdhfr_pfdhps PF3D7_0417200.1 108
 pfdhfr_pfdhps PF3D7_0417200.1 164
@@ -91,45 +92,46 @@ pfdhfr_pfdhps PF3D7_0810800.1 581
 pfdhfr_pfdhps PF3D7_0810800.1 613
 ```
 
-Pf3D7_04_v3 748237  748240  PF3D7_0417200.1-AA51  3 + dhfr-ts 51  PF3D7_0417200.1
-Pf3D7_04_v3 748261  748264  PF3D7_0417200.1-AA59  3 + dhfr-ts 59  PF3D7_0417200.1
-Pf3D7_04_v3 748408  748411  PF3D7_0417200.1-AA108 3 + dhfr-ts 108 PF3D7_0417200.1
-Pf3D7_04_v3 748576  748579  PF3D7_0417200.1-AA164 3 + dhfr-ts 164 PF3D7_0417200.1
-Pf3D7_05_v3 958144  958147  PF3D7_0523000.1-AA86  3 + mdr1  86  PF3D7_0523000.1
-Pf3D7_05_v3 958438  958441  PF3D7_0523000.1-AA184 3 + mdr1  184 PF3D7_0523000.1
-Pf3D7_05_v3 961624  961627  PF3D7_0523000.1-AA1246  3 + mdr1  1246  PF3D7_0523000.1
-Pf3D7_07_v3 403623  403626  PF3D7_0709000.1-AA76  3 + crt 76  PF3D7_0709000.1
+Pf3D7_04_v3 748237 748240 PF3D7_0417200.1-AA51 3 + dhfr-ts 51 PF3D7_0417200.1
+Pf3D7_04_v3 748261 748264 PF3D7_0417200.1-AA59 3 + dhfr-ts 59 PF3D7_0417200.1
+Pf3D7_04_v3 748408 748411 PF3D7_0417200.1-AA108 3 + dhfr-ts 108 PF3D7_0417200.1
+Pf3D7_04_v3 748576 748579 PF3D7_0417200.1-AA164 3 + dhfr-ts 164 PF3D7_0417200.1
+Pf3D7_05_v3 958144 958147 PF3D7_0523000.1-AA86 3 + mdr1 86 PF3D7_0523000.1
+Pf3D7_05_v3 958438 958441 PF3D7_0523000.1-AA184 3 + mdr1 184 PF3D7_0523000.1
+Pf3D7_05_v3 961624 961627 PF3D7_0523000.1-AA1246 3 + mdr1 1246 PF3D7_0523000.1
+Pf3D7_07_v3 403623 403626 PF3D7_0709000.1-AA76 3 + crt 76 PF3D7_0709000.1
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `group_id`  | Unique identifier for the group of loci. |
-| `gene_id` | Full PlasmoDB gene model identifier (e.g., PF3D7_0417200.1).                                                             |
-| `aa_position` | Amino acid position within the protein where the codon is located.                                                           |
+| Column        | Description                                                        |
+| ------------- | ------------------------------------------------------------------ |
+| `group_id`    | Unique identifier for the group of loci.                           |
+| `gene_id`     | Full PlasmoDB gene model identifier (e.g., PF3D7_0417200.1).       |
+| `aa_position` | Amino acid position within the protein where the codon is located. |
 
-## Input file 
+## Input file
 
-Decide if you will be running the pipeline from a [PMO file](#pmo-inputs) or an [allele table](#allele-table-inputs) as other required inputs will depend on this. The most simple way to run this pipeline is by using a [Portable Microhaplotype Object (PMO)](https://plasmogenepi.github.io/PMO_Docs/) file. To maximize flexibility, the pipeline also allows users to provide a PMO with reference sequences separately, or to supply an allele table with panel information in a separate file. 
+Decide if you will be running the pipeline from a [PMO file](#pmo-inputs) or an [allele table](#allele-table-inputs) as other required inputs will depend on this. The most simple way to run this pipeline is by using a [Portable Microhaplotype Object (PMO)](https://plasmogenepi.github.io/PMO_Docs/) file. To maximize flexibility, the pipeline also allows users to provide a PMO with reference sequences separately, or to supply an allele table with panel information in a separate file.
 
-### PMO Inputs 
+### PMO Inputs
 
-Generate a PMO file using [this documentation](https://plasmogenepi.github.io/PMO_Docs/). If you include reference sequences in your PMO then this is all you need. If you don't then you should provide a reference with either `--genome_reference` or `--targeted_reference`. `--genome_reference` can be a fasta file including a full genome. `--targeted_reference` is a fasta file where sequence names match up with target_ids.  
+Generate a PMO file using [this documentation](https://plasmogenepi.github.io/PMO_Docs/). If you include reference sequences in your PMO then this is all you need. If you don't then you should provide a reference with either `--genome_reference` or `--targeted_reference`. `--genome_reference` can be a fasta file including a full genome. `--targeted_reference` is a fasta file where sequence names match up with target_ids.
 
-### Allele Table Inputs 
+### Allele Table Inputs
 
-When running with an allele table you should create the following inputs: 
-* [allele table](#allele-table)
-* [panel info bed file](#panel-info)
-* [population map (optional)](#population-map-optional)
+When running with an allele table you should create the following inputs:
+
+- [allele table](#allele-table)
+- [panel info bed file](#panel-info)
+- [population map (optional)](#population-map-optional)
 
 #### Allele Table
 
-You will need to create an allele table file that includes your genomic data. It has to be a tab-separated file with 3 columns, and a header row as shown in the examples below. You can optionally include a 4th column. 
+You will need to create an allele table file that includes your genomic data. It has to be a tab-separated file with 3 columns, and a header row as shown in the examples below. You can optionally include a 4th column.
 
 ```bash
 --allele_table '[path to allele table file]'
 ```
 
-##### Full allele table 
+##### Full allele table
 
 A final allele table may look something like the one below. In this example, three groups are defined: crt, mdr1, and pfdhfr_pfdhps, containing 2, 3, and 4 loci, respectively.
 
@@ -142,22 +144,22 @@ specimen_2  target1 AATAAAGAAGAAGATAAATATGGAAAAAATGAAAAAAACGAAAAATATGACAAATATGAC
 specimen_3  target1 AATAAAGAAGAAGATAAATATGGAAAAAATGAAAAAAACGAAAAATATGACAAATATGACAAATATGAAAAATATGATAAATACAAAAAAGAT 650
 ```
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `specimen_id`  | Unique identifier for the specimen or sample from which the sequence was obtained. |
-| `target_id` | Identifier for the genomic region being sequenced.                                                        |
-| `seq` | Observed nucleotide sequence (microhaplotype) aligned to the target region.                                                         |
-| `read_count` | Number of sequencing reads supporting the given sequence in that specimen, representing its abundance. (Optional)                                                      |
+| Column        | Description                                                                                                       |
+| ------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `specimen_id` | Unique identifier for the specimen or sample from which the sequence was obtained.                                |
+| `target_id`   | Identifier for the genomic region being sequenced.                                                                |
+| `seq`         | Observed nucleotide sequence (microhaplotype) aligned to the target region.                                       |
+| `read_count`  | Number of sequencing reads supporting the given sequence in that specimen, representing its abundance. (Optional) |
 
 #### Panel Info
 
-Next, prepare a panel info bed file. This will define the locations of the targets in the `target_id` column in the allele table. It has to be a tab-separated file with 7 columns. 
+Next, prepare a panel info bed file. This will define the locations of the targets in the `target_id` column in the allele table. It has to be a tab-separated file with 7 columns.
 
 ```bash
 --panel_info_bed '[path to panel info file]'
 ```
 
-##### Full panel info bed file 
+##### Full panel info bed file
 
 A final panel info bed file may look something like the one below.
 
@@ -167,19 +169,19 @@ Pf3D7_01_v3     145421  145629  target1    208     +       GATATGTTTAAATATATGATT
 Pf3D7_01_v3     162889  163091  target2   202     +       ATATACCAATAATACTTTTTTTTTTAAATAATGTAAAAAATGATTTATATAATTGTTATAAACAAATGATCACATATCATAATAATAATATCCTAAATCATAACTCTAATATTTTATCAAAAGAAAATGAAAAAAAACAACCTTTTTCAACATATAATATATCAAATCTTTGTTCTCCTGACCAAATGGTGATAAATAAAAA
 ```
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `#chrom`  | Chromosome that the target is found on. You may have multiple targets with the same #chrom. This should match with the reference information. |
-| `start` | Genomic start position of the target (0-based).                                              |
-| `end` | Genomic end position of the target (0-based).                                                 |
-| `target_id` | Identifier for the genomic region being sequenced.                                       |
-| `length` | Length in base pairs.                           |
-| `strand` | Strand orientation (+ or -) relative to the reference genome.                                                 |
-| `ref_seq` | reference sequence for the target (optional if genome_reference or targeted reference supplied)                                                 |
+| Column      | Description                                                                                                                                   |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `#chrom`    | Chromosome that the target is found on. You may have multiple targets with the same #chrom. This should match with the reference information. |
+| `start`     | Genomic start position of the target (0-based).                                                                                               |
+| `end`       | Genomic end position of the target (0-based).                                                                                                 |
+| `target_id` | Identifier for the genomic region being sequenced.                                                                                            |
+| `length`    | Length in base pairs.                                                                                                                         |
+| `strand`    | Strand orientation (+ or -) relative to the reference genome.                                                                                 |
+| `ref_seq`   | reference sequence for the target (optional if genome_reference or targeted reference supplied)                                               |
 
 #### Population Map (optional)
 
-If you would like to estimate prevalences and frequencies for several populations you need to provide a population map which assigns specimens to individual populations. The file only contains two columns `specimen_id` which should match the unique specimen_ids in the allele table, and `population` which contains identifiers for populations. The population identifier will be included in output tables. 
+If you would like to estimate prevalences and frequencies for several populations you need to provide a population map which assigns specimens to individual populations. The file only contains two columns `specimen_id` which should match the unique specimen_ids in the allele table, and `population` which contains identifiers for populations. The population identifier will be included in output tables.
 
 ```bash
 --population_map '[path to population map file]'
@@ -196,14 +198,14 @@ specimen_2  pop2
 specimen_3  pop2
 ```
 
-## Other params 
+## Other params
 
-* `--bioinformatics_id` - Required when input is `--pmo`. Bioinformatics id of microhaplotypes within the PMO file. 
-* `--population_label` - If running one population used to label the dataset. (Default: pop1)
-* `--translate_loci_extra_args` - Extra arguments when translating loci of interest. [See documentation here](https://github.com/PlasmoGenEpi/PGEcore/tree/develop/scripts/translate_loci_of_interest). 
-* `--slaf_method` - chosen method to estimate single locus allele frequencies (Default: IDM Options: ["IDM","naive","from_mlaf"])
-* `--mlaf_method` - chosen method to estimate multi-locus allele frequencies (Default: MLBM Options: ["MLBM","FEM"])
-* `--naive_slaf_method` - Chosen naive method when running `--slaf_method naive`. (Default:read_count_prop,  Options: ["read_count_prop", "presence_absence])
+- `--bioinformatics_id` - Required when input is `--pmo`. Bioinformatics id of microhaplotypes within the PMO file.
+- `--population_label` - If running one population used to label the dataset. (Default: pop1)
+- `--translate_loci_extra_args` - Extra arguments when translating loci of interest. [See documentation here](https://github.com/PlasmoGenEpi/PGEcore/tree/develop/scripts/translate_loci_of_interest).
+- `--slaf_method` - chosen method to estimate single locus allele frequencies (Default: IDM Options: ["IDM","naive","from_mlaf"])
+- `--mlaf_method` - chosen method to estimate multi-locus allele frequencies (Default: MLBM Options: ["MLBM","FEM"])
+- `--naive_slaf_method` - Chosen naive method when running `--slaf_method naive`. (Default:read_count_prop, Options: ["read_count_prop", "presence_absence])
 
 ## Running the pipeline
 
@@ -213,19 +215,19 @@ The typical command for running the pipeline from a PMO file is as follows:
 nextflow run nf-core/plasmodiumdrugres --pmo input_file.pmo --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --bioinformatics_id bioinfo_run1 --outdir ./results -profile docker
 ```
 
-If you are supplying a reference the add the `--genome_reference` flag. 
+If you are supplying a reference the add the `--genome_reference` flag.
 
 ```bash
 nextflow run nf-core/plasmodiumdrugres --pmo input_file.pmo --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --bioinformatics_id bioinfo_run1 --genome_reference genome_reference.fasta --outdir ./results -profile docker
 ```
 
-If you are supplying a targeted reference the add the `--targeted_reference` flag. 
+If you are supplying a targeted reference the add the `--targeted_reference` flag.
 
 ```bash
 nextflow run nf-core/plasmodiumdrugres --pmo input_file.pmo --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --bioinformatics_id bioinfo_run1  --targeted_reference genome_reference.fasta --outdir ./results -profile docker
 ```
 
-If you are running from an allele table you can run the pipeline like this: 
+If you are running from an allele table you can run the pipeline like this:
 
 ```bash
 nextflow run nf-core/plasmodiumdrugres --allele_table allele_table.tsv --panel_info_bed panel_info.bed --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --outdir ./results -profile docker

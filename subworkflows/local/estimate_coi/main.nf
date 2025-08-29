@@ -8,7 +8,7 @@ include { ESTIMATE_COI_NAIVE } from '../../../modules/local/estimate_coi_naive'
 
 workflow ESTIMATE_COI {
 
-    take: 
+    take:
     method
     allele_table
 

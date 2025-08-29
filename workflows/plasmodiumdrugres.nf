@@ -24,7 +24,7 @@ include { CONCAT_TABLES } from '../modules/local/concat_tables'
 workflow PLASMODIUMDRUGRES {
     take:
     allele_table
-    panel_info_bed_with_ref 
+    panel_info_bed_with_ref
     loci_of_interest_bed
     translate_loci_extra_args
     mlaf_method
@@ -34,8 +34,8 @@ workflow PLASMODIUMDRUGRES {
     main:
 
     TRANSLATE_LOCI_OF_INTEREST(allele_table, panel_info_bed_with_ref, loci_of_interest_bed, translate_loci_extra_args)
-    
-    // split allele table 
+
+    // split allele table
     if (params.population_map) {
         SPLIT_AA_TABLE_BY_POP(TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls, params.population_map)
         aa_table_ch = (SPLIT_AA_TABLE_BY_POP.out.per_pop_tables).flatten()
@@ -46,10 +46,10 @@ workflow PLASMODIUMDRUGRES {
     // Estimate Single Locus Allele Prevalence
     ESTIMATE_ALLELE_PREVALENCE_NAIVE(aa_table_ch)
 
-    // Estimate Multi Loci Allele Frequency 
+    // Estimate Multi Loci Allele Frequency
     ESTIMATE_MLAF(mlaf_method, aa_table_ch, loci_groups)
 
-    // Estimate Single Locus Allele Frequency 
+    // Estimate Single Locus Allele Frequency
     if (slaf_method == 'from_mlaf') {
         ESTIMATE_SLAF(slaf_method,  ESTIMATE_MLAF.out.mlaf_output.map { it[1] })
     } else {
@@ -59,9 +59,9 @@ workflow PLASMODIUMDRUGRES {
     // Create tuple of output files by population
     all_outputs = ESTIMATE_ALLELE_PREVALENCE_NAIVE.out.allele_prevalence.mix(ESTIMATE_MLAF.out.mlaf_output, ESTIMATE_SLAF.out.slaf_output)
     outputs_per_population = all_outputs.groupTuple()
-    
+
     // OUTPUT
-    // TODO: sort out mlaf and the prevelances 
+    // TODO: sort out mlaf and the prevelances
     if (params.population_map) {
         MERGE_TABLES(outputs_per_population)
     } else {
@@ -71,7 +71,7 @@ workflow PLASMODIUMDRUGRES {
         }
         MERGE_TABLES(updated_ch)
     }
-    
+
     all_sl_summary_ch = MERGE_TABLES.out.sl_summary.collect()
     all_ml_summary_ch = MERGE_TABLES.out.ml_summary.collect()
 

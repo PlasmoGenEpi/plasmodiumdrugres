@@ -20,8 +20,8 @@ nextflow_process {
             assert process.success
             // channel exists
             assert process.out.slaf != null
-            
-            // unpack tuple output 
+
+            // unpack tuple output
             def (pop, outFile) = process.out.slaf.get(0)
 
             assert pop == 'example_amino_acid_calls'
@@ -47,8 +47,8 @@ nextflow_process {
             assert process.success
             // channel exists
             assert process.out.slaf != null
-           
-            // unpack tuple output 
+
+            // unpack tuple output
             def (pop, outFile) = process.out.slaf.get(0)
 
             assert pop == 'example_amino_acid_calls'

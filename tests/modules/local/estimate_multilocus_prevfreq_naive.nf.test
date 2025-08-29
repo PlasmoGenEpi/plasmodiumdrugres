@@ -19,7 +19,7 @@ nextflow_process {
             assert process.success
             assert process.out.ml_prevfreq != null
 
-            // unpack tuple output 
+            // unpack tuple output
             def (pop, outFile) = process.out.ml_prevfreq.get(0)
 
             assert pop == 'example2_amino_acid_calls'
@@ -44,8 +44,8 @@ nextflow_process {
         then {
             assert process.success
             assert process.out.ml_prevfreq != null
-            
-            // unpack tuple output 
+
+            // unpack tuple output
             def (pop, outFile) = process.out.ml_prevfreq.get(0)
 
             assert pop == 'example_amino_acid_calls'

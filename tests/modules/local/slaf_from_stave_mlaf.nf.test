@@ -18,7 +18,7 @@ nextflow_process {
             assert process.success
             assert process.out.slaf != null
 
-            // unpack tuple output 
+            // unpack tuple output
             def (pop, outFile) = process.out.slaf.get(0)
 
             assert pop == 'example_mlaf'

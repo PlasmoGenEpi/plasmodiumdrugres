@@ -3,7 +3,7 @@
  * Run the FreqEstimationModel (FEM) wrapper script
  */
 
-// TODO: handle coi 
+// TODO: handle coi
 process FEM_WRAPPER {
 
     label 'process_single'

@@ -1,10 +1,10 @@
 /*
  * STEP - CONCAT_TABLES
- * concatenate output tables 
+ * concatenate output tables
  */
- 
- process CONCAT_TABLES {
-    
+
+process CONCAT_TABLES {
+
     label 'process_single'
 
     input:
@@ -16,7 +16,7 @@
     path "ml_summary.tsv", emit: ml_summary
 
     publishDir "${params.outdir}", mode: 'copy', overwrite: true
-    
+
     script:
     """
     # Concatenate SL summaries

@@ -7,7 +7,8 @@ include { ADD_REF_SEQS_WITH_TARGETED_REF_FASTA } from '../../../modules/local/ad
 include { ADD_REF_SEQS_WITH_FULL_GENOME_REF_FASTA } from '../../../modules/local/add_ref_seqs_with_full_genome_ref_fasta'
 
 workflow EXTRACT_BED_FILE_FROM_PMO {
-    take: 
+
+    take:
     pmo
     ref_type
     fasta

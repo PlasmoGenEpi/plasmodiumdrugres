@@ -8,11 +8,11 @@ process IDM_WRAPPER {
     label 'process_single'
 
     input:
-    path aa_calls_input 
+    path aa_calls_input
 
     output:
     tuple val("${aa_calls_input.getBaseName(3)}"), path("${aa_calls_input.getBaseName(3)}.aa_slaf.tsv"), emit: slaf
-    
+
     script:
     """
     Rscript ${projectDir}/bin/PGEcore/scripts/IDM_wrapper/IDM_wrapper.R \\

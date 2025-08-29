@@ -21,7 +21,7 @@ nextflow_process {
             // channel exists
             assert process.out.sl_summary != null
             assert process.out.ml_summary != null
-            
+
             // output md5 check
             assert path(process.out.sl_summary.get(0)).md5 == "0130574a9fc4986b4c171d706e8bd86a"
             assert path(process.out.ml_summary.get(0)).md5 == "a638db7e1d4b8deab2f19bf61513e921"
@@ -46,7 +46,7 @@ nextflow_process {
             // channel exists
             assert process.out.sl_summary != null
             assert process.out.ml_summary != null
-            
+
             // output md5 check
             assert path(process.out.sl_summary.get(0)).md5 == "f03de9dcd849de7031fbc1758dfeb0ce"
             assert path(process.out.ml_summary.get(0)).md5 == "e470163280e0becd30b301ca7ea220de"

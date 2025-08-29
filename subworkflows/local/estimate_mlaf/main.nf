@@ -8,13 +8,13 @@ include { ESTIMATE_ML_PREVFREQ_NAIVE } from '../../../modules/local/estimate_mul
 
 workflow ESTIMATE_MLAF {
 
-    take: 
+    take:
     method
     amino_acid_calls
     loci_groups
 
     main:
-    // TODO: add naive method (estimate_multilocus_prevfreq_naive) when groups are added in 
+    // TODO: add naive method (estimate_multilocus_prevfreq_naive) when groups are added in
     // TODO: These estimates should also include prev output
     // TODO: FEM needs to output population too
     if (method == "MLBM") {

@@ -11,61 +11,41 @@
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "Chromosome that is targeted.",
-                "meta": [
-                    "id"
-                ]
+                "meta": ["id"]
             },
             "start": {
                 "type": "integer",
                 "errorMessage": "Zero-based start coordinate of target.",
-                "meta": [
-                    "id"
-                ]
+                "meta": ["id"]
             },
             "end": {
                 "type": "integer",
                 "errorMessage": "Zero-based end coordinate of target",
-                "meta": [
-                    "id"
-                ]
+                "meta": ["id"]
             },
             "length": {
                 "type": "integer",
                 "errorMessage": "Length must be an integer, but is optional.",
-                "meta": [
-                    "id"
-                ]
+                "meta": ["id"]
             },
             "strand": {
                 "type": "string",
                 "pattern": "^[+-]$",
                 "errorMessage": "Strand of the target of interest.",
-                "meta": [
-                    "id"
-                ]
+                "meta": ["id"]
             },
             "extra_info": {
                 "type": "string",
                 "errorMessage": "Extra information about target, but is optional.",
-                "meta": [
-                    "id"
-                ]
+                "meta": ["id"]
             },
             "ref_seq": {
                 "type": "string",
                 "errorMessage": "Sequence of reference for target.",
                 "pattern": "^[ATCG]+$",
-                "meta": [
-                    "id"
-                ]
+                "meta": ["id"]
             }
         },
-        "required": [
-            "#chrom",
-            "start",
-            "end",
-            "target_id",
-            "strand"
-        ]
+        "required": ["#chrom", "start", "end", "target_id", "strand"]
     }
 }

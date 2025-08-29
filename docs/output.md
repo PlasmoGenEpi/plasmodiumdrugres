@@ -11,15 +11,15 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 1. Translate loci of interest ([`PGEcore`](https://github.com/PlasmoGenEpi/PGEcore))
 2. Split by population
 3. Estimate alelle prevalence ([`PGEcore`](https://github.com/PlasmoGenEpi/PGEcore))
-4. Estimate multilocus allele frequency. Choice of method between: 
-    1. [MultiLociBiallelicModel](https://www.frontiersin.org/articles/10.3389/fepid.2022.943625/full) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
-    2. [FreqEstimationModel](https://doi.org/10.1186/1475-2875-13-102) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
-5. Estimate single locus allele frequency. Choice of method between: 
-    1. [Incomplete data model (IDM)](https://doi.org/10.1371/journal.pone.0287161) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
-    2. [Naive `PGEcore` method]((https://github.com/PlasmoGenEpi/PGEcore))
-    3. [`PGEcore` from multi-locus estimates]((https://github.com/PlasmoGenEpi/PGEcore))
-6. Merge prevalence and frequency outputs 
-7. Concatenate population outputs 
+4. Estimate multilocus allele frequency. Choice of method between:
+   1. [MultiLociBiallelicModel](https://www.frontiersin.org/articles/10.3389/fepid.2022.943625/full) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
+   2. [FreqEstimationModel](https://doi.org/10.1186/1475-2875-13-102) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
+5. Estimate single locus allele frequency. Choice of method between:
+   1. [Incomplete data model (IDM)](https://doi.org/10.1371/journal.pone.0287161) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
+   2. [Naive `PGEcore` method](<(https://github.com/PlasmoGenEpi/PGEcore)>)
+   3. [`PGEcore` from multi-locus estimates](<(https://github.com/PlasmoGenEpi/PGEcore)>)
+6. Merge prevalence and frequency outputs
+7. Concatenate population outputs
 
 ### Translated Loci
 
