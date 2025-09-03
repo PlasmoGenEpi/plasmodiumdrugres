@@ -15,14 +15,13 @@ process MERGE_TABLES {
     path "${pop}.ml_summary.tsv", emit: ml_summary
 
     script:
-    // TODO: fix output dir param not being picked up
     """
     slap_table=\$(ls ${pop_files} | grep 'prev')
     mlaf_table=\$(ls ${pop_files} | grep 'mlaf')
     slaf_table=\$(ls ${pop_files} | grep 'slaf')
 
     Rscript ${projectDir}/bin/merge_tables.R --freq_table \${slaf_table} --population ${pop} --prev_table \${slap_table} --output ${pop}.sl_summary.tsv
-    mv \${mlaf_table} ${pop}.ml_summary.tsv
+    Rscript ${projectDir}/bin/add_population_column.R --table \${mlaf_table} --population ${pop} --output ${pop}.ml_summary.tsv
     """
 }
 
