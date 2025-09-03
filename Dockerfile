@@ -59,7 +59,7 @@ RUN R -e 'library("remotes")'
 
 
 # R packages
-RUN Rscript -e "remotes::install_cran(c('tibble', 'dplyr', 'stringr', 'readr', 'optparse', 'ggplot2', 'tidyr', 'data.table', 'validate', 'openxlsx', 'Rmpfr', 'rlang', 'doParallel', 'magrittr', 'checkmate', 'pegas', 'ape', 'rngtools', 'parallelly'), Ncpus = ${CPU_COUNT})"
+RUN Rscript -e "remotes::install_cran(c('tibble', 'dplyr', 'stringr', 'readr', 'optparse', 'ggplot2', 'tidyr', 'data.table', 'validate', 'openxlsx', 'Rmpfr', 'rlang', 'doParallel', 'magrittr', 'checkmate', 'pegas', 'ape', 'rngtools', 'parallelly', 'doMC'), Ncpus = ${CPU_COUNT})"
 
 ## attempt to load libraries to make sure they installed
 RUN R -e 'library("tibble")'
@@ -81,6 +81,7 @@ RUN R -e 'library("pegas")'
 RUN R -e 'library("ape")'
 RUN R -e 'library("rngtools")'
 RUN R -e 'library("parallelly")'
+RUN R -e 'library("doMC")'
 
 # R Install FEM
 RUN R -e "remotes::install_github('aimeertaylor/FreqEstimationModel', build_vignettes = FALSE, dependencies = TRUE)"
