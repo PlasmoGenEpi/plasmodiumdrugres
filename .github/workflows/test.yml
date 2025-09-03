@@ -19,7 +19,7 @@ jobs:
         with:
           submodules: recursive # Ensures submodules are fetched and updated
           fetch-depth: 0 # Fetch all history to avoid shallow clones
-      
+
       - name: Ensure Git respects file permissions
         run: git config core.fileMode true
 
