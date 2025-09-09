@@ -23,7 +23,7 @@ nextflow_process {
 
             // output md5 check
             assert path(process.out.sl_summary.get(0)).md5 == "5f89a56121d17bd001bc2d7d6df8d13c"
-            assert path(process.out.ml_summary.get(0)).md5 == "2e0bf2b7c79b5475f81a6f37b30de1e3"
+            assert path(process.out.ml_summary.get(0)).md5 == "eba89c5f93141e6b68af2015765d28af"
         }
 
     }
