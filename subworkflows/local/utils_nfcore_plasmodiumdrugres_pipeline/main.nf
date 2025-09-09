@@ -77,7 +77,7 @@ workflow PIPELINE_INITIALISATION {
         params.genome_reference ? "genome_reference" : "none"
     def fasta = params.targeted_reference ?: params.genome_reference ?: ""
     if (params.pmo) {
-        EXTRACT_ALLELE_TABLE(params.pmo, params.bioinformatics_id)
+        EXTRACT_ALLELE_TABLE(params.pmo)
         allele_table = EXTRACT_ALLELE_TABLE.out.allele_table
         EXTRACT_BED_FILE_FROM_PMO(params.pmo, ref_type, fasta)
         panel_info_bed = EXTRACT_BED_FILE_FROM_PMO.out.panel_info_bed

@@ -10,7 +10,6 @@ nextflow_process {
             process {
                 """
                 input[0] = file("${projectDir}/tests/input/example_PMO.json")
-                input[1] = "ReducedMAD4HATTERSim-SeekDeep"
                 """
             }
         }
@@ -18,7 +17,7 @@ nextflow_process {
         then {
             assert process.success
             assert process.out.allele_table != null
-            assert path(process.out.allele_table.get(0)).md5 == "9e887f1332c8a129687cde915f6921bb"
+            assert path(process.out.allele_table.get(0)).md5 == "784b56cd9ab448472553457ad5a61105"
         }
 
     }
