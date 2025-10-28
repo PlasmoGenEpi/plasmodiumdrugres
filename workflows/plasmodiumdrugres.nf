@@ -33,11 +33,11 @@ workflow PLASMODIUMDRUGRES {
 
     main:
 
-    TRANSLATE_LOCI_OF_INTEREST(allele_table, panel_info_bed_with_ref, loci_of_interest_bed, translate_loci_extra_args)
+    TRANSLATE_LOCI_OF_INTEREST(file(allele_table.value), file(panel_info_bed_with_ref.value), file(loci_of_interest_bed), translate_loci_extra_args)
 
     // split allele table
     if (params.population_map) {
-        SPLIT_AA_TABLE_BY_POP(TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls, params.population_map)
+        SPLIT_AA_TABLE_BY_POP(TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls, file(params.population_map))
         aa_table_ch = (SPLIT_AA_TABLE_BY_POP.out.per_pop_tables).flatten()
     } else {
         aa_table_ch = TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls
@@ -47,7 +47,7 @@ workflow PLASMODIUMDRUGRES {
     ESTIMATE_ALLELE_PREVALENCE_NAIVE(aa_table_ch)
 
     // Estimate Multi Loci Allele Frequency
-    ESTIMATE_MLAF(mlaf_method, aa_table_ch, loci_groups)
+    ESTIMATE_MLAF(mlaf_method, aa_table_ch, file(loci_groups))
 
     // Estimate Single Locus Allele Frequency
     if (slaf_method == 'from_mlaf') {
