@@ -23,6 +23,9 @@ workflow ESTIMATE_MLAF {
     } else if (method == "FEM") {
         FEM_WRAPPER(amino_acid_calls, loci_groups)
         mlaf_output = FEM_WRAPPER.out.mlaf
+    }  else if (method == "NAIVE") {
+        ESTIMATE_ML_PREVFREQ_NAIVE(amino_acid_calls, loci_groups)
+        mlaf_output = ESTIMATE_ML_PREVFREQ_NAIVE.out.mlaf
     } else {
         throw new IllegalArgumentException("Error: 'mlaf_method' must be one of ${params.mlaf_method_options} Provided value: ${method}.")
     }

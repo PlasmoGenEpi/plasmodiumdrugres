@@ -13,13 +13,13 @@ process ESTIMATE_ML_PREVFREQ_NAIVE {
     path loci_groups
 
     output:
-    tuple val("${aa_calls.getBaseName(3)}"), path("${aa_calls.getBaseName(3)}.ml_prevfreq.tsv"), emit: ml_prevfreq
+    tuple val("${aa_calls.getBaseName(3)}"), path("${aa_calls.getBaseName(3)}.aa_mlaf.tsv"), emit: mlaf
 
     script:
     """
     Rscript ${projectDir}/bin/PGEcore/scripts/multilocus_prevfreq_naive/multilocus_prevfreq_naive.R \
         --aa_table $aa_calls \
         --loci_groups_input $loci_groups \
-        --output_path "${aa_calls.getBaseName(3)}.ml_prevfreq.tsv"
+        --output_path "${aa_calls.getBaseName(3)}.aa_mlaf.tsv"
     """
 }
