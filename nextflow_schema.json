@@ -183,7 +183,14 @@
                 "mlaf_method_options": {
                     "type": "array",
                     "description": "method options for multi locus allele frequency estimates.",
-                    "default": "['MLBM', 'FEM']",
+                    "default": "['MLBM', 'FEM', 'NAIVE']",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "mlbm_wrapper_aa_specimen_occurence_cut_off": {
+                    "type": "integer",
+                    "description": "when running MLBM, a cut off value for filtering amino acid calls.",
+                    "default": "null",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
