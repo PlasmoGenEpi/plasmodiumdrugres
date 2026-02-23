@@ -51,13 +51,16 @@ workflow PLASMODIUMDRUGRES {
 
     // Estimate Single Locus Allele Frequency
     if (slaf_method == 'from_mlaf') {
-        ESTIMATE_SLAF(slaf_method,  ESTIMATE_MLAF.out.mlaf_output.map { it[1] })
+        ESTIMATE_SLAF(slaf_method,  ESTIMATE_MLAF.out.mlaf_output.map {it -> it[1] })
     } else {
         ESTIMATE_SLAF(slaf_method, aa_table_ch)
     }
 
     // Create tuple of output files by population
-    all_outputs = ESTIMATE_ALLELE_PREVALENCE_NAIVE.out.allele_prevalence.mix(ESTIMATE_MLAF.out.mlaf_output, ESTIMATE_SLAF.out.slaf_output)
+    all_outputs = ESTIMATE_ALLELE_PREVALENCE_NAIVE.out.allele_prevalence.mix(
+        ESTIMATE_MLAF.out.mlaf_output,
+        ESTIMATE_MLAF.out.sl_from_ml_output,
+        ESTIMATE_SLAF.out.slaf_output)
     outputs_per_population = all_outputs.groupTuple()
 
     // OUTPUT
@@ -74,8 +77,9 @@ workflow PLASMODIUMDRUGRES {
 
     all_sl_summary_ch = MERGE_TABLES.out.sl_summary.collect()
     all_ml_summary_ch = MERGE_TABLES.out.ml_summary.collect()
+    all_sl_from_ml_summary_ch = MERGE_TABLES.out.sl_from_ml_summary.collect()
 
-    CONCAT_TABLES(all_sl_summary_ch, all_ml_summary_ch)
+    CONCAT_TABLES(all_sl_summary_ch, all_ml_summary_ch, all_sl_from_ml_summary_ch)
     // // //
     // // Collate and save software versions
     // //
@@ -91,5 +95,6 @@ workflow PLASMODIUMDRUGRES {
     emit:
     sl_summary = CONCAT_TABLES.out.sl_summary
     ml_summary = CONCAT_TABLES.out.ml_summary
+    sl_from_ml_summary = CONCAT_TABLES.out.sl_from_ml_summary
     // // versions = ch_versions // channel: [ path(versions.yml) ]
 }

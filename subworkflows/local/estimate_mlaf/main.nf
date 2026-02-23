@@ -5,6 +5,8 @@
 include { MLBM_WRAPPER } from '../../../modules/local/mlbm_wrapper'
 include { FEM_WRAPPER } from '../../../modules/local/fem_wrapper'
 include { ESTIMATE_ML_PREVFREQ_NAIVE } from '../../../modules/local/estimate_multilocus_prevfreq_naive'
+include { SLAF_FROM_STAVE_MLAF as MLBM_SLAF_FROM_STAVE_MLAF} from '../../../modules/local/slaf_from_stave_mlaf.nf'
+include { SLAF_FROM_STAVE_MLAF as FEM_SLAF_FROM_STAVE_MLAF} from '../../../modules/local/slaf_from_stave_mlaf.nf'
 
 workflow ESTIMATE_MLAF {
 
@@ -20,16 +22,22 @@ workflow ESTIMATE_MLAF {
     if (method == "MLBM") {
         MLBM_WRAPPER(amino_acid_calls, loci_groups)
         mlaf_output = MLBM_WRAPPER.out.mlaf
+        MLBM_SLAF_FROM_STAVE_MLAF(MLBM_WRAPPER.out.mlaf)
+        sl_from_ml_output = MLBM_SLAF_FROM_STAVE_MLAF.out.slaf
     } else if (method == "FEM") {
         FEM_WRAPPER(amino_acid_calls, loci_groups)
         mlaf_output = FEM_WRAPPER.out.mlaf
+        FEM_SLAF_FROM_STAVE_MLAF(FEM_WRAPPER.out.mlaf)
+        sl_from_ml_output = FEM_SLAF_FROM_STAVE_MLAF.out.slaf
     }  else if (method == "NAIVE") {
         ESTIMATE_ML_PREVFREQ_NAIVE(amino_acid_calls, loci_groups)
         mlaf_output = ESTIMATE_ML_PREVFREQ_NAIVE.out.mlaf
+        sl_from_ml_output = ESTIMATE_ML_PREVFREQ_NAIVE.out.slaf_from_mlaf
     } else {
         throw new IllegalArgumentException("Error: 'mlaf_method' must be one of ${params.mlaf_method_options} Provided value: ${method}.")
     }
 
     emit:
     mlaf_output = mlaf_output
+    sl_from_ml_output = sl_from_ml_output
 }

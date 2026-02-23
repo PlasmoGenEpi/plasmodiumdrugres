@@ -53,8 +53,9 @@ load_freq_table <- function(freq) {
         col_types = cols(
             variant = col_character(),
             freq = col_double()
-        ),
-        col_select = c("variant", "freq")
+        )
+        # ,
+        # col_select = c("variant", "freq")
     )
     return(freq_table)
 }
@@ -66,8 +67,9 @@ load_prev_table <- function(prev) {
         col_types = cols(
             variant = col_character(),
             prev = col_double()
-        ),
-        col_select = c("variant", "prev")
+        )
+        # ,
+        # col_select = c("variant", "prev")
     )
     return(prev_table)
 }

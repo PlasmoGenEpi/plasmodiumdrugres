@@ -8,7 +8,7 @@ process SLAF_FROM_STAVE_MLAF {
     label 'process_single'
 
     input:
-    path mlaf_input
+    tuple val(mlaf_base), path(mlaf_input)
 
     output:
     tuple val("${mlaf_input.getBaseName(3)}"), path("${mlaf_input.getBaseName(3)}.aa_slaf.tsv"), emit: slaf
