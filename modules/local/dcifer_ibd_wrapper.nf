@@ -1,9 +1,9 @@
 /*
  * STEP - DCIFER_WRAPPER
- * Run the Dcifer wrapper script
+ * Run the Dcifer IBD wrapper script
  */
 
-process DCIFER_WRAPPER {
+process DCIFER_IBD_WRAPPER {
 
     label 'process_low'
 
@@ -17,7 +17,7 @@ process DCIFER_WRAPPER {
 
     script:
     """
-    Rscript ${projectDir}/bin/PGEcore/scripts/dcifer_wrapper/dcifer_wrapper.R \
+    Rscript ${projectDir}/bin/PGEcore/scripts/dcifer_ibd_wrapper/dcifer_ibd_wrapper.R \
         --allele_table ${allele_table} --threads ${task.cpus} \
         --btwn_host_rel_output "$btwn_host_rel_output"
     """

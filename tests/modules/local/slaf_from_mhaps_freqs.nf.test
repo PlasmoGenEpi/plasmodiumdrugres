@@ -1,0 +1,26 @@
+nextflow_process {
+
+    name "Test Process SLAF_FROM_MHAPS_FREQS"
+    script "modules/local/slaf_from_mhaps_freqs.nf"
+    process "SLAF_FROM_MHAPS_FREQS"
+
+    test("Test for failures and output file checksums with example_loci_of_interest_for_target_for_microhap.tsv and example_mhaps_slaf.tsv") {
+
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example_mhaps_slaf.tsv")
+                input[1] = file("${projectDir}/tests/input/example_loci_of_interest_for_target_for_microhap.tsv")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.slaf != null
+            assert path(process.out.slaf.get(0)).md5 == "5b95916d2672eefd789df92a264ae0fa"
+        }
+
+    }
+
+}

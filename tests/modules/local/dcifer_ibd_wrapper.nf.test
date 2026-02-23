@@ -1,8 +1,8 @@
 nextflow_process {
 
-    name "Test Process DCIFER_WRAPPER"
-    script "modules/local/dcifer_wrapper.nf"
-    process "DCIFER_WRAPPER"
+    name "Test Process DCIFER_IBD_WRAPPER"
+    script "modules/local/dcifer_ibd_wrapper.nf"
+    process "DCIFER_IBD_WRAPPER"
 
     test("Test for failures and output file checksums with example_allele_table") {
 
