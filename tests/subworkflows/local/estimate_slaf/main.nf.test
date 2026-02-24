@@ -40,24 +40,6 @@ nextflow_workflow {
 
     }
 
-    test("Should run without failures for from_mlaf method") {
-
-        when {
-            workflow {
-                """
-                input[0] = "from_mlaf"
-                input[1] = file("${projectDir}/tests/input/example_mlaf.tsv")
-                """
-            }
-        }
-
-        then {
-            assert workflow.success
-            assert workflow.trace.tasks().size() == 1
-        }
-
-    }
-
     test("Should fail with incorrect method") {
 
         when {

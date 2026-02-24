@@ -17,7 +17,7 @@ process EXTRACT_ALLELE_TABLE {
 
     script:
     """
-    pmotools-runner.py extract_allele_table \
+    pmotools-python extract_allele_table \
         --file ${pmo} \
         --representative_haps_fields "seq" \
         --microhap_fields "reads" \

@@ -50,11 +50,7 @@ workflow PLASMODIUMDRUGRES {
     ESTIMATE_MLAF(mlaf_method, aa_table_ch, file(loci_groups))
 
     // Estimate Single Locus Allele Frequency
-    if (slaf_method == 'from_mlaf') {
-        ESTIMATE_SLAF(slaf_method,  ESTIMATE_MLAF.out.mlaf_output.map {it -> it[1] })
-    } else {
-        ESTIMATE_SLAF(slaf_method, aa_table_ch)
-    }
+    ESTIMATE_SLAF(slaf_method, aa_table_ch)
 
     // Create tuple of output files by population
     all_outputs = ESTIMATE_ALLELE_PREVALENCE_NAIVE.out.allele_prevalence.mix(

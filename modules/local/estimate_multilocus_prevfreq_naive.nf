@@ -3,7 +3,6 @@
  * Estimate multilocus prev/freq naively
  */
 
-// @TODO: Add ability to set the wsaf cut off
 process ESTIMATE_ML_PREVFREQ_NAIVE {
 
     label 'process_single'

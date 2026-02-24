@@ -22,7 +22,7 @@ process EXTRACT_PANEL_INFO_TO_BED {
         : ""
 
     """
-    pmotools-runner.py extract_insert_of_panels \
+    pmotools-python extract_insert_of_panels \
         --file ${pmo} \
         --output ${output_filename} \
         ${parameter_string}

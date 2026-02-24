@@ -9,7 +9,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = tuple('pop1', [file("${projectDir}/tests/input/example_allele_prev.tsv"), file("${projectDir}/tests/input/example_aa_mlaf.tsv"), file("${projectDir}/tests/input/example_aa_slaf.tsv")])
+                input[0] = tuple('pop1', [
+                file("${projectDir}/tests/input/example_allele_prev.tsv"),
+                file("${projectDir}/tests/input/example_aa_mlaf.tsv"),
+                file("${projectDir}/tests/input/example_aa_slaf.tsv"),
+                file("${projectDir}/tests/input/example_sl_from_ml.tsv")])
                 """
             }
         }
@@ -20,10 +24,13 @@ nextflow_process {
             // channel exists
             assert process.out.sl_summary != null
             assert process.out.ml_summary != null
+            assert process.out.sl_from_ml_summary != null
 
             // output md5 check
             assert path(process.out.sl_summary.get(0)).md5 == "5f89a56121d17bd001bc2d7d6df8d13c"
             assert path(process.out.ml_summary.get(0)).md5 == "eba89c5f93141e6b68af2015765d28af"
+            assert path(process.out.sl_from_ml_summary.get(0)).md5 == "a8870f7877d373daa0f9e3c744ab0617"
+
         }
 
     }

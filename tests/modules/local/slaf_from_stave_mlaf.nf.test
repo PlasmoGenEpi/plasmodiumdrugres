@@ -9,7 +9,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = file("${projectDir}/tests/input/example_mlaf.tsv")
+                input[0] = tuple(file("${projectDir}/tests/input/example_mlaf.tsv").getBaseName(3), file("${projectDir}/tests/input/example_mlaf.tsv"))
                 """
             }
         }
