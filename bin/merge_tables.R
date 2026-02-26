@@ -84,6 +84,11 @@ merge_tables_add_pop <- function(freq_table, prev_table, pop) {
 
 # Load input data
 freq_table <- load_freq_table(args$freq_table)
+# rename sample_total from freq_table if present (in some methods, like dcifer_mhaps it will output sample total with the allele freqs)
+if("sample_total" %in% colnames(freq_table)){
+    freq_table = freq_table %>%
+    dplyr::rename(sample_total_for_allele_freq = sample_total)
+}
 prev_table <- load_prev_table(args$prev_table)
 
 # Merge tables

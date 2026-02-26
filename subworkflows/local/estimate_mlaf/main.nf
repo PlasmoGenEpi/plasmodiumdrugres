@@ -29,8 +29,8 @@ workflow ESTIMATE_MLAF {
         mlaf_output = FEM_WRAPPER.out.mlaf
         FEM_SLAF_FROM_STAVE_MLAF(FEM_WRAPPER.out.mlaf)
         sl_from_ml_output = FEM_SLAF_FROM_STAVE_MLAF.out.slaf
-    }  else if (method == "NAIVE") {
-        ESTIMATE_ML_PREVFREQ_NAIVE(amino_acid_calls, loci_groups)
+    }  else if (method == "naive") {
+        ESTIMATE_ML_PREVFREQ_NAIVE(amino_acid_calls, loci_groups, params.naive_mlaf_method)
         mlaf_output = ESTIMATE_ML_PREVFREQ_NAIVE.out.mlaf
         sl_from_ml_output = ESTIMATE_ML_PREVFREQ_NAIVE.out.slaf_from_mlaf
     } else {

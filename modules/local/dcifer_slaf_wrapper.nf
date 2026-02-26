@@ -12,7 +12,7 @@ process DCIFER_SLAF_WRAPPER {
     path allele_table
 
     output:
-    path "slaf.tsv", emit: slaf
+    tuple val("${allele_table.getBaseName(3)}"), path("${allele_table.getBaseName(3)}.mhaps_slaf.tsv"), emit: mhaps_slaf
 
     script:
     def extra_args = task.ext.args ? task.ext.args : ''
@@ -21,7 +21,7 @@ process DCIFER_SLAF_WRAPPER {
     """
     Rscript ${projectDir}/bin/PGEcore/scripts/dcifer_slaf_wrapper/dcifer_slaf_wrapper.R \
         --allele_table ${allele_table}  \
-        --slaf_output slaf.tsv \
+        --slaf_output "${allele_table.getBaseName(3)}.mhaps_slaf.tsv" \
         ${extra_args}
     """
 }

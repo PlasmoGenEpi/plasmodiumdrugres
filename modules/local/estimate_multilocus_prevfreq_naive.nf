@@ -10,6 +10,7 @@ process ESTIMATE_ML_PREVFREQ_NAIVE {
     input:
     path aa_calls
     path loci_groups
+    val method
 
     output:
     tuple val("${aa_calls.getBaseName(3)}"), path("${aa_calls.getBaseName(3)}.aa_mlaf.tsv"), emit: mlaf
@@ -24,6 +25,7 @@ process ESTIMATE_ML_PREVFREQ_NAIVE {
         --loci_groups_input $loci_groups \
         --output_path "${aa_calls.getBaseName(3)}.aa_mlaf.tsv" \
         --recalc_single_locus_output_path "${aa_calls.getBaseName(3)}.aa_sl_from_ml.tsv" \
+        --method ${method}
         ${extra_args}
     """
 }

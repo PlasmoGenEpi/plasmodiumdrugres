@@ -9,11 +9,11 @@ process SLAF_FROM_MHAPS_FREQS {
 
 
     input:
-    path mhaps_slaf_fnp
+    tuple val(group_name), path(mhaps_slaf_fnp)
     path loci_of_interest_per_microhaps_fnp
 
     output:
-    path "slaf.tsv", emit: slaf
+    tuple val("${group_name}"), path("${group_name}.slaf.tsv"), emit: slaf
 
     script:
 
@@ -22,6 +22,6 @@ process SLAF_FROM_MHAPS_FREQS {
     Rscript ${projectDir}/bin/PGEcore/scripts/calc_slaf_based_on_mhap_freqs/slaf_from_mhaps_freqs.R \
         --mhaps_slaf_fnp ${mhaps_slaf_fnp}  \
         --loci_of_interest_per_microhaps_fnp ${loci_of_interest_per_microhaps_fnp}  \
-        --slaf_output slaf.tsv
+        --slaf_output ${group_name}.slaf.tsv
     """
 }
