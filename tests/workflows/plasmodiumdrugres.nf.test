@@ -13,12 +13,12 @@ nextflow_workflow {
             }
             workflow {
                 """
-                input[0] = file("${projectDir}/tests/input/example2_allele_table.tsv")
-                input[1] = file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed")
-                input[2] = file("${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed")
+                input[0] = [ value: ("${projectDir}/tests/input/example2_allele_table.tsv") ]
+                input[1] = [ value: ("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed") ]
+                input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
                 input[3] = ""
                 input[4] = "MLBM"
-                input[5] = file("${projectDir}/tests/input/example_loci_groups.tsv")
+                input[5] = "${projectDir}/tests/input/example2_loci_groups.tsv"
                 input[6] = "naive"
                 """
             }
@@ -26,7 +26,7 @@ nextflow_workflow {
 
         then {
             assert workflow.success
-            assert workflow.trace.tasks().size() == 6
+            assert workflow.trace.tasks().size() == 7
         }
 
     }
@@ -40,12 +40,12 @@ nextflow_workflow {
             }
             workflow {
                 """
-                input[0] = file("${projectDir}/tests/input/example2_allele_table.tsv")
-                input[1] = file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed")
-                input[2] = file("${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed")
+                input[0] = [ value: "${projectDir}/tests/input/example2_allele_table.tsv" ]
+                input[1] = [ value: "${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed" ]
+                input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
                 input[3] = ""
                 input[4] = "FEM"
-                input[5] = file("${projectDir}/tests/input/example_loci_groups.tsv")
+                input[5] = "${projectDir}/tests/input/example2_loci_groups.tsv"
                 input[6] = "IDM"
                 """
             }
@@ -53,12 +53,12 @@ nextflow_workflow {
 
         then {
             assert workflow.success
-            assert workflow.trace.tasks().size() == 6
+            assert workflow.trace.tasks().size() == 7
         }
 
     }
 
-    test("Should run without failures - FEM and slaf from mlaf") {
+    test("Should run without failures - NAIVE multilocus and mhaps_freq for slaf") {
 
         when {
             params {
@@ -67,20 +67,46 @@ nextflow_workflow {
             }
             workflow {
                 """
-                input[0] = file("${projectDir}/tests/input/example2_allele_table.tsv")
-                input[1] = file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed")
-                input[2] = file("${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed")
+                input[0] = [ value: "${projectDir}/tests/input/example2_allele_table.tsv" ]
+                input[1] = [ value: "${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed" ]
+                input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
                 input[3] = ""
-                input[4] = "FEM"
-                input[5] = file("${projectDir}/tests/input/example_loci_groups.tsv")
-                input[6] = "from_mlaf"
+                input[4] = "naive"
+                input[5] = "${projectDir}/tests/input/example2_loci_groups.tsv"
+                input[6] = "mhaps_freq"
                 """
             }
         }
 
         then {
             assert workflow.success
-            assert workflow.trace.tasks().size() == 6
+            assert workflow.trace.tasks().size() == 7
+        }
+
+    }
+
+    test("Should run without failures - NAIVE multilocus and mhaps_freq for slaf with multi populations") {
+
+        when {
+            params {
+                population_map = "${projectDir}/tests/input/example2_population_map.tsv"
+            }
+            workflow {
+                """
+                input[0] = [ value: "${projectDir}/tests/input/example2_allele_table.tsv" ]
+                input[1] = [ value: "${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed" ]
+                input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
+                input[3] = ""
+                input[4] = "naive"
+                input[5] = "${projectDir}/tests/input/example2_loci_groups.tsv"
+                input[6] = "mhaps_freq"
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 14
         }
 
     }
@@ -93,12 +119,12 @@ nextflow_workflow {
             }
             workflow {
                 """
-                input[0] = file("${projectDir}/tests/input/example2_allele_table.tsv")
-                input[1] = file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed")
-                input[2] = file("${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed")
+                input[0] = [ value: "${projectDir}/tests/input/example2_allele_table.tsv" ]
+                input[1] = [ value: "${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed" ]
+                input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
                 input[3] = ""
                 input[4] = "MLBM"
-                input[5] = file("${projectDir}/tests/input/example_loci_groups.tsv")
+                input[5] = "${projectDir}/tests/input/example2_loci_groups.tsv"
                 input[6] = "naive"
                 """
             }
@@ -106,10 +132,9 @@ nextflow_workflow {
 
         then {
             assert workflow.success
-            assert workflow.trace.tasks().size() == 11
+            assert workflow.trace.tasks().size() == 13
         }
 
     }
-
 
 }

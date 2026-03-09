@@ -19,9 +19,6 @@ workflow ESTIMATE_SLAF {
     } else if (method == "naive") {
         ESTIMATE_ALLELE_FREQUENCY_NAIVE(method_input, params.naive_slaf_method)
         slaf_output = ESTIMATE_ALLELE_FREQUENCY_NAIVE.out.slaf
-    } else if (method == "from_mlaf") {
-        SLAF_FROM_STAVE_MLAF(method_input)
-        slaf_output = SLAF_FROM_STAVE_MLAF.out.slaf
     } else {
         throw new IllegalArgumentException("Error: 'slaf_method' must be one of ${params.slaf_method_options} Provided value: ${method}.")
     }

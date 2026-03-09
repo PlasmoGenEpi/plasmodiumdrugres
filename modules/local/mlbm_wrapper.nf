@@ -22,7 +22,7 @@ process MLBM_WRAPPER {
     Rscript ${projectDir}/bin/PGEcore/scripts/MultiLociBiallelicModel_wrapper/MultiLociBiallelicModel_wrapper.R \
         --aa_calls ${aa_calls} \
         --loci_group_table ${loci_group_table} \
-        --mlaf_output "${aa_calls.getBaseName(3)}.aa_mlaf.tsv"\
+        --mlaf_output "${aa_calls.getBaseName(3)}.aa_mlaf.tsv" \
         ${extra_args}
     """
 }
