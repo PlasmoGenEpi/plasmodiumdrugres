@@ -156,11 +156,7 @@ def validateInputParameters() {
     if (params.pmo && params.allele_table) {
         validation_errors.add("Only one of 'pmo' or 'allele_table' can be set, but not both.")
     }
-    // If pmo set check bioinformatics_id is set
     if (params.pmo) {
-        if (!params.bioinformatics_id) {
-            validation_errors.add("Missing required parameter: '--bioinformatics_id' is not set and is required with --pmo.")
-        }
         if (params.genome_reference && params.targeted_reference) {
             validation_warnings.add("WARNING: Both 'genome_reference' or 'targeted_reference' set, 'targeted_reference' will be used.")
         }

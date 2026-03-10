@@ -200,7 +200,6 @@ specimen_3  pop2
 
 ## Other params
 
-- `--bioinformatics_id` - Required when input is `--pmo`. Bioinformatics id of microhaplotypes within the PMO file.
 - `--population_label` - If running one population used to label the dataset. (Default: pop1)
 - `--translate_loci_extra_args` - Extra arguments when translating loci of interest. [See documentation here](https://github.com/PlasmoGenEpi/PGEcore/tree/develop/scripts/translate_loci_of_interest).
 - `--slaf_method` - chosen method to estimate single locus allele frequencies (Default: IDM Options: ["IDM","naive","from_mlaf"])
@@ -212,19 +211,19 @@ specimen_3  pop2
 The typical command for running the pipeline from a PMO file is as follows:
 
 ```bash
-nextflow run nf-core/plasmodiumdrugres --pmo input_file.pmo --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --bioinformatics_id bioinfo_run1 --outdir ./results -profile docker
+nextflow run nf-core/plasmodiumdrugres --pmo input_file.pmo --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --outdir ./results -profile docker
 ```
 
 If you are supplying a reference the add the `--genome_reference` flag.
 
 ```bash
-nextflow run nf-core/plasmodiumdrugres --pmo input_file.pmo --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --bioinformatics_id bioinfo_run1 --genome_reference genome_reference.fasta --outdir ./results -profile docker
+nextflow run nf-core/plasmodiumdrugres --pmo input_file.pmo --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --genome_reference genome_reference.fasta --outdir ./results -profile docker
 ```
 
 If you are supplying a targeted reference the add the `--targeted_reference` flag.
 
 ```bash
-nextflow run nf-core/plasmodiumdrugres --pmo input_file.pmo --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --bioinformatics_id bioinfo_run1  --targeted_reference genome_reference.fasta --outdir ./results -profile docker
+nextflow run nf-core/plasmodiumdrugres --pmo input_file.pmo --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv  --targeted_reference genome_reference.fasta --outdir ./results -profile docker
 ```
 
 If you are running from an allele table you can run the pipeline like this:

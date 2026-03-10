@@ -183,7 +183,6 @@ Now you can run the pipeline like this
 nextflow run nf-core/plasmodiumdrugres \
    -profile <docker/singularity/.../institute> \
    --pmo input_file.pmo \
-   --bioinformatics_id bioinfo_run1 \
    --loci_of_interest_bed loci_of_interest.bed \
    --loci_groups loci_groups.tsv \
    --outdir <OUTDIR>
@@ -195,7 +194,6 @@ If you are supplying a reference the add the `--genome_reference` flag.
 nextflow run nf-core/plasmodiumdrugres \
    -profile <docker/singularity/.../institute> \
    --pmo input_file.pmo \
-   --bioinformatics_id bioinfo_run1 \
    --loci_of_interest_bed loci_of_interest.bed \
    --loci_groups loci_groups.tsv \
    --genome_reference genome_reference.fasta
@@ -208,7 +206,6 @@ If you are supplying a targeted reference the add the `--targeted_reference` fla
 nextflow run nf-core/plasmodiumdrugres \
    -profile <docker/singularity/.../institute> \
    --pmo input_file.pmo \
-   --bioinformatics_id bioinfo_run1 \
    --loci_of_interest_bed loci_of_interest.bed \
    --loci_groups loci_groups.tsv \
    --targeted_reference genome_reference.fasta

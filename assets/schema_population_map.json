@@ -8,12 +8,6 @@
         "type": "object",
         "properties": {
             "specimen_id": {
-                "type": "string",
-                "pattern": "^\\S+$",
-                "errorMessage": "Specimen ID must be provided and cannot contain spaces.",
-                "meta": ["id"]
-            },
-            "population": {
                 "anyOf": [
                     {
                         "type": "integer"
@@ -23,10 +17,29 @@
                         "pattern": "^\\S+$"
                     }
                 ],
+                "errorMessage": "Specimen ID must be provided and cannot contain spaces.",
+                "meta": [
+                    "id"
+                ]
+            },
+            "population": {
+                "anyOf": [
+                    {
+                        "type": "integer"
+                    },
+                    {
+                        "type": "string"
+                    }
+                ],
                 "errorMessage": "Population must be provided and cannot contain spaces.",
-                "meta": ["id"]
+                "meta": [
+                    "id"
+                ]
             }
         },
-        "required": ["specimen_id", "population"]
+        "required": [
+            "specimen_id",
+            "population"
+        ]
     }
 }

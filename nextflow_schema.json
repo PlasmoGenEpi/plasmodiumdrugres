@@ -87,11 +87,6 @@
                     "fa_icon": "fas fa-envelope",
                     "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
-                },
-                "input": {
-                    "type": "string",
-                    "description": "Input from nextflow schema.",
-                    "fa_icon": "fas fa-folder-open"
                 }
             }
         },
@@ -137,12 +132,6 @@
             "description": "Parameters used to define the methods used for each step of the pipeline.",
             "required": ["naive_slaf_method"],
             "properties": {
-                "bioinformatics_id": {
-                    "type": "string",
-                    "description": "bioinformatics_id of data stored within pmo.",
-                    "help_text": "This parameter is *mandatory* if `--pmo` is specified.",
-                    "fa_icon": "fas fa-users-cog"
-                },
                 "mlaf_method": {
                     "type": "string",
                     "description": "method for multi locus allele frequency estimates.",
@@ -153,12 +142,6 @@
                     "type": "string",
                     "description": "method for single locus allele frequency estimates.",
                     "default": "IDM",
-                    "fa_icon": "fas fa-users-cog"
-                },
-                "coi_method": {
-                    "type": "string",
-                    "description": "method for coi estimates.",
-                    "default": "NAIVE_INT_METHOD",
                     "fa_icon": "fas fa-users-cog"
                 },
                 "translate_loci_extra_args": {
@@ -198,13 +181,6 @@
                     "type": "array",
                     "description": "method options for single locus allele frequency estimates.",
                     "default": "['IDM', 'naive', 'from_mlaf']",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
-                },
-                "coi_method_options": {
-                    "type": "array",
-                    "description": "method options for coi estimates.",
-                    "default": "['NAIVE_INT_METHOD', 'NAIVE_QUANTILE_METHOD']",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 }
