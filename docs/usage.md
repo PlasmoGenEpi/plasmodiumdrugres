@@ -24,7 +24,7 @@ You will need to create a bed file including the locations of the loci that you 
 
 ### Full loci of interest bed file
 
-This file will be used to call amino acids from your data and caluclate frequencies and prevalences for the single loci. You can include as many single loci as you like, however the pipeline will fail if a locus is completely missing from the input data for a population.
+This file will be used to call amino acids from your data and calculate frequencies and prevalences for the single loci. You can include as many single loci as you like, however the pipeline will fail if a locus is completely missing from the input data for a population.
 
 A final loci of interest bed file may look something like the one below.
 
@@ -202,8 +202,8 @@ specimen_3  pop2
 
 - `--population_label` - If running one population used to label the dataset. (Default: pop1)
 - `--translate_loci_extra_args` - Extra arguments when translating loci of interest. [See documentation here](https://github.com/PlasmoGenEpi/PGEcore/tree/develop/scripts/translate_loci_of_interest).
-- `--slaf_method` - chosen method to estimate single locus allele frequencies (Default: IDM Options: ["IDM","naive","from_mlaf"])
-- `--mlaf_method` - chosen method to estimate multi-locus allele frequencies (Default: MLBM Options: ["MLBM","FEM"])
+- `--slaf_method` - chosen method to estimate single locus allele frequencies (Default: IDM Options: ["IDM","naive","mhaps_freq"])
+- `--mlaf_method` - chosen method to estimate multi-locus allele frequencies (Default: MLBM Options: ["MLBM","FEM","naive"])
 - `--naive_slaf_method` - Chosen naive method when running `--slaf_method naive`. (Default:read_count_prop, Options: ["read_count_prop", "presence_absence])
 
 ## Running the pipeline
