@@ -17,8 +17,7 @@ include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
 include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
-include { EXTRACT_ALLELE_TABLE      } from '../../../modules/local/extract_allele_table'
-include { EXTRACT_BED_FILE_FROM_PMO } from '../../../subworkflows/local/generate_reference_bed_file'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     SUBWORKFLOW TO INITIALISE PIPELINE
@@ -31,8 +30,9 @@ workflow PIPELINE_INITIALISATION {
     version           // boolean: Display version and exit
     validate_params   // boolean: Boolean whether to validate parameters against the schema at runtime
     monochrome_logs   // boolean: Do not use coloured log outputs
-    nextflow_cli_args //  array: List of positional nextflow CLI args
+    nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
+    input             //  string: Path to input samplesheet
     help              // boolean: Display help message and exit
     help_full         // boolean: Show the full help message
     show_hidden       // boolean: Show hidden parameters in the help message
@@ -71,7 +71,8 @@ workflow PIPELINE_INITIALISATION {
 * Software dependencies
     https://github.com/nf-core/plasmodiumdrugres/blob/master/CITATIONS.md
 """
-    command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --pmo <PMO_FILE> --loci_of_interest_bed <BED> --loci_groups <TSV> --outdir <OUTDIR>"
+    command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
+
     UTILS_NFSCHEMA_PLUGIN (
         workflow,
         validate_params,
@@ -97,25 +98,32 @@ workflow PIPELINE_INITIALISATION {
     validateInputParameters()
 
     //
-    // Create allele table input for pipeline
+    // Create channel from input file provided through params.input
     //
-    def ref_type = params.targeted_reference ? "targeted_reference" :
-        params.genome_reference ? "genome_reference" : "none"
-    def fasta = params.targeted_reference ?: params.genome_reference ?: ""
-    if (params.pmo) {
-        EXTRACT_ALLELE_TABLE(params.pmo)
-        allele_table = EXTRACT_ALLELE_TABLE.out.allele_table
-        EXTRACT_BED_FILE_FROM_PMO(params.pmo, ref_type, fasta)
-        panel_info_bed = EXTRACT_BED_FILE_FROM_PMO.out.panel_info_bed
-    } else if (params.allele_table) {
-        allele_table = params.allele_table
-        panel_info_bed = params.panel_info_bed
-    }
+
+    channel
+        .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
+        .map {
+            meta, fastq_1, fastq_2 ->
+                if (!fastq_2) {
+                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
+                } else {
+                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
+                }
+        }
+        .groupTuple()
+        .map { samplesheet ->
+            validateInputSamplesheet(samplesheet)
+        }
+        .map {
+            meta, fastqs ->
+                return [ meta, fastqs.flatten() ]
+        }
+        .set { ch_samplesheet }
 
     emit:
-    allele_table    = allele_table
-    panel_info_bed  = panel_info_bed
-    versions        = ch_versions
+    samplesheet = ch_samplesheet
+    versions    = ch_versions
 }
 
 /*
@@ -175,71 +183,7 @@ workflow PIPELINE_COMPLETION {
 // Check and validate pipeline parameters
 //
 def validateInputParameters() {
-    // Collect validation errors
-    def validation_errors = []
-    def validation_warnings = []
-
-    // Ensure only one of `pmo` or `allele_table` is set
-    if (params.pmo && params.allele_table) {
-        validation_errors.add("Only one of 'pmo' or 'allele_table' can be set, but not both.")
-    }
-    if (params.pmo) {
-        if (params.genome_reference && params.targeted_reference) {
-            validation_warnings.add("WARNING: Both 'genome_reference' or 'targeted_reference' set, 'targeted_reference' will be used.")
-        }
-    } else if (params.allele_table) {
-        if (!params.panel_info_bed) {
-            validation_errors.add("Missing required parameter: '--panel_info_bed' is not set and is required with --allele_table.")
-        }
-        if (params.genome_reference || params.targeted_reference) {
-            validation_warnings.add("WARNING: Either 'genome_reference' or 'targeted_reference' set, but neither will be used.")
-        }
-    } else {
-        validation_errors.add("Missing required parameter: Either '--pmo' or '--allele_table' must be set, but neither were.")
-    }
-
-    // Warn if both population_map and population_label is set
-    if ((params.population_map) && (params.population_label!='pop1')) {
-        validation_warnings.add("WARNING: both '--population_map' and --'population_label' set. '--population_map' will be used.")
-    }
-    // Check if `mlaf_method` is valid
-    if (!params.mlaf_method_options.contains(params.mlaf_method)) {
-        validation_errors.add("Invalid mlaf_method specified: '${params.mlaf_method}'. Allowed methods are: ${params.mlaf_method_options}.")
-    }
-
-    // Check if `slaf_method` is valid
-    if (!params.slaf_method_options.contains(params.slaf_method)) {
-        validation_errors.add("Invalid slaf_method specified: '${params.slaf_method}'. Allowed methods are: ${params.slaf_method_options}.")
-    }
-
-    // Check other required files: `loci_of_interest_bed`, `loci_groups`
-    def required_files = [
-        'loci_of_interest_bed': params.loci_of_interest_bed,
-        'loci_groups': params.loci_groups
-    ]
-
-    required_files.each { file_label, file_path ->
-        if (!file_path) {
-            validation_errors.add("Missing required file parameter: '${file_label}' is not set.")
-        } else if (!file(file_path).exists()) {
-            validation_errors.add("File not found: '${file_label}' at path '${file_path}'.")
-        }
-    }
-
-    // Print warnings if any
-    if (validation_warnings.size() > 0) {
-        log.warn "Input validation warnings:\n" +
-            validation_warnings.collect { "- ${it}" }.join("\n")
-    }
-
-    // Report all errors at once
-    if (validation_errors.size() > 0) {
-        log.error "Input validation failed with the following errors:\n" +
-            validation_errors.collect { "- ${it}" }.join("\n")
-        exit 1
-    }
-
-    log.info "All input validations passed successfully."
+    genomeExistsError()
 }
 
 //
@@ -290,9 +234,8 @@ def toolCitationText() {
     // Uncomment function in methodsDescriptionText to render in MultiQC report
     def citation_text = [
             "Tools used in the workflow included:",
-            "IDM (Hashemi M, Schneider KA (2024)),",
-            "MultiLocusBiallelicModel (Tsoungui Obama and Schneider 2022)",
-            "PGEcore (PlasmoGenEpi)",
+            "FastQC (Andrews 2010),",
+            "MultiQC (Ewels et al. 2016)",
             "."
         ].join(' ').trim()
 
@@ -336,8 +279,8 @@ def methodsDescriptionText(mqc_methods_yaml) {
     meta["tool_bibliography"] = ""
 
     // TODO nf-core: Only uncomment below if logic in toolCitationText/toolBibliographyText has been filled!
-    meta["tool_citations"] = toolCitationText().replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
-    meta["tool_bibliography"] = toolBibliographyText()
+    // meta["tool_citations"] = toolCitationText().replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
+    // meta["tool_bibliography"] = toolBibliographyText()
 
 
     def methods_text = mqc_methods_yaml.text
