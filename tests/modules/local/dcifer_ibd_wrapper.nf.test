@@ -1,0 +1,43 @@
+nextflow_process {
+
+    name "Test Process DCIFER_IBD_WRAPPER"
+    script "modules/local/dcifer_ibd_wrapper.nf"
+    process "DCIFER_IBD_WRAPPER"
+
+    test("Test for failures and output file checksums with example_allele_table") {
+
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example_allele_table.tsv")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.btwn_host_rel != null
+            assert path(process.out.btwn_host_rel.get(0)).md5 == "84d67414cb1870109403fecbe217533e"
+        }
+
+    }
+
+    test("Test for failures and output file checksums with example2_allele_table") {
+
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example2_allele_table.tsv")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.btwn_host_rel != null
+            assert path(process.out.btwn_host_rel.get(0)).md5 == "10133465013741097af8068b41855471"
+        }
+
+    }
+
+}

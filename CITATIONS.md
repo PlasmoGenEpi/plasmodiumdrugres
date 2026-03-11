@@ -10,13 +10,19 @@
 
 ## Pipeline tools
 
-- [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+- [PGEcore](https://github.com/PlasmoGenEpi/PGEcore)
 
-> Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online].
+- [IDM](https://doi.org/10.1371/journal.pone.0287161)
 
-- [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
+> Hashemi M, Schneider KA (2024) Estimating multiplicity of infection, allele frequencies, and prevalences accounting for incomplete data. PLoS ONE 19(3): e0287161.
 
-> Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
+- [MultiLociBiallelicModel](https://www.frontiersin.org/articles/10.3389/fepid.2022.943625/full)
+
+> Tsoungui Obama, Henri Christian Junior, and Kristan Alexander Schneider. 2022. “A Maximum-Likelihood Method to Estimate Haplotype Frequencies and Prevalence Alongside Multiplicity of Infection from SNP Data.” Frontiers in Epidemiology 2.
+
+- [FreqEstimationModel](https://doi.org/10.1186/1475-2875-13-102)
+
+> Taylor, A.R., Flegg, J.A., Nsobya, S.L. et al. Estimation of malaria haplotype and genotype frequencies: a statistical approach to overcome the challenge associated with multiclonal infections. Malar J 13, 102 (2014).
 
 ## Software packaging/containerisation tools
 
