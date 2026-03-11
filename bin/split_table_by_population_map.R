@@ -125,5 +125,3 @@ if(nrow(input_table_with_no_pop) > 0){
         paste0(args$output_directory, "/", args$unmapped_identifiers_output), args$unmapped_identifiers_output)
     cat(unique(sort(input_table_with_no_pop[[args$identifier_col]])), sep = "\n", file = output_unmapped_identifiers_output)
 }
-
-

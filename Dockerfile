@@ -108,4 +108,3 @@ RUN R -e 'library("msa")'
 
 # update path
 ENV PATH="/opt/pmotools-python/scripts:$PATH"
-
