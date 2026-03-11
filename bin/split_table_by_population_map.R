@@ -112,7 +112,7 @@ input_table_with_pop = input_table %>%
     filter(!is.na(args$population_col))
 
 input_table_with_no_pop = input_table %>%
-    filter(!is.na(args$population_col))
+    filter(is.na(args$population_col))
 
 input_table_with_pop_split = split(input_table_with_pop, input_table_with_pop[[args$population_col]])
 
