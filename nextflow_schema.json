@@ -32,6 +32,11 @@
                     "help_text": "This parameter is *mandatory* if `--pmo` is not specified. You will need to create a TSV file before running the pipeline. Use this parameter to specify its location. It has to be tab separated and include columns specimen_id, target_id, and seq. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#allele-table-input).",
                     "fa_icon": "fas fa-file-csv"
                 },
+                "input": {
+                    "type": "null",
+                    "exists": false,
+                    "hidden": true
+                },
                 "loci_of_interest_bed": {
                     "type": "string",
                     "format": "file-path",
