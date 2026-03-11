@@ -135,13 +135,13 @@
                 "mlaf_method": {
                     "type": "string",
                     "description": "method for multi locus allele frequency estimates.",
-                    "default": "MLBM",
+                    "default": "naive",
                     "fa_icon": "fas fa-users-cog"
                 },
                 "slaf_method": {
                     "type": "string",
                     "description": "method for single locus allele frequency estimates.",
-                    "default": "IDM",
+                    "default": "mhaps_freq",
                     "fa_icon": "fas fa-users-cog"
                 },
                 "translate_loci_extra_args": {
@@ -164,21 +164,21 @@
                     "fa_icon": "fas fa-users-cog"
                 },
                 "mlaf_method_options": {
-                    "type": "array",
+                    "type": "string",
                     "description": "method options for multi locus allele frequency estimates.",
                     "default": "['MLBM', 'FEM', 'naive']",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
                 "mlbm_wrapper_aa_specimen_occurence_cut_off": {
-                    "type": "integer",
+                    "type": ["integer", "null"],
                     "description": "when running MLBM, a cut off value for filtering amino acid calls.",
-                    "default": "null",
+                    "default": null,
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
                 "slaf_method_options": {
-                    "type": "array",
+                    "type": "string",
                     "description": "method options for single locus allele frequency estimates.",
                     "default": "['IDM', 'naive', 'mhaps_freq']",
                     "hidden": true,
@@ -220,7 +220,7 @@
                     "fa_icon": "fas fa-users-cog"
                 },
                 "slaf_method_mhaps_freq_method_options": {
-                    "type": "array",
+                    "type": "string",
                     "description": "method options for mhaps_freq SLAF (e.g. dcifer).",
                     "default": ["dcifer"],
                     "hidden": true,
