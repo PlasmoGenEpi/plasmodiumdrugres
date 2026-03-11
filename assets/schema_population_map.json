@@ -18,9 +18,7 @@
                     }
                 ],
                 "errorMessage": "Specimen ID must be provided and cannot contain spaces.",
-                "meta": [
-                    "id"
-                ]
+                "meta": ["id"]
             },
             "population": {
                 "anyOf": [
@@ -32,14 +30,9 @@
                     }
                 ],
                 "errorMessage": "Population must be provided and cannot contain spaces.",
-                "meta": [
-                    "id"
-                ]
+                "meta": ["id"]
             }
         },
-        "required": [
-            "specimen_id",
-            "population"
-        ]
+        "required": ["specimen_id", "population"]
     }
 }
