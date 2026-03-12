@@ -287,30 +287,40 @@ def genomeExistsError() {
 // Generate methods description for MultiQC
 //
 def toolCitationText() {
-    // TODO nf-core: Optionally add in-text citation tools to this list.
-    // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "Tool (Foo et al. 2023)" : "",
-    // Uncomment function in methodsDescriptionText to render in MultiQC report
-    def citation_text = [
-            "Tools used in the workflow included:",
-            "IDM (Hashemi M, Schneider KA (2024)),",
-            "MultiLocusBiallelicModel (Tsoungui Obama and Schneider 2022)",
-            "PGEcore (PlasmoGenEpi)",
-            "."
-        ].join(' ').trim()
-
-    return citation_text
+    def citations = ["Tools used in the workflow included:"]
+    if (params.slaf_method == "IDM") {
+        citations << "IDM (Hashemi M, Schneider KA 2024)"
+    }
+    if (params.mlaf_method == "MLBM") {
+        citations << "MultiLocusBiallelicModel (Tsoungui Obama and Schneider 2022)"
+    }
+    if (params.mlaf_method == "FEM") {
+        citations << "FreqEstimationModel (Taylor et al. 2014)"
+    }
+    if (params.slaf_method == "mhaps_freq" && params.slaf_method_mhaps_freq_method == "dcifer") {
+        citations << "Dcifer (Gerlovina et al. 2022)"
+    }
+    citations << "PGEcore (PlasmoGenEpi)"
+    return citations.join(", ") + "."
 }
 
 def toolBibliographyText() {
-    // TODO nf-core: Optionally add bibliographic entries to this list.
-    // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "<li>Author (2023) Pub name, Journal, DOI</li>" : "",
-    // Uncomment function in methodsDescriptionText to render in MultiQC report
-    def reference_text = [
-            "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li>",
-            "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: /10.1093/bioinformatics/btw354</li>"
-        ].join(' ').trim()
-
-    return reference_text
+    def refs = []
+    if (params.slaf_method == "IDM") {
+        refs << "<li>Hashemi M, Schneider KA (2024) Estimating multiplicity of infection, allele frequencies, and prevalences accounting for incomplete data. PLoS ONE 19(3): e0287161. doi: <a href='https://doi.org/10.1371/journal.pone.0287161'>10.1371/journal.pone.0287161</a></li>"
+    }
+    if (params.mlaf_method == "MLBM") {
+        refs << "<li>Tsoungui Obama HCJ, Schneider KA (2022) A Maximum-Likelihood Method to Estimate Haplotype Frequencies and Prevalence Alongside Multiplicity of Infection from SNP Data. Frontiers in Epidemiology 2. <a href='https://www.frontiersin.org/articles/10.3389/fepid.2022.943625/full'>10.3389/fepid.2022.943625</a></li>"
+    }
+    if (params.mlaf_method == "FEM") {
+        refs << "<li>Taylor AR, Flegg JA, Nsobya SL et al. (2014) Estimation of malaria haplotype and genotype frequencies: a statistical approach to overcome the challenge associated with multiclonal infections. Malar J 13, 102. doi: <a href='https://doi.org/10.1186/1475-2875-13-102'>10.1186/1475-2875-13-102</a></li>"
+    }
+    if (params.slaf_method == "mhaps_freq" && params.slaf_method_mhaps_freq_method == "dcifer") {
+        refs << "<li>Gerlovina I, Gerlovin B, Rodríguez-Barraquer I, Greenhouse B (2022) Dcifer: an IBD-based method to calculate genetic distance between polyclonal infections. Genetics 222(2). doi: <a href='https://doi.org/10.1093/genetics/iyac126'>10.1093/genetics/iyac126</a></li>"
+    }
+    refs << "<li>PGEcore: <a href='https://github.com/PlasmoGenEpi/PGEcore'>https://github.com/PlasmoGenEpi/PGEcore</a></li>"
+    refs << "<li>Ewels P, Magnusson M, Lundin S, Käller M (2016) MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics 32(19), 3047–3048. doi: <a href='https://doi.org/10.1093/bioinformatics/btw354'>10.1093/bioinformatics/btw354</a></li>"
+    return refs.join(" ")
 }
 
 def methodsDescriptionText(mqc_methods_yaml) {
@@ -334,10 +344,6 @@ def methodsDescriptionText(mqc_methods_yaml) {
     meta["nodoi_text"] = meta.manifest_map.doi ? "" : "<li>If available, make sure to update the text to include the Zenodo DOI of version of the pipeline used. </li>"
 
     // Tool references
-    meta["tool_citations"] = ""
-    meta["tool_bibliography"] = ""
-
-    // TODO nf-core: Only uncomment below if logic in toolCitationText/toolBibliographyText has been filled!
     meta["tool_citations"] = toolCitationText().replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
     meta["tool_bibliography"] = toolBibliographyText()
 

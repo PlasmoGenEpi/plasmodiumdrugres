@@ -24,6 +24,10 @@
 
 > Taylor, A.R., Flegg, J.A., Nsobya, S.L. et al. Estimation of malaria haplotype and genotype frequencies: a statistical approach to overcome the challenge associated with multiclonal infections. Malar J 13, 102 (2014).
 
+- [Dcifer](https://doi.org/10.1093/genetics/iyac126)
+
+> Inna Gerlovina, Boris Gerlovin, Isabel Rodríguez-Barraquer, Bryan Greenhouse, Dcifer: an IBD-based method to calculate genetic distance between polyclonal infections, Genetics, Volume 222, Issue 2, October 2022.
+
 ## Software packaging/containerisation tools
 
 - [Anaconda](https://anaconda.com)

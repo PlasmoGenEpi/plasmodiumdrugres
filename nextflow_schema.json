@@ -34,6 +34,7 @@
                 },
                 "input": {
                     "type": "null",
+                    "description": "Path to input samplesheet",
                     "exists": false,
                     "hidden": true
                 },
