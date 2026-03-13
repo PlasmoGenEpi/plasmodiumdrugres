@@ -105,18 +105,19 @@ workflow PIPELINE_INITIALISATION {
         params.genome_reference ? "genome_reference" : "none"
     def fasta = params.targeted_reference ?: params.genome_reference ?: ""
     if (params.pmo) {
-        EXTRACT_ALLELE_TABLE(params.pmo)
-        allele_table = EXTRACT_ALLELE_TABLE.out.allele_table
-        EXTRACT_BED_FILE_FROM_PMO(params.pmo, ref_type, fasta)
-        panel_info_bed = EXTRACT_BED_FILE_FROM_PMO.out.panel_info_bed
+        pmo_ch = Channel.fromPath(params.pmo)
+        EXTRACT_ALLELE_TABLE(pmo_ch)
+        allele_table_ch = EXTRACT_ALLELE_TABLE.out.allele_table
+        EXTRACT_BED_FILE_FROM_PMO(pmo_ch, ref_type, fasta)
+        panel_info_bed_ch = EXTRACT_BED_FILE_FROM_PMO.out.panel_info_bed
     } else if (params.allele_table) {
-        allele_table = params.allele_table
-        panel_info_bed = params.panel_info_bed
+        allele_table_ch = Channel.fromPath(params.allele_table)
+        panel_info_bed_ch = Channel.fromPath(params.panel_info_bed)
     }
 
     emit:
-    allele_table    = allele_table
-    panel_info_bed  = panel_info_bed
+    allele_table_ch    = allele_table_ch
+    panel_info_bed_ch  = panel_info_bed_ch
     versions        = ch_versions
 }
 

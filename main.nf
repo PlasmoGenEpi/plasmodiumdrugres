@@ -44,8 +44,8 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     NFCORE_PLASMODIUMDRUGRES(
-        PIPELINE_INITIALISATION.out.allele_table,
-        PIPELINE_INITIALISATION.out.panel_info_bed,
+        PIPELINE_INITIALISATION.out.allele_table_ch,
+        PIPELINE_INITIALISATION.out.panel_info_bed_ch,
         params.loci_of_interest_bed,
         params.translate_loci_extra_args,
         params.mlaf_method,
@@ -77,8 +77,8 @@ workflow {
 //
 workflow NFCORE_PLASMODIUMDRUGRES {
     take:
-    allele_table
-    panel_info_bed_with_ref
+    allele_table_ch
+    panel_info_bed_ch
     loci_of_interest_bed
     translate_loci_extra_args
     mlaf_method
@@ -91,8 +91,8 @@ workflow NFCORE_PLASMODIUMDRUGRES {
     // WORKFLOW: Run pipeline
     //
     PLASMODIUMDRUGRES(
-        allele_table,
-        panel_info_bed_with_ref,
+        allele_table_ch,
+        panel_info_bed_ch,
         loci_of_interest_bed,
         translate_loci_extra_args,
         mlaf_method,

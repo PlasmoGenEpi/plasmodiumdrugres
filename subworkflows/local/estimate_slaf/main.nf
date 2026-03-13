@@ -25,7 +25,8 @@ workflow ESTIMATE_SLAF {
     } else if (method == "mhaps_freq") {
         DCIFER_SLAF_WRAPPER(method_input)
         mhaps_dcifer_ch = DCIFER_SLAF_WRAPPER.out.mhaps_slaf
-        SLAF_FROM_MHAPS_FREQS(mhaps_dcifer_ch, loci_of_interest_for_target_for_microhap)
+        // Use .first() so the single loci file broadcasts to each mhaps_dcifer item (runs per population)
+        SLAF_FROM_MHAPS_FREQS(mhaps_dcifer_ch, loci_of_interest_for_target_for_microhap.first())
         slaf_output_raw = SLAF_FROM_MHAPS_FREQS.out.slaf
         // No population_map: use "collapsed_amino_acid_calls" as group_name for merge consistency
         slaf_output = params.population_map

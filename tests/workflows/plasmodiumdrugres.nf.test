@@ -13,8 +13,8 @@ nextflow_workflow {
             }
             workflow {
                 """
-                input[0] = [ value: ("${projectDir}/tests/input/example2_allele_table.tsv") ]
-                input[1] = [ value: ("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed") ]
+                input[0] = channel.of(file("${projectDir}/tests/input/example2_allele_table.tsv"))
+                input[1] = channel.of(file(("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed")))
                 input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
                 input[3] = ""
                 input[4] = "MLBM"
@@ -40,8 +40,8 @@ nextflow_workflow {
             }
             workflow {
                 """
-                input[0] = [ value: "${projectDir}/tests/input/example2_allele_table.tsv" ]
-                input[1] = [ value: "${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed" ]
+                input[0] = channel.of(file("${projectDir}/tests/input/example2_allele_table.tsv" ))
+                input[1] = channel.of(file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed"))
                 input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
                 input[3] = ""
                 input[4] = "FEM"
@@ -67,8 +67,8 @@ nextflow_workflow {
             }
             workflow {
                 """
-                input[0] = [ value: "${projectDir}/tests/input/example2_allele_table.tsv" ]
-                input[1] = [ value: "${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed" ]
+                input[0] = channel.of(file("${projectDir}/tests/input/example2_allele_table.tsv"))
+                input[1] = channel.of(file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed"))
                 input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
                 input[3] = ""
                 input[4] = "naive"
@@ -93,8 +93,8 @@ nextflow_workflow {
             }
             workflow {
                 """
-                input[0] = [ value: "${projectDir}/tests/input/example2_allele_table.tsv" ]
-                input[1] = [ value: "${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed" ]
+                input[0] = channel.of(file("${projectDir}/tests/input/example2_allele_table.tsv"))
+                input[1] = channel.of(file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed"))
                 input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
                 input[3] = ""
                 input[4] = "naive"
@@ -119,8 +119,8 @@ nextflow_workflow {
             }
             workflow {
                 """
-                input[0] = [ value: "${projectDir}/tests/input/example2_allele_table.tsv" ]
-                input[1] = [ value: "${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed" ]
+                input[0] = channel.of(file("${projectDir}/tests/input/example2_allele_table.tsv"))
+                input[1] = channel.of(file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed"))
                 input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
                 input[3] = ""
                 input[4] = "MLBM"

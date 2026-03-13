@@ -34,14 +34,14 @@ workflow PLASMODIUMDRUGRES {
 
     main:
 
-    TRANSLATE_LOCI_OF_INTEREST(file(allele_table.value), file(panel_info_bed_with_ref.value), file(loci_of_interest_bed), translate_loci_extra_args)
+    TRANSLATE_LOCI_OF_INTEREST(allele_table, panel_info_bed_with_ref, file(loci_of_interest_bed), translate_loci_extra_args)
 
     // Split allele table by population for mhaps_freq (only when population_map)
     if (slaf_method == "mhaps_freq" && params.population_map) {
-        SPLIT_ALLELE_TABLE_BY_POP(file(allele_table.value), file(params.population_map))
+        SPLIT_ALLELE_TABLE_BY_POP(allele_table, file(params.population_map))
         mhaps_allele_table_ch = (SPLIT_ALLELE_TABLE_BY_POP.out.per_pop_tables).flatten()
     } else if (slaf_method == "mhaps_freq") {
-        mhaps_allele_table_ch = channel.fromPath(file(allele_table.value))
+        mhaps_allele_table_ch = allele_table
     } else {
         mhaps_allele_table_ch = Channel.empty()
     }

@@ -9,6 +9,11 @@ nextflow_pipeline {
         when {
             params {
                 outdir = "$outputDir"
+
+                allele_table               = "${projectDir}/tests/input/example2_allele_table.tsv"
+                panel_info_bed             = "${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed"
+                loci_of_interest_bed       = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
+                loci_groups                = "${projectDir}/tests/input/example2_loci_groups.tsv"
             }
         }
 
@@ -19,8 +24,7 @@ nextflow_pipeline {
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
+                {             assert snapshot(
                     removeNextflowVersion("$outputDir/pipeline_info/nf_core_plasmodiumdrugres_software_mqc_versions.yml"),
                     // All stable path name, with a relative path
                     stable_name,
