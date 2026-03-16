@@ -7,17 +7,15 @@ process IDM_WRAPPER {
 
     label 'process_single'
 
-    def slaf_output = 'aa_slaf.tsv'
-
     input:
     path aa_calls_input
 
     output:
-    path "$slaf_output", emit: slaf
+    tuple val("${aa_calls_input.getBaseName(3)}"), path("${aa_calls_input.getBaseName(3)}.aa_slaf.tsv"), emit: slaf
 
     script:
     """
     Rscript ${projectDir}/bin/PGEcore/scripts/IDM_wrapper/IDM_wrapper.R \\
-        --aa_calls_input ${aa_calls_input} --slaf_output "$slaf_output"
+        --aa_calls_input ${aa_calls_input} --slaf_output "${aa_calls_input.getBaseName(3)}.aa_slaf.tsv"
     """
 }

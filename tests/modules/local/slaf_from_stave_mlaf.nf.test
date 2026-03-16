@@ -9,7 +9,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = file("${projectDir}/tests/input/example_mlaf.tsv")
+                input[0] = tuple(file("${projectDir}/tests/input/example_mlaf.tsv").getBaseName(3), file("${projectDir}/tests/input/example_mlaf.tsv"))
                 """
             }
         }
@@ -17,7 +17,14 @@ nextflow_process {
         then {
             assert process.success
             assert process.out.slaf != null
-            assert path(process.out.slaf.get(0)).md5 == "508f094181fd61c8d2f967a4b5dfe430"
+
+            // unpack tuple output
+            def (pop, outFile) = process.out.slaf.get(0)
+
+            assert pop == 'example_mlaf'
+
+            // output md5 check
+            assert path(outFile).md5 == "937b13856732e07791f20eb9ebc47acd"
         }
 
     }

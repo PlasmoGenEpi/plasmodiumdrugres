@@ -7,20 +7,19 @@ process ESTIMATE_ALLELE_FREQUENCY_NAIVE {
 
     label 'process_single'
 
-    def output_filename = "allele_freqs.tsv"
-
     input:
     path aa_calls
     val method
 
     output:
-    path "${output_filename}", emit: slaf
+    tuple val("${aa_calls.getBaseName(3)}"), path("${aa_calls.getBaseName(3)}.aa_slaf.tsv"), emit: slaf
+
 
     script:
     """
     Rscript ${projectDir}/bin/PGEcore/scripts/estimate_allele_frequency_naive/estimate_allele_frequency_naive.R \
         --aa_calls ${aa_calls} \
         --method ${method} \
-        --output ${output_filename}
+        --output "${aa_calls.getBaseName(3)}.aa_slaf.tsv"
     """
 }

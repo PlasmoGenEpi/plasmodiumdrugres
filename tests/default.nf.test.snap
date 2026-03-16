@@ -1,0 +1,31 @@
+{
+    "-profile test": {
+        "content": [
+            [
+                "ml_summary.tsv",
+                "pipeline_info",
+                "sl_from_ml_summary.tsv",
+                "sl_summary.tsv",
+                "translated_loci",
+                "translated_loci/amino_acid_calls.tsv.gz",
+                "translated_loci/collapsed_amino_acid_calls.tsv.gz",
+                "translated_loci/loci_covered_by_target_samples_info.tsv",
+                "translated_loci/loci_of_interest_for_target_for_microhap.tsv.gz"
+            ],
+            [
+                "ml_summary.tsv:md5,b1f7753ceac8e007a905804ab6a2cacf",
+                "sl_from_ml_summary.tsv:md5,5881303d455bc8663c52bc17db75a574",
+                "sl_summary.tsv:md5,e98d2d15fa24cf28355916a15bdabce6",
+                "amino_acid_calls.tsv.gz:md5,d3000136bf1c39dccf2a6816b3408209",
+                "collapsed_amino_acid_calls.tsv.gz:md5,9c73ed7161c4d1304a080459daceb8f1",
+                "loci_covered_by_target_samples_info.tsv:md5,c732c7a2c01ef61d456ceda30ddd7e29",
+                "loci_of_interest_for_target_for_microhap.tsv.gz:md5,6b1079435d42c81e2fd082746a11eb51"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-03-12T12:15:00.535015"
+    }
+}

@@ -11,19 +11,18 @@ process EXTRACT_ALLELE_TABLE {
 
     input:
     path pmo
-    val bioinfoid
 
     output:
     path "${output_filename}.tsv", emit: allele_table
 
     script:
     """
-    pmotools-runner.py extract_allele_table \
+    # TODO: update this to use the new column names read_count and convert allele
+    pmotools-python extract_allele_table \
         --file ${pmo} \
-        --bioid ${bioinfoid} \
         --representative_haps_fields "seq" \
-        --microhap_fields "read_count" \
-        --default_base_col_names specimen_id,target_id,allele \
+        --microhap_fields "reads" \
+        --default_base_col_names specimen_name,target_name,allele \
         --output ${output_filename}
     """
 }

@@ -10,24 +10,83 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": ["loci_of_interest_bed", "loci_groups"],
             "properties": {
-                "input": {
+                "pmo": {
                     "type": "string",
                     "format": "file-path",
                     "exists": true,
-                    "schema": "assets/schema_input.json",
-                    "mimetype": "text/csv",
-                    "pattern": "^\\S+\\.csv$",
-                    "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#samplesheet-input).",
+                    "mimetype": "json",
+                    "pattern": "^\\S+\\.json$",
+                    "description": "Path to json file containing metadata and microhaplotypes according to pmo format.",
+                    "help_text": "This parameter is *mandatory* if `--allele_table` is not specified. You will need to create a PMO file before running the pipeline. Use this parameter to specify its location. It has to be json formatted and include metadata and microhaplotypes. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#pmo-input).",
+                    "fa_icon": "fas fa-file"
+                },
+                "allele_table": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/tsv",
+                    "pattern": "^\\S+\\.[ct]sv$",
+                    "description": "Path to tab separated file containing microhaplotypes for specimens.",
+                    "help_text": "This parameter is *mandatory* if `--pmo` is not specified. You will need to create a TSV file before running the pipeline. Use this parameter to specify its location. It has to be tab separated and include columns specimen_id, target_id, and seq. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#allele-table-input).",
+                    "fa_icon": "fas fa-file-csv"
+                },
+                "input": {
+                    "type": "null",
+                    "description": "Path to input samplesheet",
+                    "exists": false,
+                    "hidden": true
+                },
+                "loci_of_interest_bed": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "schema": "assets/schema_loci_of_interest_bed.json",
+                    "mimetype": "bed",
+                    "pattern": "^\\S+\\.bed$",
+                    "description": "Path to BED file containing individual loci of interest.",
+                    "help_text": "You will need to create a BED file before running the pipeline. Use this parameter to specify its location. It has to comply with BED format standards and include the coordinates of loci of interest. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#loci-of-interest-input).",
+                    "fa_icon": "fas fa-file-csv"
+                },
+                "loci_groups": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/tsv",
+                    "pattern": "^\\S+\\.[ct]sv$",
+                    "description": "Path to tab separated file containing groups of loci of interest.",
+                    "help_text": "This file is used to define loci for which multilocus estimates will be made. Use this parameter to specify its location. It has to be tab separated and include columns group_id, gene_id, and aa_position. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#loci-groups-input).",
+                    "fa_icon": "fas fa-file-csv"
+                },
+                "panel_info_bed": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "schema": "assets/schema_panel_info_bed.json",
+                    "mimetype": "bed",
+                    "pattern": "^\\S+\\.bed$",
+                    "description": "Path to BED file containing panel location information.",
+                    "help_text": "This file is used to define coordinates for the targets in the panel. Use this parameter to specify its location. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#panel-info-bed).",
+                    "fa_icon": "fas fa-file-csv"
+                },
+                "population_map": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "schema": "assets/schema_population_map.json",
+                    "mimetype": "text/tsv",
+                    "pattern": "^\\S+\\.[ct]sv$",
+                    "description": "Path to tab separated file containing population assignment for each specimen_id.",
+                    "help_text": "This file is used to split specimens into separate populations to calculate metrics for each. It has to be tab separated and include columns specimen_id, population. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#population-map-input).",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
-                    "fa_icon": "fas fa-folder-open"
+                    "fa_icon": "fas fa-folder-open",
+                    "default": "output"
                 },
                 "email": {
                     "type": "string",
@@ -35,11 +94,6 @@
                     "fa_icon": "fas fa-envelope",
                     "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
-                },
-                "multiqc_title": {
-                    "type": "string",
-                    "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
-                    "fa_icon": "fas fa-file-signature"
                 }
             }
         },
@@ -53,32 +107,130 @@
                     "type": "string",
                     "description": "Name of iGenomes reference.",
                     "fa_icon": "fas fa-book",
+                    "hidden": true,
                     "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
                 },
-                "fasta": {
+                "genome_reference": {
                     "type": "string",
                     "format": "file-path",
                     "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
-                    "description": "Path to FASTA genome file.",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.",
+                    "description": "Path to FASTA file containing the full genome.",
+                    "help_text": "This parameter is *mandatory* if `--targeted_reference` is not specified and `--allele_table` is specified. This is used to extract the reference for the targets.",
                     "fa_icon": "far fa-file-code"
                 },
-                "igenomes_ignore": {
-                    "type": "boolean",
-                    "description": "Do not load the iGenomes reference config.",
-                    "fa_icon": "fas fa-ban",
-                    "hidden": true,
-                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
-                },
-                "igenomes_base": {
+                "targeted_reference": {
                     "type": "string",
-                    "format": "directory-path",
-                    "description": "The base path to the igenomes reference files",
-                    "fa_icon": "fas fa-ban",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/plain",
+                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
+                    "description": "Path to FASTA file containing the reference for only the targets.",
+                    "help_text": "This parameter is *mandatory* if `--genome_reference` is not specified and `--allele_table` is specified.",
+                    "fa_icon": "far fa-file-code"
+                }
+            }
+        },
+        "method_options": {
+            "title": "Method options for pipeline steps",
+            "type": "object",
+            "fa_icon": "fa fa-cog",
+            "description": "Parameters used to define the methods used for each step of the pipeline.",
+            "properties": {
+                "mlaf_method": {
+                    "type": "string",
+                    "description": "method for multi locus allele frequency estimates.",
+                    "default": "naive",
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "slaf_method": {
+                    "type": "string",
+                    "description": "method for single locus allele frequency estimates.",
+                    "default": "mhaps_freq",
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "translate_loci_extra_args": {
+                    "type": "string",
+                    "description": "Extra arguments supplied when translating loci of interest",
+                    "help_text": "See https://github.com/PlasmoGenEpi/PGEcore/tree/develop/scripts/translate_loci_of_interest",
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "naive_slaf_method": {
+                    "type": "string",
+                    "description": "method options for single locus allele frequency estimates with naive method. read_count_prop or presence_absence.",
+                    "default": "read_count_prop",
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "population_label": {
+                    "type": "string",
+                    "description": "label for population/ this individual pipeline run.",
+                    "help_text": "If --population_map is not set this can be used to label the population these estimates are for.",
+                    "default": "pop1",
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "mlaf_method_options": {
+                    "type": "string",
+                    "description": "method options for multi locus allele frequency estimates.",
+                    "default": "[\\'MLBM\\',\\'FEM\\',\\'naive\\']",
                     "hidden": true,
-                    "default": "s3://ngi-igenomes/igenomes/"
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "mlbm_wrapper_aa_specimen_occurence_cut_off": {
+                    "type": ["integer", "null"],
+                    "description": "when running MLBM, a cut off value for filtering amino acid calls.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "slaf_method_options": {
+                    "type": "string",
+                    "description": "method options for single locus allele frequency estimates.",
+                    "default": "[\\'IDM\\',\\'naive\\',\\'mhaps_freq\\']",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "naive_mlaf_method": {
+                    "type": "string",
+                    "description": "method for naive multi locus allele frequency estimates.",
+                    "default": "wsaf_prop",
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "naive_multilocus_wsaf_cut_off": {
+                    "type": ["number", "null"],
+                    "description": "wsaf cut off for naive multilocus estimates.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "dcifer_slaf_wrapper_coi_lrank": {
+                    "type": ["integer", "null"],
+                    "description": "COI lrank for dcifer slaf wrapper.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "dcifer_slaf_wrapper_qstart": {
+                    "type": ["number", "null"],
+                    "description": "qstart for dcifer slaf wrapper.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "dcifer_slaf_wrapper_tol": {
+                    "type": ["number", "null"],
+                    "description": "tolerance for dcifer slaf wrapper.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "slaf_method_mhaps_freq_method_options": {
+                    "type": "string",
+                    "description": "method options for mhaps_freq SLAF (e.g. dcifer).",
+                    "default": "[\\'dcifer\\']",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "slaf_method_mhaps_freq_method": {
+                    "type": "string",
+                    "description": "method for mhaps_freq SLAF.",
+                    "default": "dcifer",
+                    "fa_icon": "fas fa-users-cog"
                 }
             }
         },
@@ -166,14 +318,6 @@
                     "fa_icon": "fas fa-remove-format",
                     "hidden": true
                 },
-                "max_multiqc_email_size": {
-                    "type": "string",
-                    "description": "File size limit when attaching MultiQC reports to summary emails.",
-                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
-                    "default": "25.MB",
-                    "fa_icon": "fas fa-file-upload",
-                    "hidden": true
-                },
                 "monochrome_logs": {
                     "type": "boolean",
                     "description": "Do not use coloured log outputs.",
@@ -186,24 +330,6 @@
                     "fa_icon": "fas fa-people-group",
                     "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
                     "hidden": true
-                },
-                "multiqc_config": {
-                    "type": "string",
-                    "format": "file-path",
-                    "description": "Custom config file to supply to MultiQC.",
-                    "fa_icon": "fas fa-cog",
-                    "hidden": true
-                },
-                "multiqc_logo": {
-                    "type": "string",
-                    "description": "Custom logo file to supply to MultiQC. File name must also be set in the MultiQC config file",
-                    "fa_icon": "fas fa-image",
-                    "hidden": true
-                },
-                "multiqc_methods_description": {
-                    "type": "string",
-                    "description": "Custom MultiQC yaml file containing HTML including a methods description.",
-                    "fa_icon": "fas fa-cog"
                 },
                 "validate_params": {
                     "type": "boolean",
@@ -218,6 +344,24 @@
                     "description": "Base URL or local path to location of pipeline test dataset files",
                     "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
                     "hidden": true
+                },
+                "trace_report_suffix": {
+                    "type": "string",
+                    "fa_icon": "far calendar",
+                    "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
+                    "hidden": true
+                },
+                "help": {
+                    "type": ["boolean", "string"],
+                    "description": "Display the help message."
+                },
+                "help_full": {
+                    "type": "boolean",
+                    "description": "Display the full detailed help message."
+                },
+                "show_hidden": {
+                    "type": "boolean",
+                    "description": "Display hidden parameters in the help message (only works when --help or --help_full are provided)."
                 }
             }
         }
@@ -234,6 +378,9 @@
         },
         {
             "$ref": "#/$defs/generic_options"
+        },
+        {
+            "$ref": "#/$defs/method_options"
         }
     ]
 }

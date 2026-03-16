@@ -20,6 +20,12 @@ jobs:
           submodules: recursive # Ensures submodules are fetched and updated
           fetch-depth: 0 # Fetch all history to avoid shallow clones
 
+      - name: Ensure Git respects file permissions
+        run: git config core.fileMode true
+
+      - name: Fix R script permissions (safety net)
+        run: chmod +x bin/PGEcore/scripts/**/*.R
+
       - name: Set up Nextflow
         uses: nf-core/setup-nextflow@v1
 

@@ -17,7 +17,13 @@ nextflow_process {
         then {
             assert process.success
             assert process.out.slaf != null
-            assert path(process.out.slaf.get(0)).md5 == "52cb67a7afe69a8a68a109a6be0a7cc7"
+            // unpack tuple output
+            def (pop, outFile) = process.out.slaf.get(0)
+
+            assert pop == 'example_amino_acid_calls'
+
+            // output md5 check
+            assert path(outFile).md5 == "52cb67a7afe69a8a68a109a6be0a7cc7"
         }
 
     }

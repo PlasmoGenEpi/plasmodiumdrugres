@@ -25,9 +25,9 @@ nextflow_process {
             assert process.out.snp_calls != null
             assert process.out.snps_covered_by_target_samples_info != null
             // output md5 check
-            assert path(process.out.collapsed_snp_calls.get(0)).md5 == "b7274bdd715eefbcb13d6cd0bf3de9de"
-            assert path(process.out.snp_calls.get(0)).md5 == "28c14953b486a9de32db6e89501e754c"
-            assert path(process.out.snps_covered_by_target_samples_info.get(0)).md5 == "5961d14764001ef9273b357bd29acf58"
+            assert path(process.out.collapsed_snp_calls.get(0)).md5 == "ff49ce946c619d76ec84ad5664add36e"
+            assert path(process.out.snp_calls.get(0)).md5 == "b362db6aa8f1e72188dcb1e5a8cf6e0c"
+            assert path(process.out.snps_covered_by_target_samples_info.get(0)).md5 == "e5f13f42e043f3c4ba6f144f897373b7"
         }
 
     }

@@ -1,0 +1,45 @@
+nextflow_workflow {
+
+    name "Test Workflow EXTRACT_BED_FILE_FROM_PMO"
+    script "subworkflows/local/generate_reference_bed_file/main.nf"
+    workflow "EXTRACT_BED_FILE_FROM_PMO"
+
+    test("Should run without failures with only PMO") {
+
+        when {
+            workflow {
+                """
+                input[0] = file("${projectDir}/tests/input/example_PMO.json")
+                input[1] = null
+                input[2] = null
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 1
+        }
+
+    }
+
+    test("Should run without failures with PMO and targeted ref") {
+
+        when {
+            workflow {
+                """
+                input[0] = file("${projectDir}/tests/input/example_PMO.json")
+                input[1] = "targeted_reference"
+                input[2] = file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel_refseqs.fasta")
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 2
+        }
+
+    }
+
+}

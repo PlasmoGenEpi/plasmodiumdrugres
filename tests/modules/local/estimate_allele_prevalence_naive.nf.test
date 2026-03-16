@@ -18,8 +18,14 @@ nextflow_process {
             assert process.success
             // channel exists
             assert process.out.allele_prevalence != null
+
+            // unpack tuple output
+            def (pop, outFile) = process.out.allele_prevalence.get(0)
+
+            assert pop == 'example_amino_acid_calls'
+
             // output md5 check
-            assert path(process.out.allele_prevalence.get(0)).md5 == "693c94726e88b159f8bff05708dc3e52"
+            assert path(outFile).md5 == "716a7d5e590b87ee9189857145eb4b37"
         }
 
     }
