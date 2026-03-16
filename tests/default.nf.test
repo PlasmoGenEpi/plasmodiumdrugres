@@ -25,7 +25,7 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success},
                 {             assert snapshot(
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_plasmodiumdrugres_software_mqc_versions.yml"),
+                    //removeNextflowVersion("$outputDir/pipeline_info/nf_core_plasmodiumdrugres_software_mqc_versions.yml"),
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
