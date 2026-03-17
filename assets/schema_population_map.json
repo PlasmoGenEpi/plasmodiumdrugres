@@ -7,7 +7,7 @@
     "items": {
         "type": "object",
         "properties": {
-            "specimen_id": {
+            "specimen_name": {
                 "anyOf": [
                     {
                         "type": "integer"
@@ -17,7 +17,7 @@
                         "pattern": "^\\S+$"
                     }
                 ],
-                "errorMessage": "Specimen ID must be provided and cannot contain spaces.",
+                "errorMessage": "specimen_name must be provided and cannot contain spaces.",
                 "meta": ["id"]
             },
             "population": {
@@ -29,10 +29,10 @@
                         "type": "string"
                     }
                 ],
-                "errorMessage": "Population must be provided and cannot contain spaces.",
+                "errorMessage": "population must be provided and cannot contain spaces.",
                 "meta": ["id"]
             }
         },
-        "required": ["specimen_id", "population"]
+        "required": ["specimen_name", "population"]
     }
 }

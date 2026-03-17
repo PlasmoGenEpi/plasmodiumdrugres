@@ -21,7 +21,7 @@ nextflow_process {
             // channel exists
             assert process.out.coi_table != null
             // output md5 check
-            assert path(process.out.coi_table.get(0)).md5 == "3567444dcae3a960d81227131d6f46a5"
+            assert path(process.out.coi_table.get(0)).md5 == "0b7fc44ff21aa4fc7fd18a1ffdc1045b"
         }
 
     }
@@ -42,7 +42,7 @@ nextflow_process {
             // channel exists
             assert process.out.coi_table != null
             // output md5 check
-            assert path(process.out.coi_table.get(0)).md5 == "fd3bc792321ffa33bc06288239edb62c"
+            assert path(process.out.coi_table.get(0)).md5 == "63e48b82e3556a2a90fd1e7815350f30"
         }
 
     }
@@ -63,7 +63,7 @@ nextflow_process {
             // channel exists
             assert process.out.coi_table != null
             // output md5 check
-            assert path(process.out.coi_table.get(0)).md5 == "19bec166948479a120a33aaedd4d30c5"
+            assert path(process.out.coi_table.get(0)).md5 == "1cefd52650e52166920cf6ecabfb7605"
         }
 
     }
@@ -84,7 +84,7 @@ nextflow_process {
             // channel exists
             assert process.out.coi_table != null
             // output md5 check
-            assert path(process.out.coi_table.get(0)).md5 == "c157d7143542dc07968b1bb1d9610d4c"
+            assert path(process.out.coi_table.get(0)).md5 == "ab7afcdcc7127e1377ec479de1810c5f"
         }
 
     }

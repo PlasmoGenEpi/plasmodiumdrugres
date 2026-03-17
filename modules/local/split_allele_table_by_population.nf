@@ -1,6 +1,6 @@
 /*
  * STEP - SPLIT_ALLELE_TABLE_BY_POP
- * Split allele tables into seperate populations based on specimen_id
+ * Split allele tables into seperate populations based on specimen_name
  */
 
 // TODO: update this to work off of column names
@@ -22,7 +22,7 @@ process SPLIT_ALLELE_TABLE_BY_POP {
     ${projectDir}/bin/split_table_by_population_map.R \
             --input_table_fnp ${allele_table} \
             --population_map ${population_map} \
-            --population_col population --identifier_col specimen_id \
+            --population_col population --identifier_col specimen_name \
             --output_stub .allele_table.tsv.gz
     """
 }

@@ -17,7 +17,7 @@ nextflow_process {
         then {
             assert process.success
             assert process.out.btwn_host_rel != null
-            assert path(process.out.btwn_host_rel.get(0)).md5 == "84d67414cb1870109403fecbe217533e"
+            assert path(process.out.btwn_host_rel.get(0)).md5 == "ab14cdddd8996f26f08ee2920373d877"
         }
 
     }
@@ -35,7 +35,7 @@ nextflow_process {
         then {
             assert process.success
             assert process.out.btwn_host_rel != null
-            assert path(process.out.btwn_host_rel.get(0)).md5 == "10133465013741097af8068b41855471"
+            assert path(process.out.btwn_host_rel.get(0)).md5 == "769a8a0a092f3f75a30dd709db9f1d5d"
         }
 
     }

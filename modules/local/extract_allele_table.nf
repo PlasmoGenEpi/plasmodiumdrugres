@@ -17,7 +17,6 @@ process EXTRACT_ALLELE_TABLE {
 
     script:
     """
-    # TODO: update this to use the new column names read_count and convert allele
     pmotools-python extract_allele_table \
         --file ${pmo} \
         --representative_haps_fields "seq" \

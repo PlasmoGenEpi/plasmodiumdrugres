@@ -46,6 +46,6 @@
                 "meta": ["id"]
             }
         },
-        "required": ["#chrom", "start", "end", "target_id", "strand"]
+        "required": ["#chrom", "start", "end", "target_name", "strand"]
     }
 }
