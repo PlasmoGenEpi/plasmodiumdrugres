@@ -144,12 +144,12 @@ specimen_2  target1 AATAAAGAAGAAGATAAATATGGAAAAAATGAAAAAAACGAAAAATATGACAAATATGAC
 specimen_3  target1 AATAAAGAAGAAGATAAATATGGAAAAAATGAAAAAAACGAAAAATATGACAAATATGACAAATATGAAAAATATGATAAATACAAAAAAGAT 650
 ```
 
-| Column        | Description                                                                                                       |
-| ------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Column          | Description                                                                                                       |
+| --------------- | ----------------------------------------------------------------------------------------------------------------- |
 | `specimen_name` | Unique identifier for the specimen or sample from which the sequence was obtained.                                |
 | `target_name`   | Identifier for the genomic region being sequenced.                                                                |
-| `seq`         | Observed nucleotide sequence (microhaplotype) aligned to the target region.                                       |
-| `reads`  | Number of sequencing reads supporting the given sequence in that specimen, representing its abundance. (Optional) |
+| `seq`           | Observed nucleotide sequence (microhaplotype) aligned to the target region.                                       |
+| `reads`         | Number of sequencing reads supporting the given sequence in that specimen, representing its abundance. (Optional) |
 
 #### Panel Info
 
@@ -169,15 +169,15 @@ Pf3D7_01_v3     145421  145629  target1    208     +       GATATGTTTAAATATATGATT
 Pf3D7_01_v3     162889  163091  target2   202     +       ATATACCAATAATACTTTTTTTTTTAAATAATGTAAAAAATGATTTATATAATTGTTATAAACAAATGATCACATATCATAATAATAATATCCTAAATCATAACTCTAATATTTTATCAAAAGAAAATGAAAAAAAACAACCTTTTTCAACATATAATATATCAAATCTTTGTTCTCCTGACCAAATGGTGATAAATAAAAA
 ```
 
-| Column      | Description                                                                                                                                   |
-| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `#chrom`    | Chromosome that the target is found on. You may have multiple targets with the same #chrom. This should match with the reference information. |
-| `start`     | Genomic start position of the target (0-based).                                                                                               |
-| `end`       | Genomic end position of the target (0-based).                                                                                                 |
+| Column        | Description                                                                                                                                   |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `#chrom`      | Chromosome that the target is found on. You may have multiple targets with the same #chrom. This should match with the reference information. |
+| `start`       | Genomic start position of the target (0-based).                                                                                               |
+| `end`         | Genomic end position of the target (0-based).                                                                                                 |
 | `target_name` | Identifier for the genomic region being sequenced.                                                                                            |
-| `length`    | Length in base pairs.                                                                                                                         |
-| `strand`    | Strand orientation (+ or -) relative to the reference genome.                                                                                 |
-| `ref_seq`   | reference sequence for the target (optional if genome_reference or targeted reference supplied)                                               |
+| `length`      | Length in base pairs.                                                                                                                         |
+| `strand`      | Strand orientation (+ or -) relative to the reference genome.                                                                                 |
+| `ref_seq`     | reference sequence for the target (optional if genome_reference or targeted reference supplied)                                               |
 
 #### Population Map (optional)
 
