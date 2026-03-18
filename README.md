@@ -97,12 +97,12 @@ When running with an allele table you should create the following inputs:
 
 #### Allele Table
 
-First, prepare an allele table with the following columns: `specimen_id`, `target_id`, `seq`, and optionally `read_count`. Each row represents a microhaplotype called for a specimen at a specific target.
+First, prepare an allele table with the following columns: `specimen_name`, `target_name`, `seq`, and optionally `reads`. Each row represents a microhaplotype called for a specimen at a specific target.
 
 **allele_table.tsv**
 
 ```tsv
-specimen_id  target_id  seq read_count
+specimen_name  target_name  seq reads
 specimen_1  target1 TTATTTTTTTTGTCAATAGATAAATGATCAATATTTTCTATATTTAATCTATCAAGTATTTTTATATATCTATTATTTCTTTCTTCGATGGAT 93
 specimen_1  target1 AATAAAGAAGAAGATAAATATGGAAAAAATGAAAAAAACGAAAAATATGACAAATATGACAAATATGAAAAATATGATAAATACAAAAAAGAT 708
 specimen_1  target2 TCATTCTTTTTTTAACTAAAACTATTCATCTCAAAAATATAAGATATTTTATATGACGAATGCCATTGTATTTTTTGTTACGTAAAAC  236
@@ -117,7 +117,7 @@ Next, prepare a panel info bed file with the following columns:
 - `#chrom` the chromosome of the targeted region the microhaplotype is being called for
 - `start` the start position of the targeted region the microhaplotype is being called for
 - `end` the end position of the targeted region the microhaplotype is being called for
-- `target_id` the identifier of the target. This should match the target_id in the allele table
+- `target_name` the identifier of the target. This should match the target_name in the allele table
 - `length` the length of the targeted region the microhaplotype is being called for
 - `strand` (+ or -)
 - `ref_seq` the reference sequence for the targeted region the microhaplotype is being called for
@@ -125,7 +125,7 @@ Next, prepare a panel info bed file with the following columns:
 **panel_info.bed**
 
 ```bed
-#chrom  start   end     target_id       length  strand  ref_seq
+#chrom  start   end     target_name       length  strand  ref_seq
 Pf3D7_01_v3     145421  145629  Pf3D7_01_v3-145388-145662-1A    208     +       GATATGTTTAAATATATGATTCTCGAAAAAACTTTTTTTATTTTTTTTGTCAATAGATAAATGATCAATATTTTCTATATTTAATCTATCAAGTATTTTTATATATCTATTATTTCTTTCTTCGATGGATAAATTATAAGAATCAATATCCTTTCTTTCATCAACAAACTTTTTTATTGTTAACTCCATTTTTTTATTTAAGATACCA
 Pf3D7_01_v3     162889  163091  Pf3D7_01_v3-162867-163115-1A    202     +       ATATACCAATAATACTTTTTTTTTTAAATAATGTAAAAAATGATTTATATAATTGTTATAAACAAATGATCACATATCATAATAATAATATCCTAAATCATAACTCTAATATTTTATCAAAAGAAAATGAAAAAAAACAACCTTTTTCAACATATAATATATCAAATCTTTGTTCTCCTGACCAAATGGTGATAAATAAAAA
 Pf3D7_01_v3     181545  181728  Pf3D7_01_v3-181512-181761-1A    183     +       TTCATTATTGTTTTCATTCTTTTTTTAACGAAAACTATTCATCTCAAAAATATAAGATATTTTATATGACGAATGCCATTGTATTTTTTGTTACGTAAAACCTGACTTCTTCAAGGAAAACACATGCGCATTTTCACCAATTTTTGCCTAAGCTTATTATAAAAAGTATATTAAATGTATGAC
@@ -134,12 +134,12 @@ Pf3D7_01_v3     455827  456020  Pf3D7_01_v3-455794-456054-1A    193     +       
 
 #### Population Map (optional)
 
-If you would like to estimate prevalences and frequencies for several populations you need to provide a population map which assigns specimens to individual populations. The file only contains two columns `specimen_id` which should match the unique specimen_ids in the allele table, and `population` which contains identifiers for populations. The population identifier will be included in output tables.
+If you would like to estimate prevalences and frequencies for several populations you need to provide a population map which assigns specimens to individual populations. The file only contains two columns `specimen_name` which should match the unique specimen_names in the allele table, and `population` which contains identifiers for populations. The population identifier will be included in output tables.
 
 **population_map.tsv**
 
 ```tsv
-specimen_id population
+specimen_name population
 specimen_1  pop1
 specimen_2  pop2
 specimen_3  pop2
@@ -147,7 +147,7 @@ specimen_3  pop2
 
 ### PMO Inputs
 
-Generate a PMO file using [this documentation](https://plasmogenepi.github.io/PMO_Docs/). If you include reference sequences in your PMO then this is all you need. If you don't then you should provide a reference with either `--genome_reference` or `--targeted_reference`. `--genome_reference` can be a fasta file including a full genome. `--targeted_reference` is a fasta file where sequence names match up with target_ids.
+Generate a PMO file using [this documentation](https://plasmogenepi.github.io/PMO_Docs/). If you include reference sequences in your PMO then this is all you need. If you don't then you should provide a reference with either `--genome_reference` or `--targeted_reference`. `--genome_reference` can be a fasta file including a full genome. `--targeted_reference` is a fasta file where sequence names match up with target_names.
 
 ## Running the pipeline
 

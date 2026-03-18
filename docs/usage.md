@@ -113,7 +113,7 @@ Decide if you will be running the pipeline from a [PMO file](#pmo-inputs) or an 
 
 ### PMO Inputs
 
-Generate a PMO file using [this documentation](https://plasmogenepi.github.io/PMO_Docs/). If you include reference sequences in your PMO then this is all you need. If you don't then you should provide a reference with either `--genome_reference` or `--targeted_reference`. `--genome_reference` can be a fasta file including a full genome. `--targeted_reference` is a fasta file where sequence names match up with target_ids.
+Generate a PMO file using [this documentation](https://plasmogenepi.github.io/PMO_Docs/). If you include reference sequences in your PMO then this is all you need. If you don't then you should provide a reference with either `--genome_reference` or `--targeted_reference`. `--genome_reference` can be a fasta file including a full genome. `--targeted_reference` is a fasta file where sequence names match up with target_names.
 
 ### Allele Table Inputs
 
@@ -136,7 +136,7 @@ You will need to create an allele table file that includes your genomic data. It
 A final allele table may look something like the one below. In this example, three groups are defined: crt, mdr1, and pfdhfr_pfdhps, containing 2, 3, and 4 loci, respectively.
 
 ```tsv title="allele_table.tsv"
-specimen_id  target_id  seq read_count
+specimen_name  target_name  seq reads
 specimen_1  target1 TTATTTTTTTTGTCAATAGATAAATGATCAATATTTTCTATATTTAATCTATCAAGTATTTTTATATATCTATTATTTCTTTCTTCGATGGAT 93
 specimen_1  target1 AATAAAGAAGAAGATAAATATGGAAAAAATGAAAAAAACGAAAAATATGACAAATATGACAAATATGAAAAATATGATAAATACAAAAAAGAT 708
 specimen_1  target2 TCATTCTTTTTTTAACTAAAACTATTCATCTCAAAAATATAAGATATTTTATATGACGAATGCCATTGTATTTTTTGTTACGTAAAAC  236
@@ -146,14 +146,14 @@ specimen_3  target1 AATAAAGAAGAAGATAAATATGGAAAAAATGAAAAAAACGAAAAATATGACAAATATGAC
 
 | Column        | Description                                                                                                       |
 | ------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `specimen_id` | Unique identifier for the specimen or sample from which the sequence was obtained.                                |
-| `target_id`   | Identifier for the genomic region being sequenced.                                                                |
+| `specimen_name` | Unique identifier for the specimen or sample from which the sequence was obtained.                                |
+| `target_name`   | Identifier for the genomic region being sequenced.                                                                |
 | `seq`         | Observed nucleotide sequence (microhaplotype) aligned to the target region.                                       |
-| `read_count`  | Number of sequencing reads supporting the given sequence in that specimen, representing its abundance. (Optional) |
+| `reads`  | Number of sequencing reads supporting the given sequence in that specimen, representing its abundance. (Optional) |
 
 #### Panel Info
 
-Next, prepare a panel info bed file. This will define the locations of the targets in the `target_id` column in the allele table. It has to be a tab-separated file with 7 columns.
+Next, prepare a panel info bed file. This will define the locations of the targets in the `target_name` column in the allele table. It has to be a tab-separated file with 7 columns.
 
 ```bash
 --panel_info_bed '[path to panel info file]'
@@ -164,7 +164,7 @@ Next, prepare a panel info bed file. This will define the locations of the targe
 A final panel info bed file may look something like the one below.
 
 ```bed title="panel_info.bed"
-#chrom  start   end     target_id       length  strand  ref_seq
+#chrom  start   end     target_name       length  strand  ref_seq
 Pf3D7_01_v3     145421  145629  target1    208     +       GATATGTTTAAATATATGATTCTCGAAAAAACTTTTTTTATTTTTTTTGTCAATAGATAAATGATCAATATTTTCTATATTTAATCTATCAAGTATTTTTATATATCTATTATTTCTTTCTTCGATGGATAAATTATAAGAATCAATATCCTTTCTTTCATCAACAAACTTTTTTATTGTTAACTCCATTTTTTTATTTAAGATACCA
 Pf3D7_01_v3     162889  163091  target2   202     +       ATATACCAATAATACTTTTTTTTTTAAATAATGTAAAAAATGATTTATATAATTGTTATAAACAAATGATCACATATCATAATAATAATATCCTAAATCATAACTCTAATATTTTATCAAAAGAAAATGAAAAAAAACAACCTTTTTCAACATATAATATATCAAATCTTTGTTCTCCTGACCAAATGGTGATAAATAAAAA
 ```
@@ -174,14 +174,14 @@ Pf3D7_01_v3     162889  163091  target2   202     +       ATATACCAATAATACTTTTTTT
 | `#chrom`    | Chromosome that the target is found on. You may have multiple targets with the same #chrom. This should match with the reference information. |
 | `start`     | Genomic start position of the target (0-based).                                                                                               |
 | `end`       | Genomic end position of the target (0-based).                                                                                                 |
-| `target_id` | Identifier for the genomic region being sequenced.                                                                                            |
+| `target_name` | Identifier for the genomic region being sequenced.                                                                                            |
 | `length`    | Length in base pairs.                                                                                                                         |
 | `strand`    | Strand orientation (+ or -) relative to the reference genome.                                                                                 |
 | `ref_seq`   | reference sequence for the target (optional if genome_reference or targeted reference supplied)                                               |
 
 #### Population Map (optional)
 
-If you would like to estimate prevalences and frequencies for several populations you need to provide a population map which assigns specimens to individual populations. The file only contains two columns `specimen_id` which should match the unique specimen_ids in the allele table, and `population` which contains identifiers for populations. The population identifier will be included in output tables.
+If you would like to estimate prevalences and frequencies for several populations you need to provide a population map which assigns specimens to individual populations. The file only contains two columns `specimen_name` which should match the unique specimen_names in the allele table, and `population` which contains identifiers for populations. The population identifier will be included in output tables.
 
 ```bash
 --population_map '[path to population map file]'
@@ -192,7 +192,7 @@ If you would like to estimate prevalences and frequencies for several population
 A final population map may look something like the one below, where 3 samples are assinged to two populations.
 
 ```tsv title="population_map.tsv"
-specimen_id population
+specimen_name population
 specimen_1  pop1
 specimen_2  pop2
 specimen_3  pop2
