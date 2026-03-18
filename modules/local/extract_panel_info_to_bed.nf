@@ -26,5 +26,10 @@ process EXTRACT_PANEL_INFO_TO_BED {
         --file ${pmo} \
         --output ${output_filename} \
         ${parameter_string}
+
+    # Rename header column from target_id to target_name
+    awk 'BEGIN{FS=OFS="\t"} NR==1 {for(i=1;i<=NF;i++) if(\$i=="target_id") \$i="target_name"} {print}' \
+        ${output_filename} > ${output_filename}.tmp && \
+    mv ${output_filename}.tmp ${output_filename}
     """
 }
