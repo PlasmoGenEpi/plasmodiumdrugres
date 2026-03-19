@@ -3,7 +3,6 @@
  * Split amino acid tables into seperate populations based on specimen_name
  */
 
-// TODO: update this to work off of column names
 process SPLIT_AA_TABLE_BY_POP {
     label 'process_single'
 
