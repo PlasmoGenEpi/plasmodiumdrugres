@@ -4,7 +4,7 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
 
-    test("-profile test") {
+    test("-profile test_allele_table") {
 
         when {
             params {
@@ -29,6 +29,33 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+
+    // Default test running full pipeline from a PMO input
+    test("-profile test_PMO") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+
+                pmo                      = "${projectDir}/tests/input/example_PMO.json"
+                loci_of_interest_bed       = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
+                loci_groups                = "${projectDir}/tests/input/example2_loci_groups.tsv"
+                // Other inputs derived within the pipeline when starting from PMO
+            }
+        }
+
+        then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    stable_name,
                     stable_path
                 ).match() }
             )
