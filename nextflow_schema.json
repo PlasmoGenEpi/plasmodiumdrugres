@@ -159,7 +159,7 @@
                 "naive_slaf_method": {
                     "type": "string",
                     "description": "method options for single locus allele frequency estimates with naive method. read_count_prop or presence_absence.",
-                    "default": "read_count_prop",
+                    "default": "naive",
                     "fa_icon": "fas fa-users-cog"
                 },
                 "population_label": {
