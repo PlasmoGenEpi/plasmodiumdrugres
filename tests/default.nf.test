@@ -42,7 +42,8 @@ nextflow_pipeline {
             params {
                 outdir = "$outputDir"
 
-                pmo                      = "${projectDir}/tests/input/example_PMO.json"
+                pmo                        = "${projectDir}/tests/input/example_PMO.json"
+                pmo_population_fields      = "collection_country,collection_date"
                 loci_of_interest_bed       = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
                 loci_groups                = "${projectDir}/tests/input/example2_loci_groups.tsv"
                 // Other inputs derived within the pipeline when starting from PMO
