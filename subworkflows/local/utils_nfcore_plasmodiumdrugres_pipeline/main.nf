@@ -19,6 +19,8 @@ include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
 include { EXTRACT_ALLELE_TABLE      } from '../../../modules/local/extract_allele_table'
 include { EXTRACT_BED_FILE_FROM_PMO } from '../../../subworkflows/local/generate_reference_bed_file'
+include { EXTRACT_POPULATION_MAP_FROM_PMO } from '../../../modules/local/extract_population_map_from_pmo'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     SUBWORKFLOW TO INITIALISE PIPELINE
@@ -104,20 +106,54 @@ workflow PIPELINE_INITIALISATION {
     def ref_type = params.targeted_reference ? "targeted_reference" :
         params.genome_reference ? "genome_reference" : "none"
     def fasta = params.targeted_reference ?: params.genome_reference ?: ""
+    // Normalise PMO population fields:
+    // - user provides comma-separated list, e.g. "collection_country, collection_date"
+    // - python expects space-separated args for argparse `nargs='+'`.
+    def pmo_population_fields_norm = null
+    if (params.pmo_population_fields) {
+        def raw = params.pmo_population_fields
+        def fields = []
+        if (raw instanceof List) {
+            fields = raw.collect { it?.toString() ?: '' }
+        } else {
+            fields = raw.toString().split(',') as List
+        }
+        fields = fields.collect { it.trim() }.findAll { it }
+        // Join with spaces so the shell splits into multiple `--fields` arguments.
+        pmo_population_fields_norm = fields.join(' ')
+    }
+    // Initialise channels for all branches to avoid unbound variables
+    // Note: avoid `def` here so Nextflow can statically detect these
+    // variables for the `emit:` block.
+    allele_table_ch = Channel.empty()
+    panel_info_bed_ch = Channel.empty()
+    // Optional: keep null when we don't have a population map so downstream
+    // workflows can use `if (population_map)` checks reliably.
+    population_map_ch = null
     if (params.pmo) {
-        pmo_ch = Channel.fromPath(params.pmo)
+        def pmo_ch = Channel.fromPath(params.pmo, checkIfExists: true)
         EXTRACT_ALLELE_TABLE(pmo_ch)
         allele_table_ch = EXTRACT_ALLELE_TABLE.out.allele_table
         EXTRACT_BED_FILE_FROM_PMO(pmo_ch, ref_type, fasta)
         panel_info_bed_ch = EXTRACT_BED_FILE_FROM_PMO.out.panel_info_bed
+        if (params.population_map) {
+            population_map_ch = Channel.fromPath(params.population_map, checkIfExists: true)
+        } else if (pmo_population_fields_norm) {
+            EXTRACT_POPULATION_MAP_FROM_PMO(pmo_ch, pmo_population_fields_norm, params.pmo_population_separator)
+            population_map_ch = EXTRACT_POPULATION_MAP_FROM_PMO.out.population_map
+        } 
     } else if (params.allele_table) {
-        allele_table_ch = Channel.fromPath(params.allele_table)
-        panel_info_bed_ch = Channel.fromPath(params.panel_info_bed)
+        allele_table_ch = Channel.fromPath(params.allele_table, checkIfExists: true)
+        panel_info_bed_ch = Channel.fromPath(params.panel_info_bed, checkIfExists: true)
+        if (params.population_map) {
+            population_map_ch = Channel.fromPath(params.population_map, checkIfExists: true)
+        }
     }
 
     emit:
     allele_table_ch    = allele_table_ch
     panel_info_bed_ch  = panel_info_bed_ch
+    population_map_ch  = population_map_ch
     versions        = ch_versions
 }
 
@@ -186,6 +222,9 @@ def validateInputParameters() {
     if (params.pmo && params.allele_table) {
         validation_errors.add("Only one of 'pmo' or 'allele_table' can be set, but not both.")
     }
+    if (params.pmo_population_fields && params.population_map) {
+        validation_warnings.add("WARNING: Both 'pmo_population_fields' and 'population_map' set, 'population_map' will be used.")
+    }
     if (params.pmo) {
         if (params.genome_reference && params.targeted_reference) {
             validation_warnings.add("WARNING: Both 'genome_reference' or 'targeted_reference' set, 'targeted_reference' will be used.")
@@ -196,6 +235,9 @@ def validateInputParameters() {
         }
         if (params.genome_reference || params.targeted_reference) {
             validation_warnings.add("WARNING: Either 'genome_reference' or 'targeted_reference' set, but neither will be used.")
+        }
+        if (params.pmo_population_fields) {
+            validation_warnings.add("WARNING: 'pmo_population_fields' set with '--allele_table'. '--pmo_population_fields' is only used for PMO input and will be ignored.")
         }
     } else {
         validation_errors.add("Missing required parameter: Either '--pmo' or '--allele_table' must be set, but neither were.")

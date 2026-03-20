@@ -28,6 +28,7 @@ workflow PLASMODIUMDRUGRES {
     panel_info_bed_with_ref
     loci_of_interest_bed
     translate_loci_extra_args
+    population_map
     mlaf_method
     loci_groups
     slaf_method
@@ -37,8 +38,8 @@ workflow PLASMODIUMDRUGRES {
     TRANSLATE_LOCI_OF_INTEREST(allele_table, panel_info_bed_with_ref, file(loci_of_interest_bed), translate_loci_extra_args)
 
     // Split allele table by population for mhaps_freq (only when population_map)
-    if (slaf_method == "mhaps_freq" && params.population_map) {
-        SPLIT_ALLELE_TABLE_BY_POP(allele_table, file(params.population_map))
+    if (slaf_method == "mhaps_freq" && population_map) {
+        SPLIT_ALLELE_TABLE_BY_POP(allele_table, population_map)
         mhaps_allele_table_ch = (SPLIT_ALLELE_TABLE_BY_POP.out.per_pop_tables).flatten()
     } else if (slaf_method == "mhaps_freq") {
         mhaps_allele_table_ch = allele_table
@@ -47,8 +48,8 @@ workflow PLASMODIUMDRUGRES {
     }
 
     // Split amino acid table if population map is provided
-    if (params.population_map) {
-        SPLIT_AA_TABLE_BY_POP(TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls, file(params.population_map))
+    if (population_map) {
+        SPLIT_AA_TABLE_BY_POP(TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls, population_map)
         aa_table_ch = (SPLIT_AA_TABLE_BY_POP.out.per_pop_tables).flatten()
     } else {
         aa_table_ch = TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls
@@ -79,7 +80,7 @@ workflow PLASMODIUMDRUGRES {
 
     // OUTPUT
     // TODO: sort out mlaf and the prevelances
-    if (params.population_map) {
+    if (population_map) {
         MERGE_TABLES(outputs_per_population)
     } else {
         updated_ch = outputs_per_population.map { tuple ->

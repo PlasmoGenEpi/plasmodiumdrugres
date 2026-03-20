@@ -81,6 +81,19 @@
                     "help_text": "This file is used to split specimens into separate populations to calculate metrics for each. It has to be tab separated and include columns specimen_name, population. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#population-map-input).",
                     "fa_icon": "fas fa-file-csv"
                 },
+                "pmo_population_fields": {
+                    "type": ["string", "null"],
+                    "description": "Comma-separated list of PMO specimen metadata field names to combine into the population label (e.g. \"collection_country, collection_date\"). Whitespace is ignored.",
+                    "help_text": "Used only when providing `--pmo` without `--population_map`. The selected fields are concatenated by `pmo_population_separator` to build the `population` values.",
+                    "default": null,
+                    "fa_icon": "fas fa-list"
+                },
+                "pmo_population_separator": {
+                    "type": ["string", "null"],
+                    "description": "String used to join the selected `pmo_population_fields` when building the population label.",
+                    "default": "_",
+                    "fa_icon": "fas fa-link"
+                },
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
