@@ -42,9 +42,9 @@
                 "translated_loci/loci_of_interest_for_target_for_microhap.tsv.gz"
             ],
             [
-                "ml_summary.tsv:md5,f8719d90b06080218b045b6cc0e4a3da",
-                "sl_from_ml_summary.tsv:md5,a9d7ad1d6e76a1b743440fc56ff10a2f",
-                "sl_summary.tsv:md5,c9708a214c795515aae048e977e1bfed",
+                "ml_summary.tsv:md5,2792b1e7e59b15d61ef3e5dbf49bd1cb",
+                "sl_from_ml_summary.tsv:md5,c519165a285ddd6064f9e4ba736e7fd7",
+                "sl_summary.tsv:md5,8d8464653d3964600a236d60f4eeb4f7",
                 "amino_acid_calls.tsv.gz:md5,ade39d1ce607cfffc8b94cbb1b03048b",
                 "collapsed_amino_acid_calls.tsv.gz:md5,d489b2c846da50df03b9d74859ad20de",
                 "loci_covered_by_target_samples_info.tsv:md5,a6914117cf0d6c6d8aed439fbec9540a",
@@ -55,6 +55,10 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
+<<<<<<< HEAD
         "timestamp": "2026-03-19T01:35:30.436261"
+=======
+        "timestamp": "2026-03-20T10:17:10.008115"
+>>>>>>> 959554b (update snapshot)
     }
 }
