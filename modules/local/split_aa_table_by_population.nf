@@ -1,6 +1,6 @@
 /*
  * STEP - SPLIT_AA_TABLE_BY_POP
- * Split amino acid tables into seperate populations based on specimen_id
+ * Split amino acid tables into seperate populations based on specimen_name
  */
 
 // TODO: update this to work off of column names
@@ -20,8 +20,8 @@ process SPLIT_AA_TABLE_BY_POP {
     set -euo pipefail
 
     # Split the big allele table into one TSV per population.
-    # Assumes tab-delimited input with header and first column = specimen_id.
-    # population_map: header 'specimen_id\\tpopulation'
+    # Assumes tab-delimited input with header and first column = specimen_name.
+    # population_map: header 'specimen_name\\tpopulation'
     gzip -d < "${allele_table}" > "collapsed_amino_acid_calls.tsv"
     awk 'BEGIN{FS=OFS="\\t"}
         NR==FNR { if(NR>1){ pop[\$1]=\$2 } ; next }    # read mapping

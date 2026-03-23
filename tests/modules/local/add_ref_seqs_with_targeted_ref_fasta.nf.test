@@ -25,7 +25,7 @@ nextflow_process {
             // channel exists
             assert process.out.ref_bed_with_seqs != null
             // output md5 check
-            assert path(process.out.ref_bed_with_seqs.get(0)).md5 == "45dd3920fae3338cabf7aa1646fd18a0"
+            assert path(process.out.ref_bed_with_seqs.get(0)).md5 == "5655fad30ea541867780d735327e67fe"
         }
 
     }

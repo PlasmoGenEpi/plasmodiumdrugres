@@ -23,7 +23,7 @@ nextflow_process {
             assert pop == 'example_allele_table'
 
             // output md5 check
-            assert path(outFile).md5 == "9800ec6da44756d1d4e5721397d8ee93"
+            assert path(outFile).md5 == "5fefbcd20e84580785146b97c72175db"
         }
 
     }
@@ -50,7 +50,7 @@ nextflow_process {
             assert pop == 'example_allele_table'
 
             // output md5 check
-            assert path(outFile).md5 == "ca8e9936d37cdea646e24846ce00f3b2"
+            assert path(outFile).md5 == "6a57e9a67ba1fb273f376d7a47563b53"
         }
 
     }
@@ -74,7 +74,7 @@ nextflow_process {
             assert pop == 'example2_allele_table'
 
             // output md5 check
-            assert path(outFile).md5 == "4b96b51b4ce2a5cef621de69b3ea0625"
+            assert path(outFile).md5 == "bf96bbdd0d49597bf48424a3c9f90c03"
         }
 
     }
@@ -101,7 +101,7 @@ nextflow_process {
             assert pop == 'example2_allele_table'
 
             // output md5 check
-            assert path(outFile).md5 == "7d6c4846d17d0d8e45b6f1dbd76517aa"
+            assert path(outFile).md5 == "5e73946aa7393434a4ad02e9818cb097"
         }
 
     }

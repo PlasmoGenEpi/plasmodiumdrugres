@@ -26,7 +26,7 @@ read_input_and_check_cols <- function(input_table_fnp, required_cols){
     # Check input arguments
     stopifnot(is.character(input_table_fnp))
     stopifnot(file.exists(input_table_fnp))
-    # read in allele table and make sure it has specimen_id column
+    # read in allele table and make sure it has specimen_name column
     input_table <- read_tsv(input_table_fnp)
     missing_cols = returnMissingColumns(input_table, required_cols)
     if (length(missing_cols) > 0) {
@@ -88,7 +88,7 @@ opts <- list(
         c("--identifier_col"),
         help = "Identifer column to match between the population map and the table to split Default: %default",
         type = "character",
-        default = "specimen_id"
+        default = "specimen_name"
     ),
     make_option(
         c("--unmapped_identifiers_output"),

@@ -29,7 +29,7 @@
                     "mimetype": "text/tsv",
                     "pattern": "^\\S+\\.[ct]sv$",
                     "description": "Path to tab separated file containing microhaplotypes for specimens.",
-                    "help_text": "This parameter is *mandatory* if `--pmo` is not specified. You will need to create a TSV file before running the pipeline. Use this parameter to specify its location. It has to be tab separated and include columns specimen_id, target_id, and seq. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#allele-table-input).",
+                    "help_text": "This parameter is *mandatory* if `--pmo` is not specified. You will need to create a TSV file before running the pipeline. Use this parameter to specify its location. It has to be tab separated and include columns specimen_name, target_name, and seq. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#allele-table-input).",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "input": {
@@ -77,8 +77,8 @@
                     "schema": "assets/schema_population_map.json",
                     "mimetype": "text/tsv",
                     "pattern": "^\\S+\\.[ct]sv$",
-                    "description": "Path to tab separated file containing population assignment for each specimen_id.",
-                    "help_text": "This file is used to split specimens into separate populations to calculate metrics for each. It has to be tab separated and include columns specimen_id, population. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#population-map-input).",
+                    "description": "Path to tab separated file containing population assignment for each specimen_name.",
+                    "help_text": "This file is used to split specimens into separate populations to calculate metrics for each. It has to be tab separated and include columns specimen_name, population. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#population-map-input).",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {

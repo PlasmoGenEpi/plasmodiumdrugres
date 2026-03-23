@@ -7,30 +7,30 @@
     "items": {
         "type": "object",
         "properties": {
-            "specimen_id": {
+            "specimen_name": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Specimen ID must be provided and cannot contain spaces.",
+                "errorMessage": "specimen_name must be provided and cannot contain spaces.",
                 "meta": ["id"]
             },
-            "target_id": {
+            "target_name": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Target ID must be provided and cannot contain spaces.",
+                "errorMessage": "target_name must be provided and cannot contain spaces.",
                 "meta": ["id"]
             },
             "seq": {
                 "type": "string",
-                "errorMessage": "Sequence of microhaplotypes must be provided and only contain A,C,T,G.",
+                "errorMessage": "Sequence of microhaplotypes (seq) must be provided and only contain A,C,T,G.",
                 "pattern": "^[ATCG]+$",
                 "meta": ["id"]
             },
-            "read_count": {
+            "reads": {
                 "type": "integer",
-                "errorMessage": "Read count must be an integer, but is optional.",
+                "errorMessage": "reads must be an integer, but is optional.",
                 "meta": ["id"]
             }
         },
-        "required": ["specimen_id", "target_id", "seq"]
+        "required": ["specimen_name", "target_name", "seq"]
     }
 }
