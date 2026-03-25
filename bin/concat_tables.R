@@ -53,4 +53,3 @@ sl_from_ml_df <- maybe_sort(files_to_df(sl_from_ml_files))
 write_tsv(sl_df, args$`sl-out`)
 write_tsv(ml_df, args$`ml-out`)
 write_tsv(sl_from_ml_df, args$`sl-from-ml-out`)
-
