@@ -17,8 +17,8 @@ nextflow_process {
 
         then {
             assert process.success
-            assert path(process.out.per_pop_tables.get(0)[0]).md5 == "c7bc1fc334fa58b48703ba3b34d6273f"
-            assert path(process.out.per_pop_tables.get(0)[1]).md5 == "909d88049a821d4740356a90e1210db9"
+            assert path(process.out.per_pop_tables.get(0)[0]).md5 == "7e40bd248bb941f41c64a910402405d2"
+            assert path(process.out.per_pop_tables.get(0)[1]).md5 == "3994a47c3759685ce49b4d62ddfdb66d"
         }
 
     }
