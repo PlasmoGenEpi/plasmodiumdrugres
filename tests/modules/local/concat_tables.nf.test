@@ -26,8 +26,8 @@ nextflow_process {
 
             // output md5 check
             assert path(process.out.sl_summary.get(0)).md5 == "43310cf33d5f288f15f96f9d53fa4826"
-            assert path(process.out.ml_summary.get(0)).md5 == "ac0e47b769f1992184df3642ef16c3e8"
-            assert path(process.out.sl_from_ml_summary.get(0)).md5 == "c4ef98ba4744cea6f7e1f689802f1deb"
+            assert path(process.out.ml_summary.get(0)).md5 == "5d8ad4d3cbbc4db276e8d61d1f129ec6"
+            assert path(process.out.sl_from_ml_summary.get(0)).md5 == "462e31479a5971416d6ef28e58e32f72"
 
         }
 
@@ -54,8 +54,8 @@ nextflow_process {
 
             // output md5 check
             assert path(process.out.sl_summary.get(0)).md5 == "92a17821c0126463ff6a98d2bc56de3b"
-            assert path(process.out.ml_summary.get(0)).md5 == "29c9f707a79e777b7c5f3344eadbd7eb"
-            assert path(process.out.sl_from_ml_summary.get(0)).md5 == "bb3b6fcfe3a98b79c802db4356237311"
+            assert path(process.out.ml_summary.get(0)).md5 == "1246c7599e0beea175f19dc84b3aa300"
+            assert path(process.out.sl_from_ml_summary.get(0)).md5 == "135e6e272443ddfc91307367a7f7f45b"
 
         }
 

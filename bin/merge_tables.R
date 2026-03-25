@@ -74,7 +74,8 @@ load_prev_table <- function(prev) {
 merge_tables_add_pop <- function(freq_table, prev_table, pop) {
     merged_table <- full_join(prev_table, freq_table, by = "variant") %>%
         mutate(population = pop) %>%
-        select(population, everything())
+        select(population, everything()) %>%
+        arrange(variant)
     return(merged_table)
 }
 

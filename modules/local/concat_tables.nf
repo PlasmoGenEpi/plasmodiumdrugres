@@ -22,16 +22,13 @@ process CONCAT_TABLES {
 
     script:
     """
-    # Concatenate SL summaries
-    head -n 1 ${sl_files[0]} > sl_summary.tsv   # write header
-    tail -n +2 -q ${sl_files.join(' ')} >> sl_summary.tsv  # append data
-
-    # Concatenate ML summaries
-    head -n 1 ${ml_files[0]} > ml_summary.tsv
-    tail -n +2 -q ${ml_files.join(' ')} >> ml_summary.tsv
-
-    # Concatenate SL from ML summaries
-    head -n 1 ${sl_from_ml_files[0]} > sl_from_ml_summary.tsv
-    tail -n +2 -q ${sl_from_ml_files.join(' ')} >> sl_from_ml_summary.tsv
+    # Concatenate deterministically using R (avoids shell header/ordering drift).
+    Rscript ${projectDir}/bin/concat_tables.R \
+        --sl-files "${sl_files.join(',')}" \
+        --ml-files "${ml_files.join(',')}" \
+        --sl-from-ml-files "${sl_from_ml_files.join(',')}" \
+        --sl-out "sl_summary.tsv" \
+        --ml-out "ml_summary.tsv" \
+        --sl-from-ml-out "sl_from_ml_summary.tsv"
     """
 }
