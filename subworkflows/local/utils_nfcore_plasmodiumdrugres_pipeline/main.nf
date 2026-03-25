@@ -141,7 +141,7 @@ workflow PIPELINE_INITIALISATION {
         } else if (pmo_population_fields_norm) {
             EXTRACT_POPULATION_MAP_FROM_PMO(pmo_ch, pmo_population_fields_norm, params.pmo_population_separator)
             population_map_ch = EXTRACT_POPULATION_MAP_FROM_PMO.out.population_map
-        } 
+        }
     } else if (params.allele_table) {
         allele_table_ch = Channel.fromPath(params.allele_table, checkIfExists: true)
         panel_info_bed_ch = Channel.fromPath(params.panel_info_bed, checkIfExists: true)
