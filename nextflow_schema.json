@@ -147,7 +147,7 @@
                 "slaf_method": {
                     "type": "string",
                     "description": "method for single locus allele frequency estimates.",
-                    "default": "mhaps_freq",
+                    "default": "naive",
                     "fa_icon": "fas fa-users-cog"
                 },
                 "translate_loci_extra_args": {
