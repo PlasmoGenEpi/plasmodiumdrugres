@@ -64,7 +64,7 @@ nextflow_workflow {
 
         when {
             params {
-                population_map = null
+                population_assignment = null
             }
             workflow {
                 """

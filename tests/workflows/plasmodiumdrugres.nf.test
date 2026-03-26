@@ -8,7 +8,7 @@ nextflow_workflow {
 
         when {
             params {
-                population_map = null
+                population_assignment = null
                 population_label = "pop1"
             }
             workflow {
@@ -36,7 +36,7 @@ nextflow_workflow {
 
         when {
             params {
-                population_map = null
+                population_assignment = null
                 population_label = "pop1"
             }
             workflow {
@@ -64,7 +64,7 @@ nextflow_workflow {
 
         when {
             params {
-                population_map = null
+                population_assignment = null
                 population_label = "pop1"
             }
             workflow {
@@ -92,7 +92,7 @@ nextflow_workflow {
 
         when {
             params {
-                population_map = "${projectDir}/tests/input/example2_population_map.tsv"
+                population_assignment = "${projectDir}/tests/input/example2_population_map.tsv"
             }
             workflow {
                 """
@@ -119,7 +119,7 @@ nextflow_workflow {
 
         when {
             params {
-                population_map = "${projectDir}/tests/input/example2_population_map.tsv"
+                population_assignment = "${projectDir}/tests/input/example2_population_map.tsv"
             }
             workflow {
                 """

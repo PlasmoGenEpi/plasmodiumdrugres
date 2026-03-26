@@ -70,7 +70,7 @@
                     "help_text": "This file is used to define coordinates for the targets in the panel. Use this parameter to specify its location. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#panel-info-bed).",
                     "fa_icon": "fas fa-file-csv"
                 },
-                "population_map": {
+                "population_assignment": {
                     "type": "string",
                     "format": "file-path",
                     "exists": true,
@@ -84,7 +84,7 @@
                 "pmo_population_fields": {
                     "type": ["string", "null"],
                     "description": "Comma-separated list of PMO specimen metadata field names to combine into the population label (e.g. \"collection_country, collection_date\"). Whitespace is ignored.",
-                    "help_text": "Used only when providing `--pmo` without `--population_map`. The selected fields are concatenated by `pmo_population_separator` to build the `population` values.",
+                    "help_text": "Used only when providing `--pmo` without `--population_assignment`. The selected fields are concatenated by `pmo_population_separator` to build the `population` values.",
                     "default": null,
                     "fa_icon": "fas fa-list"
                 },
@@ -178,7 +178,7 @@
                 "population_label": {
                     "type": "string",
                     "description": "label for population/ this individual pipeline run.",
-                    "help_text": "If --population_map is not set this can be used to label the population these estimates are for.",
+                    "help_text": "If --population_assignment is not set this can be used to label the population these estimates are for.",
                     "default": "pop1",
                     "fa_icon": "fas fa-users-cog"
                 },

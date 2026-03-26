@@ -127,33 +127,31 @@ workflow PIPELINE_INITIALISATION {
     // variables for the `emit:` block.
     allele_table_ch = Channel.empty()
     panel_info_bed_ch = Channel.empty()
-    // Optional: keep null when we don't have a population map so downstream
-    // workflows can use `if (population_map)` checks reliably.
-    population_map_ch = null
+    population_assignment_ch = null
     if (params.pmo) {
         def pmo_ch = Channel.fromPath(params.pmo, checkIfExists: true)
         EXTRACT_ALLELE_TABLE(pmo_ch)
         allele_table_ch = EXTRACT_ALLELE_TABLE.out.allele_table
         EXTRACT_BED_FILE_FROM_PMO(pmo_ch, ref_type, fasta)
         panel_info_bed_ch = EXTRACT_BED_FILE_FROM_PMO.out.panel_info_bed
-        if (params.population_map) {
-            population_map_ch = Channel.fromPath(params.population_map, checkIfExists: true)
+        if (params.population_assignment) {
+            population_assignment_ch = Channel.fromPath(params.population_assignment, checkIfExists: true)
         } else if (pmo_population_fields_norm) {
             EXTRACT_POPULATION_MAP_FROM_PMO(pmo_ch, pmo_population_fields_norm, params.pmo_population_separator)
-            population_map_ch = EXTRACT_POPULATION_MAP_FROM_PMO.out.population_map
+            population_assignment_ch = EXTRACT_POPULATION_MAP_FROM_PMO.out.population_map
         }
     } else if (params.allele_table) {
         allele_table_ch = Channel.fromPath(params.allele_table, checkIfExists: true)
         panel_info_bed_ch = Channel.fromPath(params.panel_info_bed, checkIfExists: true)
-        if (params.population_map) {
-            population_map_ch = Channel.fromPath(params.population_map, checkIfExists: true)
+        if (params.population_assignment) {
+            population_assignment_ch = Channel.fromPath(params.population_assignment, checkIfExists: true)
         }
     }
 
     emit:
     allele_table_ch    = allele_table_ch
     panel_info_bed_ch  = panel_info_bed_ch
-    population_map_ch  = population_map_ch
+    population_assignment_ch  = population_assignment_ch
     versions        = ch_versions
 }
 
@@ -222,8 +220,8 @@ def validateInputParameters() {
     if (params.pmo && params.allele_table) {
         validation_errors.add("Only one of 'pmo' or 'allele_table' can be set, but not both.")
     }
-    if (params.pmo_population_fields && params.population_map) {
-        validation_warnings.add("WARNING: Both 'pmo_population_fields' and 'population_map' set, 'population_map' will be used.")
+    if (params.pmo_population_fields && params.population_assignment) {
+        validation_warnings.add("WARNING: Both 'pmo_population_fields' and 'population_assignment' set, 'population_assignment' will be used.")
     }
     if (params.pmo) {
         if (params.genome_reference && params.targeted_reference) {
@@ -243,9 +241,9 @@ def validateInputParameters() {
         validation_errors.add("Missing required parameter: Either '--pmo' or '--allele_table' must be set, but neither were.")
     }
 
-    // Warn if both population_map and population_label is set
-    if ((params.population_map) && (params.population_label!='pop1')) {
-        validation_warnings.add("WARNING: both '--population_map' and --'population_label' set. '--population_map' will be used.")
+    // Warn if both population_assignment and population_label is set
+    if ((params.population_assignment) && (params.population_label!='pop1')) {
+        validation_warnings.add("WARNING: both '--population_assignment' and --'population_label' set. '--population_assignment' will be used.")
     }
     // Check if `mlaf_method` is valid
     if (!params.mlaf_method_options.contains(params.mlaf_method)) {

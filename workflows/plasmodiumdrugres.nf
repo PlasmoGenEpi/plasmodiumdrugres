@@ -28,7 +28,7 @@ workflow PLASMODIUMDRUGRES {
     panel_info_bed_with_ref
     loci_of_interest_bed
     translate_loci_extra_args
-    population_map
+    population_assignment
     mlaf_method
     loci_groups
     slaf_method
@@ -37,13 +37,13 @@ workflow PLASMODIUMDRUGRES {
     // Avoid gating on `population_map` directly: this is a channel handle and can be truthy
     // even when it's effectively "missing", causing downstream processes to receive null paths.
     // Instead, decide based on pipeline parameters used to construct `population_map`.
-    def has_population_map = params.population_map || (params.pmo && params.pmo_population_fields)
+    def has_population_assignment = params.population_assignment || (params.pmo && params.pmo_population_fields)
 
     TRANSLATE_LOCI_OF_INTEREST(allele_table, panel_info_bed_with_ref, file(loci_of_interest_bed), translate_loci_extra_args)
 
     // Split allele table by population for mhaps_freq (only when population_map)
-    if (slaf_method == "mhaps_freq" && has_population_map) {
-        SPLIT_ALLELE_TABLE_BY_POP(allele_table, population_map)
+    if (slaf_method == "mhaps_freq" && has_population_assignment) {
+        SPLIT_ALLELE_TABLE_BY_POP(allele_table, population_assignment)
         mhaps_allele_table_ch = (SPLIT_ALLELE_TABLE_BY_POP.out.per_pop_tables).flatten()
     } else if (slaf_method == "mhaps_freq") {
         mhaps_allele_table_ch = allele_table
@@ -52,8 +52,8 @@ workflow PLASMODIUMDRUGRES {
     }
 
     // Split amino acid table if population map is provided
-    if (has_population_map) {
-        SPLIT_AA_TABLE_BY_POP(TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls, population_map)
+    if (has_population_assignment) {
+        SPLIT_AA_TABLE_BY_POP(TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls, population_assignment)
         aa_table_ch = (SPLIT_AA_TABLE_BY_POP.out.per_pop_tables).flatten()
     } else {
         aa_table_ch = TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls
@@ -84,7 +84,7 @@ workflow PLASMODIUMDRUGRES {
 
     // OUTPUT
     // TODO: sort out mlaf and the prevelances
-    if (has_population_map) {
+    if (has_population_assignment) {
         MERGE_TABLES(outputs_per_population)
     } else {
         updated_ch = outputs_per_population.map { tuple ->
