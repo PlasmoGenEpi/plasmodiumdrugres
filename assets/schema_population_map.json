@@ -1,8 +1,8 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/plasmodiumdrugres/master/assets/schema_population_map.json",
-    "title": "nf-core/plasmodiumdrugres pipeline - params.population_map schema",
-    "description": "Schema for the file provided with params.population_map",
+    "title": "nf-core/plasmodiumdrugres pipeline - params.population_assignment schema",
+    "description": "Schema for the file provided with params.population_assignment",
     "type": "array",
     "items": {
         "type": "object",

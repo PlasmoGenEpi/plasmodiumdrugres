@@ -132,11 +132,11 @@ Pf3D7_01_v3     181545  181728  Pf3D7_01_v3-181512-181761-1A    183     +       
 Pf3D7_01_v3     455827  456020  Pf3D7_01_v3-455794-456054-1A    193     +       AGAAAAAAAATTTATTAAGAGGTATTTCGATTTTAAAAATTTAAGAATTAATTTTTAATTATGTCTATAAAAACTTAATAGAAAATAAATATTATTTTGTTTTTCAAAAAAATGTTTAAGAATAATATTTCTTTATTCTTTTACAATTTAGAACATATAATGCTATTTCTTTTAATTTTAATTTAATTTCAAA
 ```
 
-#### Population Map (optional)
+#### Population assignment (optional)
 
-If you would like to estimate prevalences and frequencies for several populations you need to provide a population map which assigns specimens to individual populations. The file only contains two columns `specimen_name` which should match the unique specimen_names in the allele table, and `population` which contains identifiers for populations. The population identifier will be included in output tables.
+If you would like to estimate prevalences and frequencies for several populations you need to provide a population assignment file which assigns specimens to individual populations. The file only contains two columns `specimen_name` which should match the unique specimen_names in the allele table, and `population` which contains identifiers for populations. The population identifier will be included in output tables.
 
-**population_map.tsv**
+**population_assignment.tsv**
 
 ```tsv
 specimen_name population
@@ -165,7 +165,7 @@ nextflow run nf-core/plasmodiumdrugres \
    --outdir <OUTDIR>
 ```
 
-If you have a population_map you can include it using this flag `--population_map`
+If you have a population assignment file you can include it using this flag `--population_assignment`
 
 ```bash
 nextflow run nf-core/plasmodiumdrugres \
@@ -174,7 +174,7 @@ nextflow run nf-core/plasmodiumdrugres \
    --panel_info_bed panel_info.bed \
    --loci_of_interest_bed loci_of_interest.bed \
    --loci_groups loci_groups.tsv \
-   --population_map population_map.tsv
+   --population_assignment population_assignment.tsv
    --outdir <OUTDIR>
 ```
 

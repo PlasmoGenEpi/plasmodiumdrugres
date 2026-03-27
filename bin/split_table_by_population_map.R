@@ -108,6 +108,11 @@ population_map = read_input_and_check_cols(args$population_map, c(args$identifie
 input_table = read_input_and_check_cols(args$input_table_fnp, c(args$identifier_col)) %>%
     left_join(population_map, by = c(args$identifier_col))
 
+# Defensive cleanup: sometimes TSV values can contain trailing CR/LF or spaces,
+# which then end up inside output filenames. Trim to keep filenames stable.
+population_map[[args$identifier_col]] <- trimws(gsub("\r", "", population_map[[args$identifier_col]]))
+population_map[[args$population_col]] <- trimws(gsub("\r", "", population_map[[args$population_col]]))
+
 input_table_with_pop = input_table %>%
     filter(!is.na(args$population_col))
 

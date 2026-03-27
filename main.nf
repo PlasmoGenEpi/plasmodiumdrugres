@@ -48,6 +48,7 @@ workflow {
         PIPELINE_INITIALISATION.out.panel_info_bed_ch,
         params.loci_of_interest_bed,
         params.translate_loci_extra_args,
+        PIPELINE_INITIALISATION.out.population_assignment_ch,
         params.mlaf_method,
         params.loci_groups,
         params.slaf_method
@@ -81,6 +82,7 @@ workflow NFCORE_PLASMODIUMDRUGRES {
     panel_info_bed_ch
     loci_of_interest_bed
     translate_loci_extra_args
+    population_assignment_ch
     mlaf_method
     loci_groups
     slaf_method
@@ -95,6 +97,7 @@ workflow NFCORE_PLASMODIUMDRUGRES {
         panel_info_bed_ch,
         loci_of_interest_bed,
         translate_loci_extra_args,
+        population_assignment_ch,
         mlaf_method,
         loci_groups,
         slaf_method

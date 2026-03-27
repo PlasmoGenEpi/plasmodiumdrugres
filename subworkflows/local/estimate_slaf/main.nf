@@ -28,8 +28,8 @@ workflow ESTIMATE_SLAF {
         // Use .first() so the single loci file broadcasts to each mhaps_dcifer item (runs per population)
         SLAF_FROM_MHAPS_FREQS(mhaps_dcifer_ch, loci_of_interest_for_target_for_microhap.first())
         slaf_output_raw = SLAF_FROM_MHAPS_FREQS.out.slaf
-        // No population_map: use "collapsed_amino_acid_calls" as group_name for merge consistency
-        slaf_output = params.population_map
+        // No population_assignment: use "collapsed_amino_acid_calls" as group_name for merge consistency
+        slaf_output = params.population_assignment
             ? slaf_output_raw
             : slaf_output_raw.map { tuple -> tuple[0] = "collapsed_amino_acid_calls"; tuple }
     } else {

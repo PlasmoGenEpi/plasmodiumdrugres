@@ -184,14 +184,14 @@ Pf3D7_01_v3     162889  163091  target2   202     +       ATATACCAATAATACTTTTTTT
 If you would like to estimate prevalences and frequencies for several populations you need to provide a population map which assigns specimens to individual populations. The file only contains two columns `specimen_name` which should match the unique specimen_names in the allele table, and `population` which contains identifiers for populations. The population identifier will be included in output tables.
 
 ```bash
---population_map '[path to population map file]'
+--population_assignment '[path to population assignment file]'
 ```
 
 ##### Full Population Map
 
 A final population map may look something like the one below, where 3 samples are assinged to two populations.
 
-```tsv title="population_map.tsv"
+```tsv title="population_assignment.tsv"
 specimen_name population
 specimen_1  pop1
 specimen_2  pop2
@@ -232,10 +232,10 @@ If you are running from an allele table you can run the pipeline like this:
 nextflow run nf-core/plasmodiumdrugres --allele_table allele_table.tsv --panel_info_bed panel_info.bed --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --outdir ./results -profile docker
 ```
 
-If you have a population_map you can include it using this flag `--population_map`
+If you have a population assignment file you can include it using this flag `--population_assignment`
 
 ```bash
-nextflow run nf-core/plasmodiumdrugres --allele_table allele_table.tsv --panel_info_bed panel_info.bed --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --population_map population_map.tsv --outdir ./results -profile docker
+nextflow run nf-core/plasmodiumdrugres --allele_table allele_table.tsv --panel_info_bed panel_info.bed --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --population_assignment population_assignment.tsv --outdir ./results -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.

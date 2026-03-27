@@ -47,9 +47,11 @@ load_table <- function(table) {
 
 # Function to merge tables
 add_pop <- function(table, pop) {
-    table$population <- pop
-    # TODO: reorder columns so pop comes first
-    return(table)
+    # Ensure deterministic column ordering so downstream sorting is stable.
+    table_with_pop <- table %>%
+        mutate(population = pop) %>%
+        select(population, everything())
+    return(table_with_pop)
 }
 
 # Load input data
