@@ -49,24 +49,22 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 Core columns (always present):
 
-| Column | Description |
-| --- | --- |
-| `population` | Population label for this row (a user-defined grouping of samples; see usage docs). |
-| `variant` | Single-locus amino-acid variant identifier. |
-| `prev` | Estimated prevalence for the variant in the population. |
-| `sample_count` | Number of samples with the variant (for prevalence estimate). |
-| `sample_total` | Total number of samples considered (for prevalence estimate). |
-| `freq` | Estimated single-locus allele frequency. |
+| Column         | Description                                                                         |
+| -------------- | ----------------------------------------------------------------------------------- |
+| `population`   | Population label for this row (a user-defined grouping of samples; see usage docs). |
+| `variant`      | Single-locus amino-acid variant identifier.                                         |
+| `prev`         | Estimated prevalence for the variant in the population.                             |
+| `sample_count` | Number of samples with the variant (for prevalence estimate).                       |
+| `sample_total` | Total number of samples considered (for prevalence estimate).                       |
+| `freq`         | Estimated single-locus allele frequency.                                            |
 
 Tool-specific extra columns:
 
-| SLAF method | Extra columns in `sl_summary.tsv` |
-| --- | --- |
-| `IDM` | None (core columns only). |
-| `naive` | None (core columns only). |
+| SLAF method               | Extra columns in `sl_summary.tsv`                                                          |
+| ------------------------- | ------------------------------------------------------------------------------------------ |
+| `IDM`                     | None (core columns only).                                                                  |
+| `naive`                   | None (core columns only).                                                                  |
 | `mhaps_freq` (via DCIFER) | `sample_total_for_allele_freq` (sample count associated with frequency estimation output). |
-
-> Note: The pipeline output file is named `sl_summary.tsv` (not `slaf_summary.tsv`).
 
 ### Multi Locus Allele Frequencies
 
@@ -81,22 +79,20 @@ Tool-specific extra columns:
 
 Core columns (always present):
 
-| Column | Description |
-| --- | --- |
-| `population` | Population label for this row. |
-| `group_id` | Group identifier from `--loci_groups`. |
-| `variant` | Multi-locus variant / haplotype identifier. |
-| `freq` | Estimated multi-locus allele frequency. |
+| Column       | Description                                 |
+| ------------ | ------------------------------------------- |
+| `population` | Population label for this row.              |
+| `group_id`   | Group identifier from `--loci_groups`.      |
+| `variant`    | Multi-locus variant / haplotype identifier. |
+| `freq`       | Estimated multi-locus allele frequency.     |
 
 Tool-specific extra columns:
 
-| MLAF method | Extra columns in `ml_summary.tsv` |
-| --- | --- |
-| `MLBM` | None (core columns only). |
-| `FEM` | `sequence`, `median_freq`, `CI_2.5`, `CI_97.5`, `prev`, `sample_total` |
-| `naive` | `sample_total`, `sample_count`, `prev` |
-
-> Note: The pipeline output file is named `ml_summary.tsv` (not `mlaf_summary.tsv`).
+| MLAF method | Extra columns in `ml_summary.tsv`                                      |
+| ----------- | ---------------------------------------------------------------------- |
+| `MLBM`      | None (core columns only).                                              |
+| `FEM`       | `sequence`, `median_freq`, `CI_2.5`, `CI_97.5`, `prev`, `sample_total` |
+| `naive`     | `sample_total`, `sample_count`, `prev`                                 |
 
 ### SL-from-ML Summary
 
