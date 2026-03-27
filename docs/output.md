@@ -51,7 +51,7 @@ Core columns (always present):
 
 | Column | Description |
 | --- | --- |
-| `population` | Population label for this row. |
+| `population` | Population label for this row (a user-defined grouping of samples; see usage docs). |
 | `variant` | Single-locus amino-acid variant identifier. |
 | `prev` | Estimated prevalence for the variant in the population. |
 | `sample_count` | Number of samples with the variant (for prevalence estimate). |

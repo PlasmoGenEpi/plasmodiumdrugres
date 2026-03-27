@@ -21,8 +21,8 @@ There are two supported entry points into the pipeline:
 1. **PMO input**
    - Required: `--pmo`, `--loci_of_interest_bed`, `--loci_groups`
    - Optional:
-     - `--population_assignment` (recommended if running by population)
      - `--pmo_population_fields` (+ optional `--pmo_population_separator`) to derive population assignment from PMO metadata
+     - `--population_assignment` (recommended if running by population)
      - `--genome_reference` or `--targeted_reference` if PMO does not include usable reference sequence information
 
 2. **Allele table input**
@@ -32,6 +32,13 @@ There are two supported entry points into the pipeline:
      - `--population_label` for single-population runs (default: `pop1`)
 
 The pipeline enforces that exactly one of `--pmo` or `--allele_table` is provided.
+
+> **Terminology note: “population”**
+>
+> In this pipeline, **population** means “a group of samples you want to estimate prevalence and frequency for”.
+> You define populations via `--population_assignment` (or derive them from PMO metadata via `--pmo_population_fields`).
+> A population can represent any grouping level you care about, e.g. **country**, **health_facility**, **year**, or any combination.
+> If you don’t set `--population_assignment`, the pipeline treats all samples as a single group (labelled by `--population_label`, default `pop1`).
 
 ## Loci of Interest Input
 

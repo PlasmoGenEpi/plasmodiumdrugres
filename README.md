@@ -53,8 +53,8 @@ There are two supported entry points:
 1. **PMO input**
    - Required: `--pmo`, `--loci_of_interest_bed`, `--loci_groups`
    - Optional:
-     - `--population_assignment`
-     - `--pmo_population_fields` (comma-separated) to derive populations from PMO specimen metadata
+     - `--pmo_population_fields` (comma-separated fields) to derive populations from PMO specimen metadata
+     - `--population_assignment` table of specimen_name and which 'population' it belongs to
      - `--pmo_population_separator`
      - `--genome_reference` or `--targeted_reference`
 
@@ -64,7 +64,14 @@ There are two supported entry points:
 
 You must provide exactly one of `--pmo` or `--allele_table`.
 
-For either option, you will first need to prepare two required inputs: [loci of interest](#loci-of-interest) and [loci groups](#loci-groups).
+> **Terminology note: “population”**
+>
+> In this pipeline, **population** means “a group of samples you want to estimate prevalence and frequency for”.
+> You define populations with `--population_assignment` (or derive them from PMO metadata via `--pmo_population_fields`).
+> This can be any grouping level you choose (e.g. country, health facility, year, or combinations).
+> If you don’t provide a population assignment file, all samples are analysed together as one group (label controlled by `--population_label`, default `pop1`).
+
+For either input option, you will first need to prepare two required inputs: [loci of interest](#loci-of-interest) and [loci groups](#loci-groups).
 
 ### Loci of interest
 
