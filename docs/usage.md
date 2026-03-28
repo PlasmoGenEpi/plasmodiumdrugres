@@ -14,6 +14,32 @@ Key words
 - locus
 - multi-locus
 
+## Entry points
+
+There are two supported entry points into the pipeline:
+
+1. **PMO input**
+   - Required: `--pmo`, `--loci_of_interest_bed`, `--loci_groups`
+   - Optional:
+     - `--pmo_population_fields` (+ optional `--pmo_population_separator`) to derive population assignment from PMO metadata
+     - `--population_assignment` (recommended if running by population)
+     - `--genome_reference` or `--targeted_reference` if PMO does not include usable reference sequence information
+
+2. **Allele table input**
+   - Required: `--allele_table`, `--panel_info_bed`, `--loci_of_interest_bed`, `--loci_groups`
+   - Optional:
+     - `--population_assignment` for multi-population analysis
+     - `--population_label` for single-population runs (default: `pop1`)
+
+The pipeline enforces that exactly one of `--pmo` or `--allele_table` is provided.
+
+> **Terminology note: “population”**
+>
+> In this pipeline, **population** means “a group of samples you want to estimate prevalence and frequency for”.
+> You define populations via `--population_assignment` (or derive them from PMO metadata via `--pmo_population_fields`).
+> A population can represent any grouping level you care about, e.g. **country**, **health_facility**, **year**, or any combination.
+> If you don’t set `--population_assignment`, the pipeline treats all samples as a single group (labelled by `--population_label`, default `pop1`).
+
 ## Loci of Interest Input
 
 You will need to create a bed file including the locations of the loci that you are interested in before running the pipeline. It has to be a tab-separated file with 9 columns, and a header row as shown in the examples below.
@@ -70,7 +96,7 @@ Before running the pipeline, you will need to create a BED file that defines the
 
 ### Full loci groups file
 
-This file specifies which loci from the loci of interest file should be grouped together for generating multi-locus estimates. You can include as many groups as you like, however some tools are limitted as to how many loci you can put in one group. Any gene_id, position combination listed in this file should also be defined in the locus of interest table.
+This file specifies which loci from the loci of interest file should be grouped together for generating multi-locus estimates. You can include as many groups as you like, however some tools are limited in how many loci they can handle per group. Any `gene_id` / `aa_position` combination listed in this file should also be defined in the loci of interest file.
 
 A final loci groups file may look something like the one below. In this example, three groups are defined: crt, mdr1, and pfdhfr_pfdhps, containing 2, 3, and 4 loci, respectively.
 
@@ -92,15 +118,6 @@ pfdhfr_pfdhps PF3D7_0810800.1 581
 pfdhfr_pfdhps PF3D7_0810800.1 613
 ```
 
-Pf3D7_04_v3 748237 748240 PF3D7_0417200.1-AA51 3 + dhfr-ts 51 PF3D7_0417200.1
-Pf3D7_04_v3 748261 748264 PF3D7_0417200.1-AA59 3 + dhfr-ts 59 PF3D7_0417200.1
-Pf3D7_04_v3 748408 748411 PF3D7_0417200.1-AA108 3 + dhfr-ts 108 PF3D7_0417200.1
-Pf3D7_04_v3 748576 748579 PF3D7_0417200.1-AA164 3 + dhfr-ts 164 PF3D7_0417200.1
-Pf3D7_05_v3 958144 958147 PF3D7_0523000.1-AA86 3 + mdr1 86 PF3D7_0523000.1
-Pf3D7_05_v3 958438 958441 PF3D7_0523000.1-AA184 3 + mdr1 184 PF3D7_0523000.1
-Pf3D7_05_v3 961624 961627 PF3D7_0523000.1-AA1246 3 + mdr1 1246 PF3D7_0523000.1
-Pf3D7_07_v3 403623 403626 PF3D7_0709000.1-AA76 3 + crt 76 PF3D7_0709000.1
-
 | Column        | Description                                                        |
 | ------------- | ------------------------------------------------------------------ |
 | `group_id`    | Unique identifier for the group of loci.                           |
@@ -121,7 +138,7 @@ When running with an allele table you should create the following inputs:
 
 - [allele table](#allele-table)
 - [panel info bed file](#panel-info)
-- [population map (optional)](#population-map-optional)
+- [population assignment (optional)](#population-assignment-optional)
 
 #### Allele Table
 
@@ -179,17 +196,17 @@ Pf3D7_01_v3     162889  163091  target2   202     +       ATATACCAATAATACTTTTTTT
 | `strand`      | Strand orientation (+ or -) relative to the reference genome.                                                                                 |
 | `ref_seq`     | reference sequence for the target (optional if genome_reference or targeted reference supplied)                                               |
 
-#### Population Map (optional)
+#### Population assignment (optional)
 
-If you would like to estimate prevalences and frequencies for several populations you need to provide a population map which assigns specimens to individual populations. The file only contains two columns `specimen_name` which should match the unique specimen_names in the allele table, and `population` which contains identifiers for populations. The population identifier will be included in output tables.
+If you would like to estimate prevalences and frequencies for several populations, provide a population assignment file. The file contains two columns: `specimen_name` (matching specimen names in your allele table/PMO-derived table) and `population` (the population label used in outputs).
 
 ```bash
 --population_assignment '[path to population assignment file]'
 ```
 
-##### Full Population Map
+##### Full population assignment file
 
-A final population map may look something like the one below, where 3 samples are assinged to two populations.
+A final population assignment file may look like this:
 
 ```tsv title="population_assignment.tsv"
 specimen_name population
@@ -208,31 +225,47 @@ specimen_3  pop2
 
 ## Running the pipeline
 
-The typical command for running the pipeline from a PMO file is as follows:
+### Run from PMO
+
+Minimal PMO run:
 
 ```bash
 nextflow run nf-core/plasmodiumdrugres --pmo input_file.pmo --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --outdir ./results -profile docker
 ```
 
-If you are supplying a reference the add the `--genome_reference` flag.
+If your PMO does not provide the reference context needed for loci translation, add `--genome_reference`:
 
 ```bash
 nextflow run nf-core/plasmodiumdrugres --pmo input_file.pmo --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --genome_reference genome_reference.fasta --outdir ./results -profile docker
 ```
 
-If you are supplying a targeted reference the add the `--targeted_reference` flag.
+If you have a targeted reference FASTA instead, use `--targeted_reference`:
 
 ```bash
 nextflow run nf-core/plasmodiumdrugres --pmo input_file.pmo --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv  --targeted_reference genome_reference.fasta --outdir ./results -profile docker
 ```
 
-If you are running from an allele table you can run the pipeline like this:
+To derive populations from PMO metadata fields, provide a comma-separated list:
+
+```bash
+nextflow run nf-core/plasmodiumdrugres \
+  --pmo input_file.pmo \
+  --pmo_population_fields "collection_country,collection_date" \
+  --loci_of_interest_bed loci_of_interest.bed \
+  --loci_groups loci_groups.tsv \
+  --outdir ./results \
+  -profile docker
+```
+
+### Run from allele table
+
+Minimal allele-table run:
 
 ```bash
 nextflow run nf-core/plasmodiumdrugres --allele_table allele_table.tsv --panel_info_bed panel_info.bed --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --outdir ./results -profile docker
 ```
 
-If you have a population assignment file you can include it using this flag `--population_assignment`
+If you have a population assignment file, include `--population_assignment`:
 
 ```bash
 nextflow run nf-core/plasmodiumdrugres --allele_table allele_table.tsv --panel_info_bed panel_info.bed --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --population_assignment population_assignment.tsv --outdir ./results -profile docker

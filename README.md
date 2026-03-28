@@ -46,7 +46,32 @@
 
 The most simple way to run this pipeline is by using a [Portable Microhaplotype Object (PMO)](https://plasmogenepi.github.io/PMO_Docs/) file. To maximize flexibility, the pipeline also allows users to provide a PMO with reference sequences separately, or to supply an allele table with panel information in a separate file.
 
-For either option, you will first need to prepare two required inputs: [loci of interest](#loci-of-interest) and [loci groups](#loci-groups).
+### Entry points
+
+There are two supported entry points:
+
+1. **PMO input**
+   - Required: `--pmo`, `--loci_of_interest_bed`, `--loci_groups`
+   - Optional:
+     - `--pmo_population_fields` (comma-separated fields) to derive populations from PMO specimen metadata
+     - `--population_assignment` table of specimen_name and which 'population' it belongs to
+     - `--pmo_population_separator`
+     - `--genome_reference` or `--targeted_reference`
+
+2. **Allele-table input**
+   - Required: `--allele_table`, `--panel_info_bed`, `--loci_of_interest_bed`, `--loci_groups`
+   - Optional: `--population_assignment`, `--population_label`
+
+You must provide exactly one of `--pmo` or `--allele_table`.
+
+> **Terminology note: “population”**
+>
+> In this pipeline, **population** means “a group of samples you want to estimate prevalence and frequency for”.
+> You define populations with `--population_assignment` (or derive them from PMO metadata via `--pmo_population_fields`).
+> This can be any grouping level you choose (e.g. country, health facility, year, or combinations).
+> If you don’t provide a population assignment file, all samples are analysed together as one group (label controlled by `--population_label`, default `pop1`).
+
+For either input option, you will first need to prepare two required inputs: [loci of interest](#loci-of-interest) and [loci groups](#loci-groups).
 
 ### Loci of interest
 
@@ -93,7 +118,7 @@ When running with an allele table you should create the following inputs:
 
 - [allele table](#allele-table)
 - [panel info bed file](#panel-info)
-- [population map (optional)](#population-map-optional)
+- [population assignment (optional)](#population-assignment-optional)
 
 #### Allele Table
 
@@ -165,7 +190,7 @@ nextflow run nf-core/plasmodiumdrugres \
    --outdir <OUTDIR>
 ```
 
-If you have a population assignment file you can include it using this flag `--population_assignment`
+If you have a population assignment file, include `--population_assignment`:
 
 ```bash
 nextflow run nf-core/plasmodiumdrugres \
@@ -174,7 +199,7 @@ nextflow run nf-core/plasmodiumdrugres \
    --panel_info_bed panel_info.bed \
    --loci_of_interest_bed loci_of_interest.bed \
    --loci_groups loci_groups.tsv \
-   --population_assignment population_assignment.tsv
+   --population_assignment population_assignment.tsv \
    --outdir <OUTDIR>
 ```
 
@@ -191,7 +216,7 @@ nextflow run nf-core/plasmodiumdrugres \
    --outdir <OUTDIR>
 ```
 
-If you are supplying a reference the add the `--genome_reference` flag.
+If your PMO does not provide suitable reference context, add `--genome_reference`:
 
 ```bash
 nextflow run nf-core/plasmodiumdrugres \
@@ -199,11 +224,11 @@ nextflow run nf-core/plasmodiumdrugres \
    --pmo input_file.pmo \
    --loci_of_interest_bed loci_of_interest.bed \
    --loci_groups loci_groups.tsv \
-   --genome_reference genome_reference.fasta
+   --genome_reference genome_reference.fasta \
    --outdir <OUTDIR>
 ```
 
-If you are supplying a targeted reference the add the `--targeted_reference` flag.
+If you have a targeted reference FASTA instead, use `--targeted_reference`:
 
 ```bash
 nextflow run nf-core/plasmodiumdrugres \
@@ -211,7 +236,19 @@ nextflow run nf-core/plasmodiumdrugres \
    --pmo input_file.pmo \
    --loci_of_interest_bed loci_of_interest.bed \
    --loci_groups loci_groups.tsv \
-   --targeted_reference genome_reference.fasta
+   --targeted_reference genome_reference.fasta \
+   --outdir <OUTDIR>
+```
+
+To derive populations directly from PMO specimen metadata:
+
+```bash
+nextflow run nf-core/plasmodiumdrugres \
+   -profile <docker/singularity/.../institute> \
+   --pmo input_file.pmo \
+   --pmo_population_fields "collection_country,collection_date" \
+   --loci_of_interest_bed loci_of_interest.bed \
+   --loci_groups loci_groups.tsv \
    --outdir <OUTDIR>
 ```
 
