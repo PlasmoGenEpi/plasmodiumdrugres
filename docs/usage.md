@@ -14,6 +14,16 @@ Key words
 - locus
 - multi-locus
 
+## Getting set up
+
+The simplest way to get the software you need is to use [Docker](https://www.docker.com/get-started). Install Docker, then pull the pipeline image (when you first set up, and again when you upgrade the pipeline or want the latest image):
+
+```bash
+docker pull plasmogenepi/plasmodiumdrugres
+```
+
+Use `-profile docker` when you run the pipeline so Nextflow uses that container.
+
 ## Entry points
 
 There are two supported entry points into the pipeline:
@@ -354,6 +364,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   - Includes links to test data so needs no other parameters
 - `docker`
   - A generic configuration profile to be used with [Docker](https://docker.com/)
+  - See [Getting set up](#getting-set-up) for installing Docker and pulling the `plasmogenepi/plasmodiumdrugres` image.
 - `singularity`
   - A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
 - `podman`
