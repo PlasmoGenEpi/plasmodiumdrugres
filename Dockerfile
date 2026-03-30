@@ -1,5 +1,5 @@
 FROM ubuntu:24.04
-LABEL authors="pge"
+LABEL authors="PlasmoGenEpi"
 
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG SHELL="/bin/bash"
