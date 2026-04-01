@@ -1,0 +1,64 @@
+nextflow_process {
+
+    name "Test Process CONCAT_TABLES"
+    script "modules/local/concat_tables.nf"
+    process "CONCAT_TABLES"
+
+    test("Should run without failures with single input") {
+
+        when {
+            process {
+                """
+                // define inputs of the process here. Example:
+                input[0] = file("${projectDir}/tests/input/example_sl_with_pop1.tsv")
+                input[1] = file("${projectDir}/tests/input/example_mlaf_with_pop1.tsv")
+                input[2] = file("${projectDir}/tests/input/example_sl_from_mlaf_with_pop1.tsv")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            // channel exists
+            assert process.out.sl_summary != null
+            assert process.out.ml_summary != null
+            assert process.out.sl_from_ml_summary != null
+
+            // output md5 check
+            assert path(process.out.sl_summary.get(0)).md5 == "43310cf33d5f288f15f96f9d53fa4826"
+            assert path(process.out.ml_summary.get(0)).md5 == "5d8ad4d3cbbc4db276e8d61d1f129ec6"
+            assert path(process.out.sl_from_ml_summary.get(0)).md5 == "462e31479a5971416d6ef28e58e32f72"
+
+        }
+
+    }
+
+    test("Should run without failures with channel input") {
+
+        when {
+            process {
+                """
+                input[0] = [file("${projectDir}/tests/input/example_sl_with_pop1.tsv"),file("${projectDir}/tests/input/example_sl_with_pop2.tsv")]
+                input[1] = [file("${projectDir}/tests/input/example_mlaf_with_pop1.tsv"),file("${projectDir}/tests/input/example_mlaf_with_pop2.tsv")]
+                input[2] = [file("${projectDir}/tests/input/example_sl_from_mlaf_with_pop1.tsv"),file("${projectDir}/tests/input/example_sl_from_mlaf_with_pop2.tsv")]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            // channel exists
+            assert process.out.sl_summary != null
+            assert process.out.ml_summary != null
+            assert process.out.sl_from_ml_summary != null
+
+            // output md5 check
+            assert path(process.out.sl_summary.get(0)).md5 == "92a17821c0126463ff6a98d2bc56de3b"
+            assert path(process.out.ml_summary.get(0)).md5 == "1246c7599e0beea175f19dc84b3aa300"
+            assert path(process.out.sl_from_ml_summary.get(0)).md5 == "135e6e272443ddfc91307367a7f7f45b"
+
+        }
+
+    }
+
+}

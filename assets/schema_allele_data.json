@@ -1,0 +1,36 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/plasmodiumdrugres/master/assets/schema_allele_table.json",
+    "title": "nf-core/plasmodiumdrugres pipeline - params.allele_table schema",
+    "description": "Schema for the file provided with params.allele_table",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "specimen_name": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "specimen_name must be provided and cannot contain spaces.",
+                "meta": ["id"]
+            },
+            "target_name": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "target_name must be provided and cannot contain spaces.",
+                "meta": ["id"]
+            },
+            "seq": {
+                "type": "string",
+                "errorMessage": "Sequence of microhaplotypes (seq) must be provided and only contain A,C,T,G.",
+                "pattern": "^[ATCG]+$",
+                "meta": ["id"]
+            },
+            "reads": {
+                "type": "integer",
+                "errorMessage": "reads must be an integer, but is optional.",
+                "meta": ["id"]
+            }
+        },
+        "required": ["specimen_name", "target_name", "seq"]
+    }
+}

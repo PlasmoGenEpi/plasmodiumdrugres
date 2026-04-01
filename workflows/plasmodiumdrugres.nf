@@ -3,13 +3,19 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-include { FASTQC                 } from '../modules/nf-core/fastqc/main'
-include { MULTIQC                } from '../modules/nf-core/multiqc/main'
-include { paramsSummaryMap       } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_plasmodiumdrugres_pipeline'
+// include { paramsSummaryMap } from 'plugin/nf-schema'
+// include { paramsSummaryMultiqc } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+// include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+// include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_plasmodiumdrugres_pipeline'
 
+include { TRANSLATE_LOCI_OF_INTEREST } from '../modules/local/translate_loci_of_interest'
+include { SPLIT_AA_TABLE_BY_POP } from '../modules/local/split_aa_table_by_population'
+include { SPLIT_ALLELE_TABLE_BY_POP } from '../modules/local/split_allele_table_by_population'
+include { ESTIMATE_ALLELE_PREVALENCE_NAIVE } from '../modules/local/estimate_allele_prevalence_naive'
+include { ESTIMATE_MLAF } from '../subworkflows/local/estimate_mlaf'
+include { ESTIMATE_SLAF } from '../subworkflows/local/estimate_slaf'
+include { MERGE_TABLES } from '../modules/local/merge_tables'
+include { CONCAT_TABLES } from '../modules/local/concat_tables'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -17,81 +23,97 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_plas
 */
 
 workflow PLASMODIUMDRUGRES {
-
     take:
-    ch_samplesheet // channel: samplesheet read in from --input
+    allele_table
+    panel_info_bed_with_ref
+    loci_of_interest_bed
+    translate_loci_extra_args
+    population_assignment
+    mlaf_method
+    loci_groups
+    slaf_method
+
     main:
+    // Avoid gating on `population_map` directly: this is a channel handle and can be truthy
+    // even when it's effectively "missing", causing downstream processes to receive null paths.
+    // Instead, decide based on pipeline parameters used to construct `population_map`.
+    def has_population_assignment = params.population_assignment || (params.pmo && params.pmo_population_fields)
 
-    ch_versions = Channel.empty()
-    ch_multiqc_files = Channel.empty()
-    //
-    // MODULE: Run FastQC
-    //
-    FASTQC (
-        ch_samplesheet
+    TRANSLATE_LOCI_OF_INTEREST(allele_table, panel_info_bed_with_ref, file(loci_of_interest_bed), translate_loci_extra_args)
+
+    // Split allele table by population for mhaps_freq (only when population_map)
+    if (slaf_method == "mhaps_freq" && has_population_assignment) {
+        SPLIT_ALLELE_TABLE_BY_POP(allele_table, population_assignment)
+        mhaps_allele_table_ch = (SPLIT_ALLELE_TABLE_BY_POP.out.per_pop_tables).flatten()
+    } else if (slaf_method == "mhaps_freq") {
+        mhaps_allele_table_ch = allele_table
+    } else {
+        mhaps_allele_table_ch = Channel.empty()
+    }
+
+    // Split amino acid table if population map is provided
+    if (has_population_assignment) {
+        SPLIT_AA_TABLE_BY_POP(TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls, population_assignment)
+        aa_table_ch = (SPLIT_AA_TABLE_BY_POP.out.per_pop_tables).flatten()
+    } else {
+        aa_table_ch = TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls
+    }
+
+    // Estimate Single Locus Allele Prevalence
+    ESTIMATE_ALLELE_PREVALENCE_NAIVE(aa_table_ch)
+    // Estimate Multi Locus Allele Frequency
+    ESTIMATE_MLAF(mlaf_method, aa_table_ch, file(loci_groups))
+
+    // Estimate Single Locus Allele Frequency. Select appropriate input channel based on slaf_method.
+    slaf_method_input = slaf_method == "mhaps_freq" ? mhaps_allele_table_ch : aa_table_ch
+    ESTIMATE_SLAF(
+        slaf_method,
+        slaf_method_input,
+        slaf_method == "mhaps_freq" ? TRANSLATE_LOCI_OF_INTEREST.out.loci_of_interest_for_target_for_microhap : Channel.empty()
     )
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
-    ch_versions = ch_versions.mix(FASTQC.out.versions.first())
+    slaf_output = ESTIMATE_SLAF.out.slaf_output
 
-    //
-    // Collate and save software versions
-    //
-    softwareVersionsToYAML(ch_versions)
-        .collectFile(
-            storeDir: "${params.outdir}/pipeline_info",
-            name: 'nf_core_'  + 'pipeline_software_' +  'mqc_'  + 'versions.yml',
-            sort: true,
-            newLine: true
-        ).set { ch_collated_versions }
+    // -------------------------------------------------------------------------
+    // Merge per-population outputs and concat into final summaries
+    // -------------------------------------------------------------------------
+    all_outputs = ESTIMATE_ALLELE_PREVALENCE_NAIVE.out.allele_prevalence.mix(
+        ESTIMATE_MLAF.out.mlaf_output,
+        ESTIMATE_MLAF.out.sl_from_ml_output,
+        slaf_output)
+    outputs_per_population = all_outputs.groupTuple()
 
+    // OUTPUT
+    // TODO: sort out mlaf and the prevelances
+    if (has_population_assignment) {
+        MERGE_TABLES(outputs_per_population)
+    } else {
+        updated_ch = outputs_per_population.map { tuple ->
+            tuple[0] = params.population_label
+            return tuple
+        }
+        MERGE_TABLES(updated_ch)
+    }
 
-    //
-    // MODULE: MultiQC
-    //
-    ch_multiqc_config        = Channel.fromPath(
-        "$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-    ch_multiqc_custom_config = params.multiqc_config ?
-        Channel.fromPath(params.multiqc_config, checkIfExists: true) :
-        Channel.empty()
-    ch_multiqc_logo          = params.multiqc_logo ?
-        Channel.fromPath(params.multiqc_logo, checkIfExists: true) :
-        Channel.empty()
+    all_sl_summary_ch = MERGE_TABLES.out.sl_summary.collect()
+    all_ml_summary_ch = MERGE_TABLES.out.ml_summary.collect()
+    all_sl_from_ml_summary_ch = MERGE_TABLES.out.sl_from_ml_summary.collect()
 
-    summary_params      = paramsSummaryMap(
-        workflow, parameters_schema: "nextflow_schema.json")
-    ch_workflow_summary = Channel.value(paramsSummaryMultiqc(summary_params))
-    ch_multiqc_files = ch_multiqc_files.mix(
-        ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_custom_methods_description = params.multiqc_methods_description ?
-        file(params.multiqc_methods_description, checkIfExists: true) :
-        file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-    ch_methods_description                = Channel.value(
-        methodsDescriptionText(ch_multiqc_custom_methods_description))
+    CONCAT_TABLES(all_sl_summary_ch, all_ml_summary_ch, all_sl_from_ml_summary_ch)
+    // // //
+    // // Collate and save software versions
+    // //
+    // // softwareVersionsToYAML(ch_versions)
+    // //     .collectFile(
+    // //         storeDir: "${params.outdir}/pipeline_info",
+    // //         name: 'nf_core_' + 'pipeline_software_' + 'mqc_' + 'versions.yml',
+    // //         sort: true,
+    // //         newLine: true,
+    // //     )
+    // //     .set { ch_collated_versions }
 
-    ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
-    ch_multiqc_files = ch_multiqc_files.mix(
-        ch_methods_description.collectFile(
-            name: 'methods_description_mqc.yaml',
-            sort: true
-        )
-    )
-
-    MULTIQC (
-        ch_multiqc_files.collect(),
-        ch_multiqc_config.toList(),
-        ch_multiqc_custom_config.toList(),
-        ch_multiqc_logo.toList(),
-        [],
-        []
-    )
-
-    emit:multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
-    versions       = ch_versions                 // channel: [ path(versions.yml) ]
-
+    emit:
+    sl_summary = CONCAT_TABLES.out.sl_summary
+    ml_summary = CONCAT_TABLES.out.ml_summary
+    sl_from_ml_summary = CONCAT_TABLES.out.sl_from_ml_summary
+    // // versions = ch_versions // channel: [ path(versions.yml) ]
 }
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    THE END
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/

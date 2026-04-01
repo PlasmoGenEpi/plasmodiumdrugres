@@ -1,0 +1,145 @@
+nextflow_workflow {
+
+    name "Test Workflow PLASMODIUMDRUGRES"
+    script "workflows/plasmodiumdrugres.nf"
+    workflow "PLASMODIUMDRUGRES"
+
+    test("Should run without failures - MLBM and naive slaf") {
+
+        when {
+            params {
+                population_assignment = null
+                population_label = "pop1"
+            }
+            workflow {
+                """
+                input[0] = channel.of(file("${projectDir}/tests/input/example2_allele_table.tsv"))
+                input[1] = channel.of(file(("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed")))
+                input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
+                input[3] = ""
+                input[4] = null
+                input[5] = "MLBM"
+                input[6] = "${projectDir}/tests/input/example2_loci_groups.tsv"
+                input[7] = "naive"
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 7
+        }
+
+    }
+
+    test("Should run without failures - FEM and IDM") {
+
+        when {
+            params {
+                population_assignment = null
+                population_label = "pop1"
+            }
+            workflow {
+                """
+                input[0] = channel.of(file("${projectDir}/tests/input/example2_allele_table.tsv" ))
+                input[1] = channel.of(file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed"))
+                input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
+                input[3] = ""
+                input[4] = null
+                input[5] = "FEM"
+                input[6] = "${projectDir}/tests/input/example2_loci_groups.tsv"
+                input[7] = "IDM"
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 7
+        }
+
+    }
+
+    test("Should run without failures - NAIVE multilocus and mhaps_freq for slaf") {
+
+        when {
+            params {
+                population_assignment = null
+                population_label = "pop1"
+            }
+            workflow {
+                """
+                input[0] = channel.of(file("${projectDir}/tests/input/example2_allele_table.tsv"))
+                input[1] = channel.of(file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed"))
+                input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
+                input[3] = ""
+                input[4] = null
+                input[5] = "naive"
+                input[6] = "${projectDir}/tests/input/example2_loci_groups.tsv"
+                input[7] = "mhaps_freq"
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 7
+        }
+
+    }
+
+    test("Should run without failures - NAIVE multilocus and mhaps_freq for slaf with multi populations") {
+
+        when {
+            params {
+                population_assignment = "${projectDir}/tests/input/example2_population_map.tsv"
+            }
+            workflow {
+                """
+                input[0] = channel.of(file("${projectDir}/tests/input/example2_allele_table.tsv"))
+                input[1] = channel.of(file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed"))
+                input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
+                input[3] = ""
+                input[4] = channel.of(file("${projectDir}/tests/input/example2_population_map.tsv"))
+                input[5] = "naive"
+                input[6] = "${projectDir}/tests/input/example2_loci_groups.tsv"
+                input[7] = "mhaps_freq"
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 14
+        }
+
+    }
+
+    test("Should run without failures with multiple populations") {
+
+        when {
+            params {
+                population_assignment = "${projectDir}/tests/input/example2_population_map.tsv"
+            }
+            workflow {
+                """
+                input[0] = channel.of(file("${projectDir}/tests/input/example2_allele_table.tsv"))
+                input[1] = channel.of(file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed"))
+                input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
+                input[3] = ""
+                input[4] = channel.of(file("${projectDir}/tests/input/example2_population_map.tsv"))
+                input[5] = "MLBM"
+                input[6] = "${projectDir}/tests/input/example2_loci_groups.tsv"
+                input[7] = "naive"
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 13
+        }
+
+    }
+
+}
