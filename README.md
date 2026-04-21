@@ -46,6 +46,19 @@
 
 ### Getting set up
 
+Clone the repository with submodules enabled:
+
+```bash
+git clone --recurse-submodules https://github.com/nf-core/plasmodiumdrugres.git
+cd plasmodiumdrugres
+```
+
+If you already cloned without submodules, run:
+
+```bash
+git submodule update --init --recursive
+```
+
 The simplest way to get the software you need is to use [Docker](https://www.docker.com/get-started). Install Docker, then pull the pipeline image (do this when you first set up, and again when you upgrade the pipeline or want the latest image):
 
 ```bash
