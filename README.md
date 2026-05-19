@@ -65,10 +65,9 @@ The simplest way to get the software you need is to use [Docker](https://www.doc
 docker pull plasmogenepi/plasmodiumdrugres:main
 ```
 
-Run the workflow with `-profile docker` so Nextflow uses that container. 
+Run the workflow with `-profile docker` so Nextflow uses that container.
 
-
-**Note:** If you are using an Apple Silicon Mac (M1/M2/M3) and encounter an error such as `no matching manifest for linux/arm64/v8 in the manifest list entries` please pull and run the container using the following command 
+**Note:** If you are using an Apple Silicon Mac (M1/M2/M3) and encounter an error such as `no matching manifest for linux/arm64/v8 in the manifest list entries` please pull and run the container using the following command
 
 ```bash
 docker pull --platform linux/amd64 plasmogenepi/plasmodiumdrugres:latest
