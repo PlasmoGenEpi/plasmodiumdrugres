@@ -28,6 +28,9 @@ RUN apt-get install -yq --no-install-recommends autotools-dev autoconf libtool a
 # install common bio tools
 RUN apt-get install -yq --no-install-recommends muscle r-recommended=4.4* r-base=4.4.* r-base-core=4.4.* r-base-dev=4.4.*
 
+# Add this after the r-base installation (after line 29):
+RUN R -e "install.packages('nlme', type='source')"
+
 # set environment locale
 RUN echo "$LANG UTF-8" >> /etc/locale.gen
 RUN echo "LANG=$LANG" > /etc/locale.conf
