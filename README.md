@@ -64,10 +64,16 @@ git submodule update --init --recursive
 The simplest way to get the software you need is to use [Docker](https://www.docker.com/get-started). Install Docker, then pull the pipeline image (do this when you first set up, and again when you upgrade the pipeline or want the latest image):
 
 ```bash
-docker pull plasmogenepi/plasmodiumdrugres
+docker pull plasmogenepi/plasmodiumdrugres:main
 ```
 
 Run the workflow with `-profile docker` so Nextflow uses that container.
+
+**Note:** If you are using an Apple Silicon Mac (M1/M2/M3) and encounter an error such as `no matching manifest for linux/arm64/v8 in the manifest list entries` please pull and run the container using the following command
+
+```bash
+docker pull --platform linux/amd64 plasmogenepi/plasmodiumdrugres:main
+```
 
 The most simple way to run this pipeline is by using a [Portable Microhaplotype Object (PMO)](https://plasmogenepi.github.io/PMO_Docs/) file. To maximize flexibility, the pipeline also allows users to provide a PMO with reference sequences separately, or to supply an allele table with panel information in a separate file.
 
