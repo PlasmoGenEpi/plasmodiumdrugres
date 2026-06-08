@@ -90,13 +90,12 @@ RUN R -e 'library("doMC")'
 RUN R -e "remotes::install_github('aimeertaylor/FreqEstimationModel', build_vignettes = FALSE, dependencies = TRUE)"
 RUN R -e 'library("FreqEstimationModel")'
 
-# R install dcifer, moire, variantstring
-RUN R -e "install.packages(c('dcifer', 'moire'), repos = c('https://plasmogenepi.r-universe.dev', 'https://cloud.r-project.org'))"
+# R install dcifer, variantstring
+RUN R -e "install.packages(c('dcifer'), repos = c('https://plasmogenepi.r-universe.dev', 'https://cloud.r-project.org'))"
 RUN R -e "remotes::install_github('mrc-ide/variantstring@1.8.0')"
 
 ## attempt to load libraries to make sure they installed
 RUN R -e 'library("dcifer")'
-RUN R -e 'library("moire")'
 RUN R -e 'library("variantstring")'
 
 # Bioconductor packages (have to install 3.19 because that's needed for pwalign)
@@ -107,7 +106,6 @@ RUN Rscript -e 'BiocManager::install("msa", ask = FALSE)'
 ## attempt to load libraries to make sure they installed
 RUN R -e 'library("Biostrings")'
 RUN R -e 'library("pwalign")'
-RUN R -e 'library("msa")'
 
 # update path
 ENV PATH="/opt/pmotools-python/scripts:$PATH"

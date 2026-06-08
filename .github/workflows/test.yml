@@ -31,9 +31,11 @@ jobs:
         with:
           version: "25.04.0"
 
-      - name: Set up Docker image
+      - name: Set up Docker images
         run: |
           docker build -t plasmogenepi/plasmodiumdrugres .
+          docker build -t plasmogenepi/plasmodiumdrugres-translate-loci:1.0.0 \
+            modules/local/translate_loci_of_interest
 
       - name: Set up nf-test
         uses: nf-core/setup-nf-test@v1

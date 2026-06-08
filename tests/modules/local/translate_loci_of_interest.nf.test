@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process TRANSLATE_LOCI_OF_INTEREST"
-    script "modules/local/translate_loci_of_interest.nf"
+    script "modules/local/translate_loci_of_interest"
     process "TRANSLATE_LOCI_OF_INTEREST"
 
     test("Should run without failures") {

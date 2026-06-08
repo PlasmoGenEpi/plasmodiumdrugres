@@ -1,0 +1,61 @@
+name: translate_loci_of_interest
+description: Translate loci of interest to amino acid calls using PGEcore
+keywords:
+  - translation
+  - amino acid
+  - plasmodium
+  - drug resistance
+tools:
+  - pgecore_translate_loci:
+      description: |
+        Wrapper around the PGEcore translate_loci_of_interest.R script.
+        Aligns alleles to reference codons and produces collapsed amino acid calls.
+      homepage: https://github.com/PlasmoGenEpi/PGEcore
+      documentation: https://github.com/PlasmoGenEpi/PGEcore/tree/develop/scripts/translate_loci_of_interest
+      licence: ["MIT"]
+input:
+  - allele_table:
+      type: file
+      description: Allele table (TSV)
+      pattern: "*.tsv"
+  - ref_bed:
+      type: file
+      description: Reference BED with sequences for panel targets
+      pattern: "*.bed"
+  - loci_of_interest:
+      type: file
+      description: BED of principal resistance markers / loci of interest
+      pattern: "*.bed"
+  - extra_args:
+      type: string
+      description: Additional CLI arguments passed to the R script
+output:
+  - collapsed_amino_acid_calls:
+      - "translated_loci/collapsed_amino_acid_calls.tsv.gz":
+          type: file
+          description: Collapsed amino acid calls per specimen and target
+          pattern: "collapsed_amino_acid_calls.tsv.gz"
+  - amino_acid_calls:
+      - "translated_loci/amino_acid_calls.tsv.gz":
+          type: file
+          description: Per-haplotype amino acid calls
+          pattern: "amino_acid_calls.tsv.gz"
+  - loci_covered_by_target_samples_info:
+      - "translated_loci/loci_covered_by_target_samples_info.tsv":
+          type: file
+          description: Coverage summary for loci of interest
+          pattern: "loci_covered_by_target_samples_info.tsv"
+  - loci_of_interest_for_target_for_microhap:
+      - "translated_loci/loci_of_interest_for_target_for_microhap.tsv.gz":
+          type: file
+          description: Loci of interest table for microhap-based SLAF methods
+          pattern: "loci_of_interest_for_target_for_microhap.tsv.gz"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@PlasmoGenEpi"
+maintainers:
+  - "@PlasmoGenEpi"
