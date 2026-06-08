@@ -14,6 +14,7 @@ nextflow_process {
                 file("${projectDir}/tests/input/example_aa_mlaf.tsv"),
                 file("${projectDir}/tests/input/example_aa_slaf.tsv"),
                 file("${projectDir}/tests/input/example_sl_from_ml.tsv")])
+                input[1] = file("${projectDir}/assets/empty_population_index_lookup.tsv")
                 """
             }
         }
@@ -31,6 +32,30 @@ nextflow_process {
             assert path(process.out.ml_summary.get(0)).md5 == "08b7b0df26a3983bc08a7216ee68c7fc"
             assert path(process.out.sl_from_ml_summary.get(0)).md5 == "94fe43bc91d6ee0caaeb3e6ccd7b0562"
 
+        }
+
+    }
+
+    test("Should restore true population labels from index lookup") {
+
+        when {
+            process {
+                """
+                input[0] = tuple('popidx_001', [
+                file("${projectDir}/tests/input/example_allele_prev.tsv"),
+                file("${projectDir}/tests/input/example_aa_mlaf.tsv"),
+                file("${projectDir}/tests/input/example_aa_slaf.tsv"),
+                file("${projectDir}/tests/input/example_sl_from_ml.tsv")])
+                input[1] = file("${projectDir}/tests/input/example_population_index_lookup.tsv")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert path(process.out.sl_summary.get(0)).text.contains("pop 1")
+            assert path(process.out.ml_summary.get(0)).text.contains("pop 1")
+            assert path(process.out.sl_from_ml_summary.get(0)).text.contains("pop 1")
         }
 
     }
