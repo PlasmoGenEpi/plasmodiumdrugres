@@ -44,11 +44,8 @@ RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 
 # pmotools
-WORKDIR /opt
-RUN git clone  https://github.com/PlasmoGenEpi/pmotools-python.git
-WORKDIR /opt/pmotools-python
-RUN git checkout develop
-RUN pip install --break-system-packages .
+RUN pip install --break-system-packages "pmotools==1.0.0"
+RUN pmotools-python --list-plain > /dev/null
 
 # R configuration
 RUN mkdir -p /usr/local/lib/R/etc/ /usr/lib/R/etc/
@@ -108,6 +105,3 @@ RUN Rscript -e 'BiocManager::install("msa", ask = FALSE)'
 RUN R -e 'library("Biostrings")'
 RUN R -e 'library("pwalign")'
 RUN R -e 'library("msa")'
-
-# update path
-ENV PATH="/opt/pmotools-python/scripts:$PATH"
