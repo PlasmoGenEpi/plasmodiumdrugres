@@ -37,7 +37,7 @@
    2. [Naive `PGEcore` method](https://github.com/PlasmoGenEpi/PGEcore)
    3. [mhaps_freq (from microhaplotype frequencies via DCIFER)](https://github.com/PlasmoGenEpi/PGEcore)
 6. Merge prevalence and frequency outputs
-7. Concatenate population outputs
+7. Concatenate population outputs into standardized summary tables, while preserving raw tool-specific SL-from-ML outputs in `raw_summaries/`
 
 ## Usage
 
@@ -293,6 +293,45 @@ For more details and further functionality, please refer to the [usage documenta
 To see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/plasmodiumdrugres/results) tab on the nf-core website pipeline page.
 For more details about the output files and reports, please refer to the
 [output documentation](https://nf-co.re/plasmodiumdrugres/output).
+
+The main summary tables in the output directory use a standardized column layout so results are comparable across SLAF and MLAF methods. Tool-specific columns are not included in these files; see [Raw summary outputs](#raw-summary-outputs) below.
+
+### `sl_summary.tsv`
+
+Single-locus summary table (prevalence + frequency), merged across populations. Columns are always output in this order:
+
+| Column         | Description                                                   |
+| -------------- | ------------------------------------------------------------- |
+| `population`   | Population label for this row.                                |
+| `variant`      | Single-locus amino-acid variant identifier.                   |
+| `prev`         | Estimated prevalence for the variant in the population.       |
+| `sample_count` | Number of samples with the variant (for prevalence estimate). |
+| `sample_total` | Total number of samples considered (for prevalence estimate). |
+| `freq`         | Estimated single-locus allele frequency.                      |
+
+### `ml_summary.tsv`
+
+Multi-locus summary table, merged across populations. Columns are output in this order:
+
+| Column       | Description                                 |
+| ------------ | ------------------------------------------- |
+| `population` | Population label for this row.              |
+| `group_id`   | Group identifier from `--loci_groups`.      |
+| `variant`    | Multi-locus variant / haplotype identifier. |
+| `prev`       | Estimated prevalence (included when available). |
+| `sample_count` | Number of samples with the variant (included when available). |
+| `sample_total` | Total number of samples considered (included when available). |
+| `freq`       | Estimated multi-locus allele frequency.     |
+
+Not all MLAF methods report `prev`, `sample_count`, and `sample_total`. When present, they are included in the order shown above; otherwise the table contains only `population`, `group_id`, `variant`, and `freq`.
+
+### Raw summary outputs
+
+Full concatenated outputs with all tool-specific columns are written to `raw_summaries/`:
+
+- `raw_summaries/raw_sl_summary.tsv`: Full single-locus summary before column standardization.
+- `raw_summaries/raw_ml_summary.tsv`: Full multi-locus summary before column standardization.
+- `raw_summaries/raw_sl_from_ml_summary.tsv`: Single-locus frequencies derived from multi-locus estimates.
 
 ## Credits
 

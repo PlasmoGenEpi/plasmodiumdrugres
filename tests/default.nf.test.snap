@@ -4,7 +4,10 @@
             [
                 "ml_summary.tsv",
                 "pipeline_info",
-                "sl_from_ml_summary.tsv",
+                "raw_summaries",
+                "raw_summaries/raw_ml_summary.tsv",
+                "raw_summaries/raw_sl_from_ml_summary.tsv",
+                "raw_summaries/raw_sl_summary.tsv",
                 "sl_summary.tsv",
                 "translated_loci",
                 "translated_loci/amino_acid_calls.tsv.gz",
@@ -13,8 +16,10 @@
                 "translated_loci/loci_of_interest_for_target_for_microhap.tsv.gz"
             ],
             [
-                "ml_summary.tsv:md5,48a7f581701f6966119cddf66e0dac40",
-                "sl_from_ml_summary.tsv:md5,aaee2c30e0e07d35dc7fdf2960e7fe28",
+                "ml_summary.tsv:md5,e96b21b5ec98b724c3f9004c6948947c",
+                "raw_ml_summary.tsv:md5,249438955dfbbcb6769f6a0e7ad66903",
+                "raw_sl_from_ml_summary.tsv:md5,aaee2c30e0e07d35dc7fdf2960e7fe28",
+                "raw_sl_summary.tsv:md5,214d8d99255aff5d6356b618f3ed19f5",
                 "sl_summary.tsv:md5,214d8d99255aff5d6356b618f3ed19f5",
                 "amino_acid_calls.tsv.gz:md5,8a34f7f4235b08473c5b5933a4ef6503",
                 "collapsed_amino_acid_calls.tsv.gz:md5,0e55caf7dc912137457f3929eb785f40",
@@ -33,7 +38,10 @@
             [
                 "ml_summary.tsv",
                 "pipeline_info",
-                "sl_from_ml_summary.tsv",
+                "raw_summaries",
+                "raw_summaries/raw_ml_summary.tsv",
+                "raw_summaries/raw_sl_from_ml_summary.tsv",
+                "raw_summaries/raw_sl_summary.tsv",
                 "sl_summary.tsv",
                 "translated_loci",
                 "translated_loci/amino_acid_calls.tsv.gz",
@@ -43,7 +51,7 @@
             ],
             [
                 "ml_summary.tsv:md5,c415dbd9b6d5b943a0d5fc0e51e58e4e",
-                "sl_from_ml_summary.tsv:md5,20ad2aa2a185319f991c780d10f8650e",
+                "raw_sl_from_ml_summary.tsv:md5,20ad2aa2a185319f991c780d10f8650e",
                 "sl_summary.tsv:md5,4a01a4b044aa159a08b8b8df83b2eb69",
                 "amino_acid_calls.tsv.gz:md5,ade39d1ce607cfffc8b94cbb1b03048b",
                 "collapsed_amino_acid_calls.tsv.gz:md5,d489b2c846da50df03b9d74859ad20de",
