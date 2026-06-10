@@ -10,15 +10,15 @@ nextflow_process {
             process {
                 """
                 input[0] = file("${projectDir}/tests/input/example_amino_acid_calls.tsv.gz")
-                input[1] = file("${projectDir}/tests/input/example_population_map.tsv")
+                input[1] = file("${projectDir}/tests/input/example_population_map_indexed.tsv")
                 """
             }
         }
 
         then {
             assert process.success
-            assert path(process.out.per_pop_tables.get(0)[0]).md5 == "7e40bd248bb941f41c64a910402405d2"
-            assert path(process.out.per_pop_tables.get(0)[1]).md5 == "3994a47c3759685ce49b4d62ddfdb66d"
+            assert path(process.out.per_pop_tables.get(0)[0]).md5 == "0350eacde2df086a5cebf3e326993880"
+            assert path(process.out.per_pop_tables.get(0)[1]).md5 == "cef06fa46158b9251090b2aef548e35c"
         }
 
     }

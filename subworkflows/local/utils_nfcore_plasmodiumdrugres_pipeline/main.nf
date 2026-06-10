@@ -20,6 +20,7 @@ include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipelin
 include { EXTRACT_ALLELE_TABLE      } from '../../../modules/local/extract_allele_table'
 include { EXTRACT_BED_FILE_FROM_PMO } from '../../../subworkflows/local/generate_reference_bed_file'
 include { EXTRACT_POPULATION_MAP_FROM_PMO } from '../../../modules/local/extract_population_map_from_pmo'
+include { INDEX_POPULATION_ASSIGNMENT } from '../../../modules/local/index_population_assignment'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -127,7 +128,7 @@ workflow PIPELINE_INITIALISATION {
     // variables for the `emit:` block.
     allele_table_ch = Channel.empty()
     panel_info_bed_ch = Channel.empty()
-    population_assignment_ch = null
+    raw_population_assignment_ch = null
     if (params.pmo) {
         def pmo_ch = Channel.fromPath(params.pmo, checkIfExists: true)
         EXTRACT_ALLELE_TABLE(pmo_ch)
@@ -135,23 +136,32 @@ workflow PIPELINE_INITIALISATION {
         EXTRACT_BED_FILE_FROM_PMO(pmo_ch, ref_type, fasta)
         panel_info_bed_ch = EXTRACT_BED_FILE_FROM_PMO.out.panel_info_bed
         if (params.population_assignment) {
-            population_assignment_ch = Channel.fromPath(params.population_assignment, checkIfExists: true)
+            raw_population_assignment_ch = Channel.fromPath(params.population_assignment, checkIfExists: true)
         } else if (pmo_population_fields_norm) {
             EXTRACT_POPULATION_MAP_FROM_PMO(pmo_ch, pmo_population_fields_norm, params.pmo_population_separator)
-            population_assignment_ch = EXTRACT_POPULATION_MAP_FROM_PMO.out.population_map
+            raw_population_assignment_ch = EXTRACT_POPULATION_MAP_FROM_PMO.out.population_map
         }
     } else if (params.allele_table) {
         allele_table_ch = Channel.fromPath(params.allele_table, checkIfExists: true)
         panel_info_bed_ch = Channel.fromPath(params.panel_info_bed, checkIfExists: true)
         if (params.population_assignment) {
-            population_assignment_ch = Channel.fromPath(params.population_assignment, checkIfExists: true)
+            raw_population_assignment_ch = Channel.fromPath(params.population_assignment, checkIfExists: true)
         }
+    }
+
+    population_assignment_ch = null
+    population_index_lookup_ch = null
+    if (raw_population_assignment_ch) {
+        INDEX_POPULATION_ASSIGNMENT(raw_population_assignment_ch)
+        population_assignment_ch = INDEX_POPULATION_ASSIGNMENT.out.population_map_indexed
+        population_index_lookup_ch = INDEX_POPULATION_ASSIGNMENT.out.population_index_lookup
     }
 
     emit:
     allele_table_ch    = allele_table_ch
     panel_info_bed_ch  = panel_info_bed_ch
     population_assignment_ch  = population_assignment_ch
+    population_index_lookup_ch = population_index_lookup_ch
     versions        = ch_versions
 }
 

@@ -1,0 +1,27 @@
+nextflow_process {
+
+    name "Test Process INDEX_POPULATION_ASSIGNMENT"
+    script "modules/local/index_population_assignment.nf"
+    process "INDEX_POPULATION_ASSIGNMENT"
+
+    test("Should assign stable indices to population labels") {
+
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example_population_map_with_spaces.tsv")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert path(process.out.population_map_indexed.get(0)).readLines().contains("specimen1\tpop 1\tpopidx_001")
+            assert path(process.out.population_map_indexed.get(0)).readLines().contains("specimen3\tpop 2\tpopidx_002")
+            assert path(process.out.population_index_lookup.get(0)).readLines().contains("popidx_001\tpop 1")
+            assert path(process.out.population_index_lookup.get(0)).readLines().contains("popidx_002\tpop 2")
+        }
+
+    }
+
+}
