@@ -33,6 +33,27 @@ nextflow_process {
 
     }
 
+    test("Should run without failures when ML summary inputs are empty") {
+
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/tests/input/example_sl_with_pop1.tsv")
+                input[1] = []
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert path(process.out.sl_summary.get(0)).md5 == "43310cf33d5f288f15f96f9d53fa4826"
+            assert path(process.out.ml_summary.get(0)).text == ""
+            assert path(process.out.sl_from_ml_summary.get(0)).text == ""
+        }
+
+    }
+
     test("Should run without failures with channel input") {
 
         when {

@@ -35,6 +35,28 @@ nextflow_pipeline {
         }
     }
 
+    test("-profile test_allele_table without loci_groups") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+
+                allele_table               = "${projectDir}/tests/input/example2_allele_table.tsv"
+                panel_info_bed             = "${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed"
+                loci_of_interest_bed       = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
+            }
+        }
+
+        then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(stable_name, stable_path).match() }
+            )
+        }
+    }
+
     // Default test running full pipeline from a PMO input
     test("-profile test_PMO") {
 
