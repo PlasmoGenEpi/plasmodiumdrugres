@@ -313,15 +313,15 @@ Single-locus summary table (prevalence + frequency), merged across populations. 
 
 Multi-locus summary table, merged across populations. Columns are output in this order:
 
-| Column       | Description                                 |
-| ------------ | ------------------------------------------- |
-| `population` | Population label for this row.              |
-| `group_id`   | Group identifier from `--loci_groups`.      |
-| `variant`    | Multi-locus variant / haplotype identifier. |
-| `prev`       | Estimated prevalence (included when available). |
+| Column         | Description                                                   |
+| -------------- | ------------------------------------------------------------- |
+| `population`   | Population label for this row.                                |
+| `group_id`     | Group identifier from `--loci_groups`.                        |
+| `variant`      | Multi-locus variant / haplotype identifier.                   |
+| `prev`         | Estimated prevalence (included when available).               |
 | `sample_count` | Number of samples with the variant (included when available). |
 | `sample_total` | Total number of samples considered (included when available). |
-| `freq`       | Estimated multi-locus allele frequency.     |
+| `freq`         | Estimated multi-locus allele frequency.                       |
 
 Not all MLAF methods report `prev`, `sample_count`, and `sample_total`. When present, they are included in the order shown above; otherwise the table contains only `population`, `group_id`, `variant`, and `freq`.
 

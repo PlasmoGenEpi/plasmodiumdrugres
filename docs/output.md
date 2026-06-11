@@ -24,7 +24,6 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 6. Merge prevalence and frequency outputs
 7. Concatenate population outputs into standardized summary tables, while preserving raw tool-specific outputs in `raw_summaries/`
 
-
 ### Single Locus Allele Frequencies
 
 <details markdown="1">
@@ -62,15 +61,15 @@ Tool-specific columns are removed during standardization. See [Raw summary table
 
 Standardized columns (in this order):
 
-| Column         | Description                                                                 |
-| -------------- | --------------------------------------------------------------------------- |
-| `population`   | Population label for this row.                                              |
-| `group_id`     | Group identifier from `--loci_groups`.                                      |
-| `variant`      | Multi-locus variant / haplotype identifier.                                 |
-| `prev`         | Estimated prevalence (included when available).                             |
-| `sample_count` | Number of samples with the variant (included when available).               |
-| `sample_total` | Total number of samples considered (included when available).               |
-| `freq`         | Estimated multi-locus allele frequency.                                     |
+| Column         | Description                                                   |
+| -------------- | ------------------------------------------------------------- |
+| `population`   | Population label for this row.                                |
+| `group_id`     | Group identifier from `--loci_groups`.                        |
+| `variant`      | Multi-locus variant / haplotype identifier.                   |
+| `prev`         | Estimated prevalence (included when available).               |
+| `sample_count` | Number of samples with the variant (included when available). |
+| `sample_total` | Total number of samples considered (included when available). |
+| `freq`         | Estimated multi-locus allele frequency.                       |
 
 Not all MLAF methods report `prev`, `sample_count`, and `sample_total`. When present, they are included in the order shown above; otherwise the table contains only `population`, `group_id`, `variant`, and `freq`.
 
@@ -125,18 +124,18 @@ These columns may appear in upstream SLAF/prevalence outputs but are not include
 
 These columns may appear in upstream MLAF outputs but are not included in the standardized `ml_summary.tsv`. They are retained in `raw_summaries/raw_ml_summary.tsv`:
 
-| MLAF method | Extra columns                                                          |
-| ----------- | ---------------------------------------------------------------------- |
-| `MLBM`      | None.                                                                  |
-| `FEM`       | `sequence`, `median_freq`, `CI_2.5`, `CI_97.5`                         |
-| `naive`     | `allele_count`, `allele_total`                                       |
+| MLAF method | Extra columns                                  |
+| ----------- | ---------------------------------------------- |
+| `MLBM`      | None.                                          |
+| `FEM`       | `sequence`, `median_freq`, `CI_2.5`, `CI_97.5` |
+| `naive`     | `allele_count`, `allele_total`                 |
 
 #### `raw_sl_from_ml_summary.tsv` columns by MLAF method
 
-| MLAF method | Columns in `raw_sl_from_ml_summary.tsv`                                                                                      |
-| ----------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `MLBM`      | `population`, `variant`, `freq`                                                                                            |
-| `FEM`       | `population`, `variant`, `freq`                                                                                            |
+| MLAF method | Columns in `raw_sl_from_ml_summary.tsv`                                                                             |
+| ----------- | ------------------------------------------------------------------------------------------------------------------- |
+| `MLBM`      | `population`, `variant`, `freq`                                                                                     |
+| `FEM`       | `population`, `variant`, `freq`                                                                                     |
 | `naive`     | `population`, `group_id`, `variant`, `prev`, `sample_count`, `sample_total`, `allele_count`, `allele_total`, `freq` |
 
 ### Pipeline information
