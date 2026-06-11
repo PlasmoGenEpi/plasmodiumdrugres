@@ -26,6 +26,9 @@ split_files <- function(x) {
 }
 
 files_to_df <- function(files) {
+  if (length(files) == 0) {
+    return(tibble())
+  }
   # Keep column types stable-ish; most columns are numeric but we mostly sort on strings.
   dfs <- lapply(files, function(f) {
     stopifnot(file.exists(f))

@@ -36,6 +36,27 @@ nextflow_process {
 
     }
 
+    test("Should produce empty ML summaries when MLAF outputs are absent") {
+
+        when {
+            process {
+                """
+                input[0] = tuple('pop1', [
+                file("${projectDir}/tests/input/example_allele_prev.tsv"),
+                file("${projectDir}/tests/input/example_aa_slaf.tsv")])
+                input[1] = file("${projectDir}/assets/empty_population_index_lookup.tsv")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert path(process.out.ml_summary.get(0)).text == "population\tgroup_id\tvariant\tfreq\n"
+            assert path(process.out.sl_from_ml_summary.get(0)).text == "population\tgroup_id\tvariant\tsample_total\tallele_total\tallele_count\tsample_count\tfreq\tprev\n"
+        }
+
+    }
+
     test("Should restore true population labels from index lookup") {
 
         when {

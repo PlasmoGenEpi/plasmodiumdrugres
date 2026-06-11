@@ -22,11 +22,11 @@
                 "loci_of_interest_for_target_for_microhap.tsv.gz:md5,10b8e2f5352441c28c3ea3c0bcef74cd"
             ]
         ],
+        "timestamp": "2026-03-19T09:59:00.464374",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-19T09:59:00.464374"
+        }
     },
     "-profile test_PMO": {
         "content": [
@@ -51,10 +51,39 @@
                 "loci_of_interest_for_target_for_microhap.tsv.gz:md5,ab6c872969330b3364db71991d0040f6"
             ]
         ],
+        "timestamp": "2026-03-25T05:32:13.536322",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-25T05:32:13.536322"
+        }
+    },
+    "-profile test_allele_table without loci_groups": {
+        "content": [
+            [
+                "ml_summary.tsv",
+                "pipeline_info",
+                "sl_from_ml_summary.tsv",
+                "sl_summary.tsv",
+                "translated_loci",
+                "translated_loci/amino_acid_calls.tsv.gz",
+                "translated_loci/collapsed_amino_acid_calls.tsv.gz",
+                "translated_loci/loci_covered_by_target_samples_info.tsv",
+                "translated_loci/loci_of_interest_for_target_for_microhap.tsv.gz"
+            ],
+            [
+                "ml_summary.tsv:md5,e8a94f69c5128f3f2eb73cdadbf003a3",
+                "sl_from_ml_summary.tsv:md5,cb25beedf82b44348008d8e5621655ef",
+                "sl_summary.tsv:md5,214d8d99255aff5d6356b618f3ed19f5",
+                "amino_acid_calls.tsv.gz:md5,8a34f7f4235b08473c5b5933a4ef6503",
+                "collapsed_amino_acid_calls.tsv.gz:md5,0e55caf7dc912137457f3929eb785f40",
+                "loci_covered_by_target_samples_info.tsv:md5,c732c7a2c01ef61d456ceda30ddd7e29",
+                "loci_of_interest_for_target_for_microhap.tsv.gz:md5,10b8e2f5352441c28c3ea3c0bcef74cd"
+            ]
+        ],
+        "timestamp": "2026-06-11T15:25:38.584781",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

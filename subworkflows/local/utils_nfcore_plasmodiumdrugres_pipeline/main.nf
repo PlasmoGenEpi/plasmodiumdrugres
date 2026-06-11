@@ -256,7 +256,7 @@ def validateInputParameters() {
         validation_warnings.add("WARNING: both '--population_assignment' and --'population_label' set. '--population_assignment' will be used.")
     }
     // Check if `mlaf_method` is valid
-    if (!params.mlaf_method_options.contains(params.mlaf_method)) {
+    if (params.loci_groups && !params.mlaf_method_options.contains(params.mlaf_method)) {
         validation_errors.add("Invalid mlaf_method specified: '${params.mlaf_method}'. Allowed methods are: ${params.mlaf_method_options}.")
     }
 
@@ -265,18 +265,15 @@ def validateInputParameters() {
         validation_errors.add("Invalid slaf_method specified: '${params.slaf_method}'. Allowed methods are: ${params.slaf_method_options}.")
     }
 
-    // Check other required files: `loci_of_interest_bed`, `loci_groups`
-    def required_files = [
-        'loci_of_interest_bed': params.loci_of_interest_bed,
-        'loci_groups': params.loci_groups
-    ]
+    // Check required files and validate optional files when provided
+    if (!params.loci_of_interest_bed) {
+        validation_errors.add("Missing required file parameter: 'loci_of_interest_bed' is not set.")
+    } else if (!file(params.loci_of_interest_bed).exists()) {
+        validation_errors.add("File not found: 'loci_of_interest_bed' at path '${params.loci_of_interest_bed}'.")
+    }
 
-    required_files.each { file_label, file_path ->
-        if (!file_path) {
-            validation_errors.add("Missing required file parameter: '${file_label}' is not set.")
-        } else if (!file(file_path).exists()) {
-            validation_errors.add("File not found: '${file_label}' at path '${file_path}'.")
-        }
+    if (params.loci_groups && !file(params.loci_groups).exists()) {
+        validation_errors.add("File not found: 'loci_groups' at path '${params.loci_groups}'.")
     }
 
     // Print warnings if any

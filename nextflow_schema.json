@@ -10,7 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["loci_of_interest_bed", "loci_groups"],
+            "required": ["loci_of_interest_bed"],
             "properties": {
                 "pmo": {
                     "type": "string",
@@ -50,13 +50,13 @@
                     "fa_icon": "fas fa-file-csv"
                 },
                 "loci_groups": {
-                    "type": "string",
+                    "type": ["string", "null"],
                     "format": "file-path",
                     "exists": true,
                     "mimetype": "text/tsv",
                     "pattern": "^\\S+\\.[ct]sv$",
-                    "description": "Path to tab separated file containing groups of loci of interest.",
-                    "help_text": "This file is used to define loci for which multilocus estimates will be made. Use this parameter to specify its location. It has to be tab separated and include columns group_id, gene_id, and aa_position. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#loci-groups-input).",
+                    "description": "Path to tab separated file containing groups of loci of interest. Multi-locus allele frequency estimation is skipped when this parameter is not provided.",
+                    "help_text": "Optional. When provided, this file defines loci for which multilocus estimates will be made. It has to be tab separated and include columns group_id, gene_id, and aa_position. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#loci-groups-input).",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "panel_info_bed": {
