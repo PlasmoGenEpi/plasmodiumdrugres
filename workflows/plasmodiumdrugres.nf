@@ -29,6 +29,7 @@ workflow PLASMODIUMDRUGRES {
     loci_of_interest_bed
     translate_loci_extra_args
     population_assignment
+    population_index_lookup
     mlaf_method
     loci_groups
     slaf_method
@@ -82,16 +83,18 @@ workflow PLASMODIUMDRUGRES {
         slaf_output)
     outputs_per_population = all_outputs.groupTuple()
 
-    // OUTPUT
-    // TODO: sort out mlaf and the prevelances
+    population_index_lookup_for_merge = has_population_assignment
+        ? population_index_lookup.first()
+        : Channel.value(file("${projectDir}/assets/empty_population_index_lookup.tsv"))
+
     if (has_population_assignment) {
-        MERGE_TABLES(outputs_per_population)
+        MERGE_TABLES(outputs_per_population, population_index_lookup_for_merge)
     } else {
         updated_ch = outputs_per_population.map { tuple ->
             tuple[0] = params.population_label
             return tuple
         }
-        MERGE_TABLES(updated_ch)
+        MERGE_TABLES(updated_ch, population_index_lookup_for_merge)
     }
 
     all_sl_summary_ch = MERGE_TABLES.out.sl_summary.collect()

@@ -19,7 +19,7 @@ process SPLIT_AA_TABLE_BY_POP {
      ${projectDir}/bin/split_table_by_population_map.R \
             --input_table_fnp ${aa_table} \
             --population_map ${population_map} \
-            --population_col population --identifier_col specimen_name \
+            --split_col population_index --identifier_col specimen_name \
             --output_stub .collapsed_amino_acid_calls.tsv.gz
     """
 }

@@ -22,7 +22,7 @@ process SPLIT_ALLELE_TABLE_BY_POP {
     ${projectDir}/bin/split_table_by_population_map.R \
             --input_table_fnp ${allele_table} \
             --population_map ${population_map} \
-            --population_col population --identifier_col specimen_name \
+            --split_col population_index --identifier_col specimen_name \
             --output_stub .allele_table.tsv.gz
     """
 }

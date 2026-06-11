@@ -18,9 +18,10 @@ nextflow_workflow {
                 input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
                 input[3] = ""
                 input[4] = null
-                input[5] = "MLBM"
-                input[6] = "${projectDir}/tests/input/example2_loci_groups.tsv"
-                input[7] = "naive"
+                input[5] = null
+                input[6] = "MLBM"
+                input[7] = "${projectDir}/tests/input/example2_loci_groups.tsv"
+                input[8] = "naive"
                 """
             }
         }
@@ -46,9 +47,10 @@ nextflow_workflow {
                 input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
                 input[3] = ""
                 input[4] = null
-                input[5] = "FEM"
-                input[6] = "${projectDir}/tests/input/example2_loci_groups.tsv"
-                input[7] = "IDM"
+                input[5] = null
+                input[6] = "FEM"
+                input[7] = "${projectDir}/tests/input/example2_loci_groups.tsv"
+                input[8] = "IDM"
                 """
             }
         }
@@ -74,9 +76,10 @@ nextflow_workflow {
                 input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
                 input[3] = ""
                 input[4] = null
-                input[5] = "naive"
-                input[6] = "${projectDir}/tests/input/example2_loci_groups.tsv"
-                input[7] = "mhaps_freq"
+                input[5] = null
+                input[6] = "naive"
+                input[7] = "${projectDir}/tests/input/example2_loci_groups.tsv"
+                input[8] = "mhaps_freq"
                 """
             }
         }
@@ -100,10 +103,11 @@ nextflow_workflow {
                 input[1] = channel.of(file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed"))
                 input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
                 input[3] = ""
-                input[4] = channel.of(file("${projectDir}/tests/input/example2_population_map.tsv"))
-                input[5] = "naive"
-                input[6] = "${projectDir}/tests/input/example2_loci_groups.tsv"
-                input[7] = "mhaps_freq"
+                input[4] = channel.of(file("${projectDir}/tests/input/example2_population_map_indexed.tsv"))
+                input[5] = channel.of(file("${projectDir}/tests/input/example2_population_index_lookup.tsv"))
+                input[6] = "naive"
+                input[7] = "${projectDir}/tests/input/example2_loci_groups.tsv"
+                input[8] = "mhaps_freq"
                 """
             }
         }
@@ -127,10 +131,11 @@ nextflow_workflow {
                 input[1] = channel.of(file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed"))
                 input[2] = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
                 input[3] = ""
-                input[4] = channel.of(file("${projectDir}/tests/input/example2_population_map.tsv"))
-                input[5] = "MLBM"
-                input[6] = "${projectDir}/tests/input/example2_loci_groups.tsv"
-                input[7] = "naive"
+                input[4] = channel.of(file("${projectDir}/tests/input/example2_population_map_indexed.tsv"))
+                input[5] = channel.of(file("${projectDir}/tests/input/example2_population_index_lookup.tsv"))
+                input[6] = "MLBM"
+                input[7] = "${projectDir}/tests/input/example2_loci_groups.tsv"
+                input[8] = "naive"
                 """
             }
         }
