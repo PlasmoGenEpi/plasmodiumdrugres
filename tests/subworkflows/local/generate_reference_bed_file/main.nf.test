@@ -30,7 +30,7 @@ nextflow_workflow {
                 """
                 input[0] = file("${projectDir}/tests/input/example_PMO.json")
                 input[1] = "targeted_reference"
-                input[2] = file("${projectDir}/tests/input/example_PMO_insert_locs_of_panel_refseqs.fasta")
+                input[2] = file("${projectDir}/tests/input/insert_refseqs.fasta")
                 """
             }
         }

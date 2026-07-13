@@ -10,9 +10,9 @@ nextflow_process {
             process {
                 """
                 // define inputs of the process here. Example:
-                input[0] = file("${projectDir}/tests/input/example_sl_with_pop1.tsv")
-                input[1] = file("${projectDir}/tests/input/example_mlaf_with_pop1.tsv")
-                input[2] = file("${projectDir}/tests/input/example_sl_from_mlaf_with_pop1.tsv")
+                input[0] = file("${projectDir}/tests/input/sl_pop1.tsv")
+                input[1] = file("${projectDir}/tests/input/mlaf_pop1.tsv")
+                input[2] = file("${projectDir}/tests/input/sl_from_mlaf_pop1.tsv")
                 """
             }
         }
@@ -38,9 +38,9 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [file("${projectDir}/tests/input/example_sl_with_pop1.tsv"),file("${projectDir}/tests/input/example_sl_with_pop2.tsv")]
-                input[1] = [file("${projectDir}/tests/input/example_mlaf_with_pop1.tsv"),file("${projectDir}/tests/input/example_mlaf_with_pop2.tsv")]
-                input[2] = [file("${projectDir}/tests/input/example_sl_from_mlaf_with_pop1.tsv"),file("${projectDir}/tests/input/example_sl_from_mlaf_with_pop2.tsv")]
+                input[0] = [file("${projectDir}/tests/input/sl_pop1.tsv"),file("${projectDir}/tests/input/sl_pop2.tsv")]
+                input[1] = [file("${projectDir}/tests/input/mlaf_pop1.tsv"),file("${projectDir}/tests/input/mlaf_pop2.tsv")]
+                input[2] = [file("${projectDir}/tests/input/sl_from_mlaf_pop1.tsv"),file("${projectDir}/tests/input/sl_from_mlaf_pop2.tsv")]
                 """
             }
         }
