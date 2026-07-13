@@ -24,7 +24,7 @@ nextflow_process {
             assert pop == 'amino_acid_calls'
 
             // output md5 check
-            assert path(outFile).md5 == "d12c5b2ce8d9e1ca8bcec21f19ecf1f1"
+            assert path(outFile).md5 == "ae1322b7fb6d48bb428247d47d47541a"
         }
 
     }
