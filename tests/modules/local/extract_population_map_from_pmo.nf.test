@@ -19,7 +19,7 @@ nextflow_process {
         then {
             assert process.success
             assert process.out.population_map != null
-            assert path(process.out.population_map.get(0)).md5 == "11366424ca554abae269ae7295cc5a3c"
+            assert path(process.out.population_map.get(0)).md5 == "93ca2a7743b8f67ab2b9e5e8f9dc9c80"
         }
 
     }

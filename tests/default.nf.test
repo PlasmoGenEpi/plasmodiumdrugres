@@ -10,10 +10,10 @@ nextflow_pipeline {
             params {
                 outdir = "$outputDir"
 
-                allele_table               = "${projectDir}/tests/input/example2_allele_table.tsv"
-                panel_info_bed             = "${projectDir}/tests/input/example_PMO_insert_locs_of_panel.bed"
-                loci_of_interest_bed       = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
-                loci_groups                = "${projectDir}/tests/input/example2_loci_groups.tsv"
+                allele_table               = "${projectDir}/tests/input/allele_table.tsv"
+                panel_info_bed             = "${projectDir}/tests/input/panel_info.bed"
+                loci_of_interest_bed       = "${projectDir}/tests/input/loci_of_interest.bed"
+                loci_groups                = "${projectDir}/tests/input/loci_groups.tsv"
             }
         }
 
@@ -42,9 +42,10 @@ nextflow_pipeline {
             params {
                 outdir = "$outputDir"
 
-                pmo                      = "${projectDir}/tests/input/example_PMO.json"
-                loci_of_interest_bed       = "${projectDir}/tests/input/example_principal_resistance_marker_info_table.bed"
-                loci_groups                = "${projectDir}/tests/input/example2_loci_groups.tsv"
+                pmo                     = "${projectDir}/tests/input/example_PMO.json"
+                loci_of_interest_bed    = "${projectDir}/tests/input/loci_of_interest.bed"
+                loci_groups             = "${projectDir}/tests/input/loci_groups.tsv"
+                pmo_population_fields   = "collection_country"
                 // Other inputs derived within the pipeline when starting from PMO
             }
         }

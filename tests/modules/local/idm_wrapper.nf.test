@@ -9,7 +9,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = file("${projectDir}/tests/input/example_amino_acid_calls.tsv")
+                input[0] = file("${projectDir}/tests/input/amino_acid_calls.tsv")
                 """
             }
         }
@@ -20,10 +20,10 @@ nextflow_process {
             // unpack tuple output
             def (pop, outFile) = process.out.slaf.get(0)
 
-            assert pop == 'example_amino_acid_calls'
+            assert pop == 'amino_acid_calls'
 
             // output md5 check
-            assert path(outFile).md5 == "52cb67a7afe69a8a68a109a6be0a7cc7"
+            assert path(outFile).md5 == "fe4b08c03c4cf43bbaf35d8fed1240d2"
         }
 
     }
