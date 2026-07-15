@@ -10,7 +10,7 @@ nextflow_process {
             process {
                 """
                 input[0] = file("${projectDir}/tests/input/amino_acid_calls.tsv")
-                input[1] = file("${projectDir}/tests/input/population_map_indexed.tsv")
+                input[1] = file("${projectDir}/tests/input/population_assignment_indexed.tsv")
                 """
             }
         }
