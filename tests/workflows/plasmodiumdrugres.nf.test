@@ -13,14 +13,14 @@ nextflow_workflow {
             }
             workflow {
                 """
-                input[0] = channel.of(file("${projectDir}/tests/input/allele_table.tsv"))
-                input[1] = channel.of(file(("${projectDir}/tests/input/panel_info.bed")))
-                input[2] = "${projectDir}/tests/input/loci_of_interest.bed"
+                input[0] = channel.of(file(params.pipelines_testdata_base_path + 'testdata/allele_table.tsv', checkIfExists: true))
+                input[1] = channel.of(file(params.pipelines_testdata_base_path + 'testdata/panel_info.bed', checkIfExists: true))
+                input[2] = params.pipelines_testdata_base_path + 'testdata/loci_of_interest.bed'
                 input[3] = ""
                 input[4] = null
                 input[5] = null
                 input[6] = "MLBM"
-                input[7] = "${projectDir}/tests/input/loci_groups.tsv"
+                input[7] = params.pipelines_testdata_base_path + 'testdata/loci_groups.tsv'
                 input[8] = "naive"
                 """
             }
@@ -42,14 +42,14 @@ nextflow_workflow {
             }
             workflow {
                 """
-                input[0] = channel.of(file("${projectDir}/tests/input/allele_table.tsv" ))
-                input[1] = channel.of(file("${projectDir}/tests/input/panel_info.bed"))
-                input[2] = "${projectDir}/tests/input/loci_of_interest.bed"
+                input[0] = channel.of(file(params.pipelines_testdata_base_path + 'testdata/allele_table.tsv', checkIfExists: true))
+                input[1] = channel.of(file(params.pipelines_testdata_base_path + 'testdata/panel_info.bed', checkIfExists: true))
+                input[2] = params.pipelines_testdata_base_path + 'testdata/loci_of_interest.bed'
                 input[3] = ""
                 input[4] = null
                 input[5] = null
                 input[6] = "FEM"
-                input[7] = "${projectDir}/tests/input/loci_groups.tsv"
+                input[7] = params.pipelines_testdata_base_path + 'testdata/loci_groups.tsv'
                 input[8] = "IDM"
                 """
             }
@@ -71,14 +71,14 @@ nextflow_workflow {
             }
             workflow {
                 """
-                input[0] = channel.of(file("${projectDir}/tests/input/allele_table.tsv"))
-                input[1] = channel.of(file("${projectDir}/tests/input/panel_info.bed"))
-                input[2] = "${projectDir}/tests/input/loci_of_interest.bed"
+                input[0] = channel.of(file(params.pipelines_testdata_base_path + 'testdata/allele_table.tsv', checkIfExists: true))
+                input[1] = channel.of(file(params.pipelines_testdata_base_path + 'testdata/panel_info.bed', checkIfExists: true))
+                input[2] = params.pipelines_testdata_base_path + 'testdata/loci_of_interest.bed'
                 input[3] = ""
                 input[4] = null
                 input[5] = null
                 input[6] = "naive"
-                input[7] = "${projectDir}/tests/input/loci_groups.tsv"
+                input[7] = params.pipelines_testdata_base_path + 'testdata/loci_groups.tsv'
                 input[8] = "mhaps_freq"
                 """
             }
@@ -95,18 +95,18 @@ nextflow_workflow {
 
         when {
             params {
-                population_assignment = "${projectDir}/tests/input/population_assignment.tsv"
+                population_assignment = 'https://raw.githubusercontent.com/nf-core/test-datasets/refs/heads/plasmodiumdrugres/testdata/population_assignment.tsv'
             }
             workflow {
                 """
-                input[0] = channel.of(file("${projectDir}/tests/input/allele_table.tsv"))
-                input[1] = channel.of(file("${projectDir}/tests/input/panel_info.bed"))
-                input[2] = "${projectDir}/tests/input/loci_of_interest.bed"
+                input[0] = channel.of(file(params.pipelines_testdata_base_path + 'testdata/allele_table.tsv', checkIfExists: true))
+                input[1] = channel.of(file(params.pipelines_testdata_base_path + 'testdata/panel_info.bed', checkIfExists: true))
+                input[2] = params.pipelines_testdata_base_path + 'testdata/loci_of_interest.bed'
                 input[3] = ""
-                input[4] = channel.of(file("${projectDir}/tests/input/population_assignment_indexed.tsv"))
-                input[5] = channel.of(file("${projectDir}/tests/input/tests/input/population_index_lookup.tsv"))
+                input[4] = channel.of(file(params.pipelines_testdata_base_path + 'testdata/population_assignment_indexed.tsv', checkIfExists: true))
+                input[5] = channel.of(file(params.pipelines_testdata_base_path + 'testdata/population_index_lookup.tsv', checkIfExists: true))
                 input[6] = "naive"
-                input[7] = "${projectDir}/tests/input/loci_groups.tsv"
+                input[7] = params.pipelines_testdata_base_path + 'testdata/loci_groups.tsv'
                 input[8] = "mhaps_freq"
                 """
             }

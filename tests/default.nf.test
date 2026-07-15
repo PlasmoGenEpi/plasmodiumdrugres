@@ -10,10 +10,10 @@ nextflow_pipeline {
             params {
                 outdir = "$outputDir"
 
-                allele_table               = "${projectDir}/tests/input/allele_table.tsv"
-                panel_info_bed             = "${projectDir}/tests/input/panel_info.bed"
-                loci_of_interest_bed       = "${projectDir}/tests/input/loci_of_interest.bed"
-                loci_groups                = "${projectDir}/tests/input/loci_groups.tsv"
+                allele_table         = 'https://raw.githubusercontent.com/nf-core/test-datasets/refs/heads/plasmodiumdrugres/testdata/allele_table.tsv'
+                panel_info_bed       = 'https://raw.githubusercontent.com/nf-core/test-datasets/refs/heads/plasmodiumdrugres/testdata/panel_info.bed'
+                loci_of_interest_bed = 'https://raw.githubusercontent.com/nf-core/test-datasets/refs/heads/plasmodiumdrugres/testdata/loci_of_interest.bed'
+                loci_groups          = 'https://raw.githubusercontent.com/nf-core/test-datasets/refs/heads/plasmodiumdrugres/testdata/loci_groups.tsv'
             }
         }
 
@@ -36,17 +36,16 @@ nextflow_pipeline {
     }
 
     // Default test running full pipeline from a PMO input
-    test("-profile test_PMO") {
+    test("-profile test_pmo") {
 
         when {
             params {
                 outdir = "$outputDir"
 
-                pmo                     = "${projectDir}/tests/input/example_PMO.json"
-                loci_of_interest_bed    = "${projectDir}/tests/input/loci_of_interest.bed"
-                loci_groups             = "${projectDir}/tests/input/loci_groups.tsv"
-                pmo_population_fields   = "collection_country"
-                // Other inputs derived within the pipeline when starting from PMO
+                pmo                   = 'https://raw.githubusercontent.com/nf-core/test-datasets/refs/heads/plasmodiumdrugres/testdata/example_PMO.json'
+                loci_of_interest_bed  = 'https://raw.githubusercontent.com/nf-core/test-datasets/refs/heads/plasmodiumdrugres/testdata/loci_of_interest.bed'
+                loci_groups           = 'https://raw.githubusercontent.com/nf-core/test-datasets/refs/heads/plasmodiumdrugres/testdata/loci_groups.tsv'
+                pmo_population_fields = "collection_country"
             }
         }
 
