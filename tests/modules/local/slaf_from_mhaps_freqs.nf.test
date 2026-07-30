@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process SLAF_FROM_MHAPS_FREQS"
-    script "modules/local/slaf_from_mhaps_freqs.nf"
+    script "modules/local/slaf_from_mhaps_freqs/main.nf"
     process "SLAF_FROM_MHAPS_FREQS"
 
     test("Test for failures and output file checksums with loci_of_interest_mhaps.tsv and mhaps_slaf.tsv") {

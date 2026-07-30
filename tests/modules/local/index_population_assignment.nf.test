@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process INDEX_POPULATION_ASSIGNMENT"
-    script "modules/local/index_population_assignment.nf"
+    script "modules/local/index_population_assignment/main.nf"
     process "INDEX_POPULATION_ASSIGNMENT"
 
     test("Should assign stable indices to population labels") {
