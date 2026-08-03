@@ -42,4 +42,4 @@ jobs:
 
       - name: Run nf-test
         run: |
-          nf-test test --profile docker
+          nf-test test --profile=+docker

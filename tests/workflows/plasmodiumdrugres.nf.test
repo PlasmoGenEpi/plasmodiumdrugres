@@ -95,7 +95,7 @@ nextflow_workflow {
 
         when {
             params {
-                population_assignment = 'https://raw.githubusercontent.com/nf-core/test-datasets/refs/heads/plasmodiumdrugres/testdata/population_assignment.tsv'
+                population_assignment = params.pipelines_testdata_base_path + 'testdata/population_assignment.tsv'
             }
             workflow {
                 """
