@@ -59,3 +59,17 @@ authors:
   - "@PlasmoGenEpi"
 maintainers:
   - "@PlasmoGenEpi"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/translate_loci_of_interest:2740ca1a0c447591
+      build_id: bd-2740ca1a0c447591_2
+      scan_id: sc-d08ecfef120e0c35_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/translate_loci_of_interest:78219e865294d93f
+      build_id: bd-78219e865294d93f_2
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/57/57356f85fce099dd2d684324cdb47efb1850057b2184570b1c54fc0bd3e1da1d/data
+  conda:
+    linux/amd64:
+      lock_file: modules/local/translate_loci_of_interest/.conda-lock/linux_amd64-bd-2740ca1a0c447591_2.txt

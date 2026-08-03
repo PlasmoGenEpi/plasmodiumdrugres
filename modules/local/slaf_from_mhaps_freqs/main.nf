@@ -8,9 +8,9 @@ process SLAF_FROM_MHAPS_FREQS {
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'plasmogenepi/plasmodiumdrugres-pgecore-r:1.0.0' :
-        'plasmogenepi/plasmodiumdrugres-pgecore-r:1.0.0' }"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b8/b8b5976e182bb3b8f3b3073fe7ccb663bfa240ef8476d59faf2cccf8b180fe6f/data'
+:         'community.wave.seqera.io/library/pgecore_r:b3d363b44f3cab5e' }"
 
     input:
     tuple val(group_name), path(mhaps_slaf_fnp)

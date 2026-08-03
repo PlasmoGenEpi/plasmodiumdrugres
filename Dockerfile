@@ -43,8 +43,8 @@ RUN mkdir ~/.ssh/
 RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 
-# pmotools
-RUN pip install --break-system-packages "pmotools==1.0.0"
+# pmotools (keep in sync with modules/local/pmotools/environment.yml)
+RUN pip install --break-system-packages "pmotools==1.1.0"
 RUN pmotools-python --list-plain > /dev/null
 
 # R configuration
@@ -59,7 +59,7 @@ RUN R -e 'install.packages("nlme", repos = "https://cran.rstudio.com/")'
 RUN R -e 'library("nlme")'
 
 # R packages
-RUN Rscript -e "remotes::install_cran(c('tibble', 'dplyr', 'stringr', 'readr', 'optparse', 'ggplot2', 'tidyr', 'data.table', 'validate', 'openxlsx', 'Rmpfr', 'rlang', 'doParallel', 'magrittr', 'checkmate', 'ape', 'pegas', 'rngtools', 'parallelly', 'doMC'), Ncpus = ${CPU_COUNT})"
+RUN Rscript -e "remotes::install_cran(c('tibble', 'dplyr', 'stringr', 'readr', 'optparse', 'ggplot2', 'tidyr', 'data.table', 'validate', 'openxlsx', 'Rmpfr', 'rlang', 'doParallel', 'magrittr', 'checkmate', 'ape', 'pegas', 'rngtools', 'parallelly', 'doMC', 'plyr', 'coda', 'abind', 'foreach', 'iterators'), Ncpus = ${CPU_COUNT})"
 
 ## attempt to load libraries to make sure they installed
 RUN R -e 'library("tibble")'
@@ -83,17 +83,16 @@ RUN R -e 'library("rngtools")'
 RUN R -e 'library("parallelly")'
 RUN R -e 'library("doMC")'
 
-# R Install FEM
-RUN R -e "remotes::install_github('aimeertaylor/FreqEstimationModel', build_vignettes = FALSE, dependencies = TRUE)"
+# R Install FEM (keep in sync with bioconda r-freqestimationmodel=0.1.0)
+RUN R -e "remotes::install_github('kathrynmurie/FreqEstimationModel@v0.1.0', build_vignettes = FALSE, dependencies = TRUE)"
 RUN R -e 'library("FreqEstimationModel")'
 
-# R install dcifer, moire, variantstring
-RUN R -e "install.packages(c('dcifer', 'moire'), repos = c('https://plasmogenepi.r-universe.dev', 'https://cloud.r-project.org'))"
-RUN R -e "remotes::install_github('mrc-ide/variantstring@1.8.0')"
+# R install dcifer, variantstring (variantstring pin matches bioconda r-variantstring=1.8.7)
+RUN R -e "install.packages(c('dcifer'), repos = c('https://plasmogenepi.r-universe.dev', 'https://cloud.r-project.org'))"
+RUN R -e "remotes::install_github('mrc-ide/variantstring@v1.8.7')"
 
 ## attempt to load libraries to make sure they installed
 RUN R -e 'library("dcifer")'
-RUN R -e 'library("moire")'
 RUN R -e 'library("variantstring")'
 
 # Bioconductor packages (have to install 3.19 because that's needed for pwalign)

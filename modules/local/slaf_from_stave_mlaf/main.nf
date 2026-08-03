@@ -8,9 +8,9 @@ process SLAF_FROM_STAVE_MLAF {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'plasmogenepi/plasmodiumdrugres-variantstring:1.0.0' :
-        'plasmogenepi/plasmodiumdrugres-variantstring:1.0.0' }"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/81/81b920f9fbdfb306833b8fb40a0613cc6ab2ceb9ed5f185957da55b00e4d5281/data'
+:         'community.wave.seqera.io/library/variantstring:baf88b1c56575a41' }"
 
     input:
     tuple val(mlaf_base), path(mlaf_input)

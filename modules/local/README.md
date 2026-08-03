@@ -4,43 +4,27 @@ Pipeline-specific processes live under `modules/local/<module_name>/` with:
 
 - `main.nf` — process definition (`conda`, `container`, `versions.yml` emit)
 - `environment.yml` — Bioconda / conda-forge dependencies
-- `meta.yml` — module metadata for linting and docs (where present)
-- `Dockerfile` — when no single BioContainer exists (multi-tool R envs)
+- `meta.yml` — module metadata for linting and docs
+- `.conda-lock/` — Wave/conda lock files from `nf-core modules container create` (when present)
 
-Shared environment templates live under `modules/env_templates/` and are copied into module directories by `scripts/build_module_images.sh`.
+## Containers
 
-## Environment families
-
-| Image tag | Used by |
-|-----------|---------|
-| `plasmogenepi/plasmodiumdrugres-translate-loci:1.0.0` | `translate_loci_of_interest` |
-| `plasmogenepi/plasmodiumdrugres-bioc-biostrings:1.0.0` | `add_ref_seqs_with_targeted_ref_fasta`, `add_ref_seqs_with_full_genome_ref_fasta` |
-| `plasmogenepi/plasmodiumdrugres-r-tidyverse:1.0.0` | `split_*_by_population`, `merge_tables`, `concat_tables`, `index_population_assignment` |
-| `plasmogenepi/plasmodiumdrugres-pgecore-r:1.0.0` | naive prev/freq, multilocus naive, `slaf_from_mhaps_freqs` |
-| `plasmogenepi/plasmodiumdrugres-variantstring:1.0.0` | `mlbm_wrapper`, `slaf_from_stave_mlaf` |
-| `plasmogenepi/plasmodiumdrugres-fem:1.0.0` | `fem_wrapper` |
-| `plasmogenepi/plasmodiumdrugres-idm:1.0.0` | `idm_wrapper` |
-| `plasmogenepi/plasmodiumdrugres-dcifer:1.0.0` | `dcifer_slaf_wrapper` |
-| `plasmogenepi/plasmodiumdrugres-pmotools:1.0.0` | `extract_allele_table`, `extract_population_map_from_pmo`, `extract_panel_info_to_bed` |
-| `plasmogenepi/plasmodiumdrugres` | legacy monolithic fallback in `nextflow.config` docker profile |
-
-Build all module images:
+Module containers are built and published via Seqera Wave with:
 
 ```bash
-./scripts/build_module_images.sh
+nf-core modules container create modules/local/<module_name>
 ```
 
-Images are built for `linux/amd64` by default (same as GitHub Actions). On Apple Silicon this uses Docker emulation and is slower but matches CI. For native arm64 local builds: `DOCKER_PLATFORM=linux/arm64 ./scripts/build_module_images.sh`.
+`main.nf` `container` directives point at the resulting `community.wave.seqera.io/...` (and singularity) URIs. Optional architecture-specific configs live under `conf/containers_*.config`.
 
-If a build fails with `Read-only file system` under `/opt/conda/pkgs`, Docker Desktop is usually out of disk space or has a stale cache — free space in Docker Desktop settings, then run `docker builder prune -f` and retry.
-
-Run module tests with Docker (build images first):
+## Testing
 
 ```bash
-nf-test test tests/modules/local/merge_tables.nf.test --profile test,docker
+nf-test test tests/modules/local/merge_tables.nf.test --profile docker
+nf-test test tests/modules/local/merge_tables.nf.test --profile conda
 ```
 
-Use `--profile test,conda` for local module tests. All module dependencies are now on Bioconda/conda-forge, including:
+All module dependencies are on Bioconda/conda-forge, including:
 
 | Package | Conda name | Channel |
 |---------|------------|---------|
@@ -51,10 +35,8 @@ Use `--profile test,conda` for local module tests. All module dependencies are n
 
 Note: `r-variantstring` and `r-freqestimationmodel` currently ship R 4.5 builds only, so those module environments pin `r-base=4.5`. Other R modules remain on `r-base=4.4`.
 
-**Conda vs Docker parity:** Module Dockerfiles install from the same `environment.yml` files. After changing pins, rebuild images (`./scripts/build_module_images.sh`) so `--profile docker` and `--profile conda` use the same package versions. Old MD5 assertions from pre-conda images will not match until snapshots are regenerated.
-
 **Apple Silicon + conda:** `r-validate` has no `osx-arm64` build. Use `CONDA_SUBDIR=osx-64` (Rosetta) for local conda tests, or prefer `--profile docker`.
 
 **Host pyenv:** The `conda` / `mamba` profiles strip `~/.pyenv` from `PATH` so process CLIs (e.g. `pmotools-python`) come from the conda env, not a host install.
 
-Per-module images are not published to Docker Hub yet; build locally or extend CI publish workflows before removing the monolithic fallback.
+**Bioconductor data packages:** Wave/pixi may install stub conda packages (e.g. `bioconductor-genomeinfodbdata`) without running their post-link download. Prefer conda profile for those modules until a Wave image is verified to include the R library.

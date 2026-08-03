@@ -8,9 +8,9 @@ process IDM_WRAPPER {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'plasmogenepi/plasmodiumdrugres-idm:1.0.0' :
-        'plasmogenepi/plasmodiumdrugres-idm:1.0.0' }"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/90/90d55445518a2cd019ee14b614bf95a334d7f4a6f431fd118f54b7efdef72c2a/data'
+:         'community.wave.seqera.io/library/idm_wrapper:bbf090b308b798b9' }"
 
     input:
     path aa_calls_input

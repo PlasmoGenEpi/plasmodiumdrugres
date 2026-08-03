@@ -8,9 +8,9 @@ process MERGE_TABLES {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'plasmogenepi/plasmodiumdrugres-r-tidyverse:1.0.0' :
-        'plasmogenepi/plasmodiumdrugres-r-tidyverse:1.0.0' }"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/25/25ec37d72caff047524cad028f190afbd7e97ff61cba29d8172883993c8a5c75/data'
+:         'community.wave.seqera.io/library/r_tidyverse:4e1e0dec2f11d009' }"
 
     input:
     tuple val(pop_index), path(pop_files)

@@ -7,9 +7,9 @@ process TRANSLATE_LOCI_OF_INTEREST {
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'plasmogenepi/plasmodiumdrugres-translate-loci:1.0.0' :
-        'plasmogenepi/plasmodiumdrugres-translate-loci:1.0.0' }"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/57/57356f85fce099dd2d684324cdb47efb1850057b2184570b1c54fc0bd3e1da1d/data'
+:         'community.wave.seqera.io/library/translate_loci_of_interest:2740ca1a0c447591' }"
 
     input:
     path allele_table

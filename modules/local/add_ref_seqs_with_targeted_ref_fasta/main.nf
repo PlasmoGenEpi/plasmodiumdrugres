@@ -8,9 +8,9 @@ process ADD_REF_SEQS_WITH_TARGETED_REF_FASTA {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'plasmogenepi/plasmodiumdrugres-bioc-biostrings:1.0.0' :
-        'plasmogenepi/plasmodiumdrugres-bioc-biostrings:1.0.0' }"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/fb/fb139463543e2cfb7a14e54c85858a6e40e211d735dab9438ad3b737de28f133/data'
+:         'community.wave.seqera.io/library/bioc_biostrings:859138378410587f' }"
 
     input:
     path ref_bed

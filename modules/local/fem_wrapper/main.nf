@@ -9,9 +9,9 @@ process FEM_WRAPPER {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'plasmogenepi/plasmodiumdrugres-fem:1.0.0' :
-        'plasmogenepi/plasmodiumdrugres-fem:1.0.0' }"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/80/80a01e74c5e39ae20dfe8bfd9d0e1096372cd489febd1efc85f902f9ee880949/data'
+:         'community.wave.seqera.io/library/fem_wrapper:c76f649ce875f71b' }"
 
     input:
     path aa_calls

@@ -8,9 +8,9 @@ process DCIFER_SLAF_WRAPPER {
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'plasmogenepi/plasmodiumdrugres-dcifer:1.0.0' :
-        'plasmogenepi/plasmodiumdrugres-dcifer:1.0.0' }"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/05/05f1d70c93e8c8b63e03d0b0e1e29d4fedf8994a66f43a8886539bcbadafe10e/data'
+:         'community.wave.seqera.io/library/dcifer_slaf_wrapper:4d87f0ecbaaf98ef' }"
 
     input:
     path allele_table

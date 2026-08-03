@@ -6,6 +6,7 @@ channels:
   - bioconda
 dependencies:
   - bioconda::bioconductor-biostrings=2.74.0
+  - bioconda::bioconductor-genomeinfodbdata=1.2.13
   - bioconda::bioconductor-pwalign=1.2.0
   - conda-forge::r-base=4.4
   - conda-forge::r-dplyr
