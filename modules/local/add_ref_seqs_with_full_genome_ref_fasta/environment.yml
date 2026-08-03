@@ -5,9 +5,8 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::bioconductor-biostrings=2.74.0
-  - bioconda::bioconductor-genomeinfodbdata=1.2.13
-  - conda-forge::r-base=4.4
+  - bioconda::bioconductor-biostrings=2.78.0
+  - conda-forge::r-base=4.5
   - conda-forge::r-dplyr
   - conda-forge::r-magrittr
   - conda-forge::r-optparse

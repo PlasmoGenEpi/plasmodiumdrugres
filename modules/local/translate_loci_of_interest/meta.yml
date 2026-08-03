@@ -62,14 +62,14 @@ maintainers:
 containers:
   docker:
     linux/amd64:
-      name: community.wave.seqera.io/library/translate_loci_of_interest:2740ca1a0c447591
-      build_id: bd-2740ca1a0c447591_2
-      scan_id: sc-d08ecfef120e0c35_1
+      name: community.wave.seqera.io/library/translate_loci_of_interest:dd81facbe62d2c91
+      build_id: bd-dd81facbe62d2c91_1
+      scan_id: sc-b73e79a4ae23ef43_1
   singularity:
     linux/amd64:
-      name: oras://community.wave.seqera.io/library/translate_loci_of_interest:78219e865294d93f
-      build_id: bd-78219e865294d93f_2
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/57/57356f85fce099dd2d684324cdb47efb1850057b2184570b1c54fc0bd3e1da1d/data
+      name: oras://community.wave.seqera.io/library/translate_loci_of_interest:a447d335d5f0f448
+      build_id: bd-a447d335d5f0f448_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/3d/3d094be5e8095ff83cf9b7bf80b33b60f14a0690d9ea93079eb1c4ff6949e422/data
   conda:
     linux/amd64:
-      lock_file: modules/local/translate_loci_of_interest/.conda-lock/linux_amd64-bd-2740ca1a0c447591_2.txt
+      lock_file: modules/local/translate_loci_of_interest/.conda-lock/linux_amd64-bd-dd81facbe62d2c91_1.txt

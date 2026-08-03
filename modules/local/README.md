@@ -33,10 +33,8 @@ All module dependencies are on Bioconda/conda-forge, including:
 | variantstring       | `r-variantstring=1.8.7`       | bioconda    |
 | FreqEstimationModel | `r-freqestimationmodel=0.1.0` | bioconda    |
 
-Note: `r-variantstring` and `r-freqestimationmodel` currently ship R 4.5 builds only, so those module environments pin `r-base=4.5`. Other R modules remain on `r-base=4.4`.
+Note: `r-variantstring`, `r-freqestimationmodel`, and Biostrings/`pwalign` modules pin `r-base=4.5` (Bioconductor 3.22 builds). Other R modules remain on `r-base=4.4`.
 
 **Apple Silicon + conda:** `r-validate` has no `osx-arm64` build. Use `CONDA_SUBDIR=osx-64` (Rosetta) for local conda tests, or prefer `--profile docker`.
 
 **Host pyenv:** The `conda` / `mamba` profiles strip `~/.pyenv` from `PATH` so process CLIs (e.g. `pmotools-python`) come from the conda env, not a host install.
-
-**Bioconductor data packages:** Wave/pixi may install stub conda packages (e.g. `bioconductor-genomeinfodbdata`) without running their post-link download. Prefer conda profile for those modules until a Wave image is verified to include the R library.

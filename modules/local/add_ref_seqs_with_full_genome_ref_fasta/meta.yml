@@ -39,14 +39,14 @@ maintainers:
 containers:
   docker:
     linux/amd64:
-      name: community.wave.seqera.io/library/bioc_biostrings:859138378410587f
-      build_id: bd-859138378410587f_1
-      scan_id: sc-d48407561ad6c251_1
+      name: community.wave.seqera.io/library/bioc_biostrings:4bff14692906e36a
+      build_id: bd-4bff14692906e36a_1
+      scan_id: sc-d8d0c5a4f911fca1_1
   singularity:
     linux/amd64:
-      name: oras://community.wave.seqera.io/library/bioc_biostrings:41ceebf6c5d8344e
-      build_id: bd-41ceebf6c5d8344e_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/fb/fb139463543e2cfb7a14e54c85858a6e40e211d735dab9438ad3b737de28f133/data
+      name: oras://community.wave.seqera.io/library/bioc_biostrings:97843eaee53666b9
+      build_id: bd-97843eaee53666b9_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/fa/fa5e7a47124ffe90a02dcbdc8d87234f42aa88ec26014d4f45928f92b647052a/data
   conda:
     linux/amd64:
-      lock_file: modules/local/add_ref_seqs_with_full_genome_ref_fasta/.conda-lock/linux_amd64-bd-859138378410587f_1.txt
+      lock_file: modules/local/add_ref_seqs_with_full_genome_ref_fasta/.conda-lock/linux_amd64-bd-4bff14692906e36a_1.txt

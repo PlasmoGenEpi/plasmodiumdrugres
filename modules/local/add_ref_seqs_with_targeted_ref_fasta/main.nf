@@ -9,8 +9,8 @@ process ADD_REF_SEQS_WITH_TARGETED_REF_FASTA {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/fb/fb139463543e2cfb7a14e54c85858a6e40e211d735dab9438ad3b737de28f133/data'
-:         'community.wave.seqera.io/library/bioc_biostrings:859138378410587f' }"
+?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/fa/fa5e7a47124ffe90a02dcbdc8d87234f42aa88ec26014d4f45928f92b647052a/data'
+:         'community.wave.seqera.io/library/bioc_biostrings:4bff14692906e36a' }"
 
     input:
     path ref_bed
