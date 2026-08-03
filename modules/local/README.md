@@ -26,12 +26,12 @@ nf-test test tests/modules/local/merge_tables.nf.test --profile conda
 
 All module dependencies are on Bioconda/conda-forge, including:
 
-| Package | Conda name | Channel |
-|---------|------------|---------|
-| pmotools | `pmotools=1.1.0` | bioconda |
-| dcifer | `r-dcifer=1.5.2` | conda-forge |
-| variantstring | `r-variantstring=1.8.7` | bioconda |
-| FreqEstimationModel | `r-freqestimationmodel=0.1.0` | bioconda |
+| Package             | Conda name                    | Channel     |
+| ------------------- | ----------------------------- | ----------- |
+| pmotools            | `pmotools=1.1.0`              | bioconda    |
+| dcifer              | `r-dcifer=1.5.2`              | conda-forge |
+| variantstring       | `r-variantstring=1.8.7`       | bioconda    |
+| FreqEstimationModel | `r-freqestimationmodel=0.1.0` | bioconda    |
 
 Note: `r-variantstring` and `r-freqestimationmodel` currently ship R 4.5 builds only, so those module environments pin `r-base=4.5`. Other R modules remain on `r-base=4.4`.
 
