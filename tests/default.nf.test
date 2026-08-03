@@ -1,3 +1,8 @@
+// Pipeline-test when.params are written to a JSON file before Nextflow loads config,
+// so params.pipelines_testdata_base_path is not available here (becomes "null" + path).
+// Keep in sync with nextflow.config / tests/nextflow.config / nextflow_schema.json.
+def pipelines_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/refs/heads/plasmodiumdrugres/'
+
 nextflow_pipeline {
 
     name "Test pipeline"
@@ -36,7 +41,7 @@ nextflow_pipeline {
         when {
             params {
                 outdir                = "$outputDir"
-                pmo                   = params.pipelines_testdata_base_path + 'testdata/example_PMO.json'
+                pmo                   = pipelines_testdata_base_path + 'testdata/example_PMO.json'
                 allele_table          = null
                 panel_info_bed        = null
                 pmo_population_fields = "collection_country"
