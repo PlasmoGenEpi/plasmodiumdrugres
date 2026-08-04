@@ -9,8 +9,8 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = file("${projectDir}/tests/input/allele_table.tsv")
-                input[1] = file("${projectDir}/tests/input/population_assignment_indexed.tsv")
+                input[0] = file(params.pipelines_testdata_base_path + 'testdata/allele_table.tsv', checkIfExists: true)
+                input[1] = file(params.pipelines_testdata_base_path + 'testdata/population_assignment_indexed.tsv', checkIfExists: true)
                 """
             }
         }

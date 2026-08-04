@@ -1,5 +1,5 @@
 {
-    "-profile test_allele_table": {
+    "-profile test": {
         "content": [
             [
                 "ml_summary.tsv",
@@ -22,13 +22,13 @@
                 "loci_of_interest_for_target_for_microhap.tsv.gz:md5,2b9323b36ae6979db24b6456eac732ea"
             ]
         ],
-        "timestamp": "2026-07-13T13:32:03.057738",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-07-13T13:32:03.057738"
     },
-    "-profile test_PMO": {
+    "-profile test_pmo": {
         "content": [
             [
                 "ml_summary.tsv",
@@ -51,10 +51,10 @@
                 "loci_of_interest_for_target_for_microhap.tsv.gz:md5,2b9323b36ae6979db24b6456eac732ea"
             ]
         ],
-        "timestamp": "2026-07-13T13:33:16.033522",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-07-15T15:28:00.885779"
     }
 }
