@@ -9,8 +9,8 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = tuple("mhaps_slaf", file("${projectDir}/tests/input/mhaps_slaf.tsv"))
-                input[1] = file("${projectDir}/tests/input/loci_of_interest_mhaps.bed")
+                input[0] = tuple("mhaps_slaf", file(params.pipelines_testdata_base_path + 'testdata/mhaps_slaf.tsv', checkIfExists: true))
+                input[1] = file(params.pipelines_testdata_base_path + 'testdata/loci_of_interest_mhaps.bed', checkIfExists: true)
                 """
             }
         }

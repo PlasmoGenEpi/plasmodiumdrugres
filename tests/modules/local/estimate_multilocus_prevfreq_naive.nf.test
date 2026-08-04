@@ -9,8 +9,8 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = file("${projectDir}/tests/input/amino_acid_calls.tsv")
-                input[1] = file("${projectDir}/tests/input/loci_groups.tsv")
+                input[0] = file(params.pipelines_testdata_base_path + 'testdata/amino_acid_calls.tsv', checkIfExists: true)
+                input[1] = file(params.pipelines_testdata_base_path + 'testdata/loci_groups.tsv', checkIfExists: true)
                 input[2] = "wsaf_prop"
                 """
             }
@@ -41,8 +41,8 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = file("${projectDir}/tests/input/amino_acid_calls.tsv")
-                input[1] = file("${projectDir}/tests/input/loci_groups.tsv")
+                input[0] = file(params.pipelines_testdata_base_path + 'testdata/amino_acid_calls.tsv', checkIfExists: true)
+                input[1] = file(params.pipelines_testdata_base_path + 'testdata/loci_groups.tsv', checkIfExists: true)
                 input[2] = "presence_absence"
                 """
             }

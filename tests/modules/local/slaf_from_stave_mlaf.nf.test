@@ -9,7 +9,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = tuple(file("${projectDir}/tests/input/amino_acid_calls.aa_mlaf.tsv").getBaseName(3), file("${projectDir}/tests/input/aa_mlaf.tsv"))
+                input[0] = tuple(file(params.pipelines_testdata_base_path + 'testdata/amino_acid_calls.aa_mlaf.tsv').getBaseName(3), file(params.pipelines_testdata_base_path + 'testdata/aa_mlaf.tsv', checkIfExists: true))
                 """
             }
         }

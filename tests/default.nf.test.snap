@@ -1,5 +1,5 @@
 {
-    "-profile test_allele_table": {
+    "-profile test": {
         "content": [
             [
                 "ml_summary.tsv",
@@ -28,9 +28,10 @@
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-07-13T13:32:03.057738"
     },
-    "-profile test_PMO": {
+    "-profile test_pmo": {
         "content": [
             [
                 "ml_summary.tsv",
@@ -59,6 +60,7 @@
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-07-15T15:28:00.885779"
     }
 }
