@@ -44,8 +44,6 @@
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-Requires Nextflow `>=25.04.0` (including Nextflow 26).
-
 ### Getting set up
 
 Clone the repository with submodules enabled:
