@@ -41,6 +41,7 @@ jobs:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           fetch-depth: 0
+          submodules: recursive
 
       - name: get number of shards
         id: set-shards
@@ -84,6 +85,7 @@ jobs:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           fetch-depth: 0
+          submodules: recursive
 
       - name: Run nf-test
         id: run_nf_test
