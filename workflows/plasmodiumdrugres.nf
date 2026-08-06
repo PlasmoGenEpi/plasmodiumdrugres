@@ -3,10 +3,7 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-// include { paramsSummaryMap } from 'plugin/nf-schema'
-// include { paramsSummaryMultiqc } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-// include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-// include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_plasmodiumdrugres_pipeline'
+include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 
 include { TRANSLATE_LOCI_OF_INTEREST } from '../modules/local/translate_loci_of_interest'
 include { SPLIT_AA_TABLE_BY_POP } from '../modules/local/split_aa_table_by_population'
@@ -93,7 +90,7 @@ workflow PLASMODIUMDRUGRES {
         updated_ch = outputs_per_population.map { tuple ->
             tuple[0] = params.population_label
             return tuple
-        }
+            }
         MERGE_TABLES(updated_ch, population_index_lookup_for_merge)
     }
 
@@ -102,21 +99,39 @@ workflow PLASMODIUMDRUGRES {
     all_sl_from_ml_summary_ch = MERGE_TABLES.out.sl_from_ml_summary.collect()
 
     CONCAT_TABLES(all_sl_summary_ch, all_ml_summary_ch, all_sl_from_ml_summary_ch)
-    // // //
-    // // Collate and save software versions
-    // //
-    // // softwareVersionsToYAML(ch_versions)
-    // //     .collectFile(
-    // //         storeDir: "${params.outdir}/pipeline_info",
-    // //         name: 'nf_core_' + 'pipeline_software_' + 'mqc_' + 'versions.yml',
-    // //         sort: true,
-    // //         newLine: true,
-    // //     )
-    // //     .set { ch_collated_versions }
+
+    //
+    // Collate and save software versions
+    //
+    def ch_versions = channel.empty()
+    def topic_versions = channel.topic("versions")
+        .distinct()
+        .branch { entry ->
+            versions_file: entry instanceof Path
+            versions_tuple: true
+        }
+
+    def topic_versions_string = topic_versions.versions_tuple
+        .map { process, tool, version ->
+            [ process[process.lastIndexOf(':')+1..-1], "  ${tool}: ${version}" ]
+        }
+        .groupTuple()
+        .map { process, versions ->
+            "${process}:\n${versions.join('\n')}\n"
+        }
+
+    softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
+        .mix(topic_versions_string)
+        .collectFile(
+            storeDir: "${params.outdir}/pipeline_info",
+            name: 'nf_core_'  +  'plasmodiumdrugres_software_'  + 'mqc_'  + 'versions.yml',
+            sort: true,
+            newLine: true
+        )
 
     emit:
     sl_summary = CONCAT_TABLES.out.sl_summary
     ml_summary = CONCAT_TABLES.out.ml_summary
     sl_from_ml_summary = CONCAT_TABLES.out.sl_from_ml_summary
-    // // versions = ch_versions // channel: [ path(versions.yml) ]
+    versions = ch_versions // channel: [ path(versions.yml) ]
 }
