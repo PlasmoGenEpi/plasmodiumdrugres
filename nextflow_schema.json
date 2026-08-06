@@ -34,6 +34,8 @@
                 },
                 "input": {
                     "type": "null",
+                    "format": "file-path",
+                    "mimetype": "text/csv",
                     "description": "Path to input samplesheet (unused; kept for nf-core template lint compatibility).",
                     "exists": false,
                     "hidden": true
