@@ -7,9 +7,6 @@ testing/
 testing*
 *.pyc
 null/
-<<<<<<< HEAD
 .nf-test*
 .vscode/
-=======
 .lineage/
->>>>>>> TEMPLATE

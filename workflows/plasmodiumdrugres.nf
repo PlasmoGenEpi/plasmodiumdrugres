@@ -46,7 +46,7 @@ workflow PLASMODIUMDRUGRES {
     } else if (slaf_method == "mhaps_freq") {
         mhaps_allele_table_ch = allele_table
     } else {
-        mhaps_allele_table_ch = Channel.empty()
+        mhaps_allele_table_ch = channel.empty()
     }
 
     // Split amino acid table if population map is provided
@@ -67,7 +67,7 @@ workflow PLASMODIUMDRUGRES {
     ESTIMATE_SLAF(
         slaf_method,
         slaf_method_input,
-        slaf_method == "mhaps_freq" ? TRANSLATE_LOCI_OF_INTEREST.out.loci_of_interest_for_target_for_microhap : Channel.empty()
+        slaf_method == "mhaps_freq" ? TRANSLATE_LOCI_OF_INTEREST.out.loci_of_interest_for_target_for_microhap : channel.empty()
     )
     slaf_output = ESTIMATE_SLAF.out.slaf_output
 
@@ -82,7 +82,7 @@ workflow PLASMODIUMDRUGRES {
 
     population_index_lookup_for_merge = has_population_assignment
         ? population_index_lookup.first()
-        : Channel.value(file("${projectDir}/assets/empty_population_index_lookup.tsv"))
+        : channel.value(file("${projectDir}/assets/empty_population_index_lookup.tsv"))
 
     if (has_population_assignment) {
         MERGE_TABLES(outputs_per_population, population_index_lookup_for_merge)

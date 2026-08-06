@@ -10,6 +10,7 @@ process TRANSLATE_LOCI_OF_INTEREST {
     container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
 ?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/3d/3d094be5e8095ff83cf9b7bf80b33b60f14a0690d9ea93079eb1c4ff6949e422/data'
 :         'community.wave.seqera.io/library/translate_loci_of_interest:dd81facbe62d2c91' }"
+    publishDir "${params.outdir}", mode: "${params.publish_dir_mode}", overwrite: true
 
     input:
     path allele_table
@@ -24,10 +25,7 @@ process TRANSLATE_LOCI_OF_INTEREST {
     path ("translated_loci/loci_of_interest_for_target_for_microhap.tsv.gz"), emit: loci_of_interest_for_target_for_microhap
     path "versions.yml", emit: versions
 
-    publishDir "${params.outdir}", mode: "${params.publish_dir_mode}", overwrite: true
-
     script:
-    def extra_args = "${extra_args}"
     """
     Rscript ${projectDir}/bin/PGEcore/scripts/translate_loci_of_interest/translate_loci_of_interest.R \
         --allele_table ${allele_table} \
