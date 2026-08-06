@@ -1,4 +1,7 @@
-lint: {}
+lint:
+  files_unchanged:
+    - .gitignore
+  multiqc_config: false
 nf_core_version: 4.1.0
 repository_type: pipeline
 template:

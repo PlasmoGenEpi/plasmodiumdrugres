@@ -52,7 +52,8 @@ workflow {
         PIPELINE_INITIALISATION.out.population_index_lookup_ch,
         params.mlaf_method,
         params.loci_groups,
-        params.slaf_method
+        params.slaf_method,
+        PIPELINE_INITIALISATION.out.versions
     )
     //
     // SUBWORKFLOW: Run completion tasks
@@ -63,7 +64,6 @@ workflow {
         params.plaintext_email,
         params.outdir,
         params.monochrome_logs,
-        "multiqcreport",
     )
 }
 
@@ -87,6 +87,7 @@ workflow NFCORE_PLASMODIUMDRUGRES {
     mlaf_method
     loci_groups
     slaf_method
+    ch_versions
 
     main:
 
@@ -102,7 +103,8 @@ workflow NFCORE_PLASMODIUMDRUGRES {
         population_index_lookup_ch,
         mlaf_method,
         loci_groups,
-        slaf_method
+        slaf_method,
+        ch_versions
     )
 
 }

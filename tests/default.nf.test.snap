@@ -2,6 +2,41 @@
     "-profile test_pmo": {
         "content": [
             {
+                "CONCAT_TABLES": {
+                    "r-base": "4.4.3"
+                },
+                "ESTIMATE_ALLELE_FREQUENCY_NAIVE": {
+                    "r-base": "4.4.3"
+                },
+                "ESTIMATE_ALLELE_PREVALENCE_NAIVE": {
+                    "r-base": "4.4.3"
+                },
+                "ESTIMATE_ML_PREVFREQ_NAIVE": {
+                    "r-base": "4.4.3"
+                },
+                "EXTRACT_ALLELE_TABLE": {
+                    "pmotools-python": "pmotools-python 1.1.0"
+                },
+                "EXTRACT_PANEL_INFO_TO_BED": {
+                    "pmotools-python": "pmotools-python 1.1.0"
+                },
+                "EXTRACT_POPULATION_MAP_FROM_PMO": {
+                    "pmotools-python": "pmotools-python 1.1.0"
+                },
+                "INDEX_POPULATION_ASSIGNMENT": {
+                    "r-base": "4.4.3"
+                },
+                "MERGE_TABLES": {
+                    "r-base": "4.4.3"
+                },
+                "SPLIT_AA_TABLE_BY_POP": {
+                    "r-base": "4.4.3"
+                },
+                "TRANSLATE_LOCI_OF_INTEREST": {
+                    "r-base": "4.5.3",
+                    "bioconductor-biostrings": "2.78.0",
+                    "bioconductor-pwalign": "1.6.0"
+                },
                 "Workflow": {
                     "nf-core/plasmodiumdrugres": "v1.0.0dev"
                 }
@@ -76,7 +111,7 @@
                 "versions.yml:md5,5c35d6ad8fb13393903612aa219772b6"
             ]
         ],
-        "timestamp": "2026-08-06T12:05:07.893251",
+        "timestamp": "2026-08-06T16:00:56.811634",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -85,6 +120,26 @@
     "-profile test": {
         "content": [
             {
+                "CONCAT_TABLES": {
+                    "r-base": "4.4.3"
+                },
+                "ESTIMATE_ALLELE_FREQUENCY_NAIVE": {
+                    "r-base": "4.4.3"
+                },
+                "ESTIMATE_ALLELE_PREVALENCE_NAIVE": {
+                    "r-base": "4.4.3"
+                },
+                "ESTIMATE_ML_PREVFREQ_NAIVE": {
+                    "r-base": "4.4.3"
+                },
+                "MERGE_TABLES": {
+                    "r-base": "4.4.3"
+                },
+                "TRANSLATE_LOCI_OF_INTEREST": {
+                    "r-base": "4.5.3",
+                    "bioconductor-biostrings": "2.78.0",
+                    "bioconductor-pwalign": "1.6.0"
+                },
                 "Workflow": {
                     "nf-core/plasmodiumdrugres": "v1.0.0dev"
                 }
@@ -128,7 +183,7 @@
                 "versions.yml:md5,5c35d6ad8fb13393903612aa219772b6"
             ]
         ],
-        "timestamp": "2026-08-06T12:02:50.348162",
+        "timestamp": "2026-08-06T15:59:02.010066",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

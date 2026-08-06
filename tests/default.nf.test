@@ -27,8 +27,8 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_plasmodiumdrugres_software_mqc_versions.yml"),
+                    // pipeline software versions.yml from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_plasmodiumdrugres_software_versions.yml"),
                     stable_name,
                     stable_path
                 ).match() }
@@ -57,7 +57,7 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_plasmodiumdrugres_software_mqc_versions.yml"),
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_plasmodiumdrugres_software_versions.yml"),
                     stable_name,
                     stable_path
                 ).match() }

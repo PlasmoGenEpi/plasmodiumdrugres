@@ -34,7 +34,7 @@
                 },
                 "input": {
                     "type": "null",
-                    "description": "Path to input samplesheet",
+                    "description": "Path to input samplesheet (unused; kept for nf-core template lint compatibility).",
                     "exists": false,
                     "hidden": true
                 },
@@ -116,13 +116,6 @@
             "fa_icon": "fas fa-dna",
             "description": "Reference genome related files and options required for the workflow.",
             "properties": {
-                "genome": {
-                    "type": "string",
-                    "description": "Name of iGenomes reference.",
-                    "fa_icon": "fas fa-book",
-                    "hidden": true,
-                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
-                },
                 "genome_reference": {
                     "type": "string",
                     "format": "file-path",
@@ -185,7 +178,7 @@
                 "mlaf_method_options": {
                     "type": "string",
                     "description": "method options for multi locus allele frequency estimates.",
-                    "default": "[\\'MLBM\\',\\'FEM\\',\\'naive\\']",
+                    "default": "['MLBM','FEM','naive']",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
@@ -198,7 +191,7 @@
                 "slaf_method_options": {
                     "type": "string",
                     "description": "method options for single locus allele frequency estimates.",
-                    "default": "[\\'IDM\\',\\'naive\\',\\'mhaps_freq\\']",
+                    "default": "['IDM','naive','mhaps_freq']",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
@@ -235,7 +228,7 @@
                 "slaf_method_mhaps_freq_method_options": {
                     "type": "string",
                     "description": "method options for mhaps_freq SLAF (e.g. dcifer).",
-                    "default": "[\\'dcifer\\']",
+                    "default": "['dcifer']",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },

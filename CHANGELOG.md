@@ -9,8 +9,17 @@ Initial release of nf-core/plasmodiumdrugres, created with the [nf-core](https:/
 
 ### `Added`
 
+- Sync with nf-core template version 4.1.0
+- Collect local module software versions into `pipeline_info/nf_core_plasmodiumdrugres_software_versions.yml`
+
 ### `Fixed`
+
+- Align README Nextflow / template badges with manifest and `.nf-core.yml`
+- Point contributing guidelines at `docs/CONTRIBUTING.md`
 
 ### `Dependencies`
 
 ### `Deprecated`
+
+- Remove unused FastQC and MultiQC modules (lint ignores MultiQC config; pipeline does not run MultiQC)
+- Hide unused `--input` template parameter (kept for nf-core lint compatibility)

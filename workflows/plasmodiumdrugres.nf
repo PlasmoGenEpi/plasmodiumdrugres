@@ -30,6 +30,7 @@ workflow PLASMODIUMDRUGRES {
     mlaf_method
     loci_groups
     slaf_method
+    ch_versions
 
     main:
     // Avoid gating on `population_map` directly: this is a channel handle and can be truthy
@@ -38,11 +39,13 @@ workflow PLASMODIUMDRUGRES {
     def has_population_assignment = params.population_assignment || (params.pmo && params.pmo_population_fields)
 
     TRANSLATE_LOCI_OF_INTEREST(allele_table, panel_info_bed_with_ref, file(loci_of_interest_bed), translate_loci_extra_args)
+    ch_versions = ch_versions.mix(TRANSLATE_LOCI_OF_INTEREST.out.versions)
 
     // Split allele table by population for mhaps_freq (only when population_map)
     if (slaf_method == "mhaps_freq" && has_population_assignment) {
         SPLIT_ALLELE_TABLE_BY_POP(allele_table, population_assignment)
         mhaps_allele_table_ch = (SPLIT_ALLELE_TABLE_BY_POP.out.per_pop_tables).flatten()
+        ch_versions = ch_versions.mix(SPLIT_ALLELE_TABLE_BY_POP.out.versions)
     } else if (slaf_method == "mhaps_freq") {
         mhaps_allele_table_ch = allele_table
     } else {
@@ -53,14 +56,17 @@ workflow PLASMODIUMDRUGRES {
     if (has_population_assignment) {
         SPLIT_AA_TABLE_BY_POP(TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls, population_assignment)
         aa_table_ch = (SPLIT_AA_TABLE_BY_POP.out.per_pop_tables).flatten()
+        ch_versions = ch_versions.mix(SPLIT_AA_TABLE_BY_POP.out.versions)
     } else {
         aa_table_ch = TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls
     }
 
     // Estimate Single Locus Allele Prevalence
     ESTIMATE_ALLELE_PREVALENCE_NAIVE(aa_table_ch)
+    ch_versions = ch_versions.mix(ESTIMATE_ALLELE_PREVALENCE_NAIVE.out.versions)
     // Estimate Multi Locus Allele Frequency
     ESTIMATE_MLAF(mlaf_method, aa_table_ch, file(loci_groups))
+    ch_versions = ch_versions.mix(ESTIMATE_MLAF.out.versions)
 
     // Estimate Single Locus Allele Frequency. Select appropriate input channel based on slaf_method.
     slaf_method_input = slaf_method == "mhaps_freq" ? mhaps_allele_table_ch : aa_table_ch
@@ -70,6 +76,7 @@ workflow PLASMODIUMDRUGRES {
         slaf_method == "mhaps_freq" ? TRANSLATE_LOCI_OF_INTEREST.out.loci_of_interest_for_target_for_microhap : channel.empty()
     )
     slaf_output = ESTIMATE_SLAF.out.slaf_output
+    ch_versions = ch_versions.mix(ESTIMATE_SLAF.out.versions)
 
     // -------------------------------------------------------------------------
     // Merge per-population outputs and concat into final summaries
@@ -93,38 +100,22 @@ workflow PLASMODIUMDRUGRES {
             }
         MERGE_TABLES(updated_ch, population_index_lookup_for_merge)
     }
+    ch_versions = ch_versions.mix(MERGE_TABLES.out.versions)
 
     all_sl_summary_ch = MERGE_TABLES.out.sl_summary.collect()
     all_ml_summary_ch = MERGE_TABLES.out.ml_summary.collect()
     all_sl_from_ml_summary_ch = MERGE_TABLES.out.sl_from_ml_summary.collect()
 
     CONCAT_TABLES(all_sl_summary_ch, all_ml_summary_ch, all_sl_from_ml_summary_ch)
+    ch_versions = ch_versions.mix(CONCAT_TABLES.out.versions)
 
     //
     // Collate and save software versions
     //
-    def ch_versions = channel.empty()
-    def topic_versions = channel.topic("versions")
-        .distinct()
-        .branch { entry ->
-            versions_file: entry instanceof Path
-            versions_tuple: true
-        }
-
-    def topic_versions_string = topic_versions.versions_tuple
-        .map { process, tool, version ->
-            [ process[process.lastIndexOf(':')+1..-1], "  ${tool}: ${version}" ]
-        }
-        .groupTuple()
-        .map { process, versions ->
-            "${process}:\n${versions.join('\n')}\n"
-        }
-
-    softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
-        .mix(topic_versions_string)
+    softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
-            name: 'nf_core_'  +  'plasmodiumdrugres_software_'  + 'mqc_'  + 'versions.yml',
+            name: 'nf_core_plasmodiumdrugres_software_versions.yml',
             sort: true,
             newLine: true
         )
@@ -133,5 +124,5 @@ workflow PLASMODIUMDRUGRES {
     sl_summary = CONCAT_TABLES.out.sl_summary
     ml_summary = CONCAT_TABLES.out.ml_summary
     sl_from_ml_summary = CONCAT_TABLES.out.sl_from_ml_summary
-    versions = ch_versions // channel: [ path(versions.yml) ]
+    versions = ch_versions
 }
