@@ -33,7 +33,7 @@ workflow PIPELINE_INITIALISATION {
     take:
     version           // boolean: Display version and exit
     validate_params   // boolean: Boolean whether to validate parameters against the schema at runtime
-    monochrome_logs   // boolean: Do not use coloured log outputs
+    _monochrome_logs  // boolean: Retained for interface compatibility; nf-schema follows ANSI settings
     nextflow_cli_args //  array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
     help              // boolean: Display help message and exit
@@ -115,37 +115,37 @@ workflow PIPELINE_INITIALISATION {
         def raw = params.pmo_population_fields
         def fields = []
         if (raw instanceof List) {
-            fields = raw.collect { it?.toString() ?: '' }
+            fields = raw.collect { field -> field?.toString() ?: '' }
         } else {
             fields = raw.toString().split(',') as List
         }
-        fields = fields.collect { it.trim() }.findAll { it }
+        fields = fields.collect { field -> field.trim() }.findAll { field -> field }
         // Join with spaces so the shell splits into multiple `--fields` arguments.
         pmo_population_fields_norm = fields.join(' ')
     }
     // Initialise channels for all branches to avoid unbound variables
     // Note: avoid `def` here so Nextflow can statically detect these
     // variables for the `emit:` block.
-    allele_table_ch = Channel.empty()
-    panel_info_bed_ch = Channel.empty()
+    allele_table_ch = channel.empty()
+    panel_info_bed_ch = channel.empty()
     raw_population_assignment_ch = null
     if (params.pmo) {
-        def pmo_ch = Channel.fromPath(params.pmo, checkIfExists: true)
+        def pmo_ch = channel.fromPath(params.pmo, checkIfExists: true)
         EXTRACT_ALLELE_TABLE(pmo_ch)
         allele_table_ch = EXTRACT_ALLELE_TABLE.out.allele_table
         EXTRACT_BED_FILE_FROM_PMO(pmo_ch, ref_type, fasta)
         panel_info_bed_ch = EXTRACT_BED_FILE_FROM_PMO.out.panel_info_bed
         if (params.population_assignment) {
-            raw_population_assignment_ch = Channel.fromPath(params.population_assignment, checkIfExists: true)
+            raw_population_assignment_ch = channel.fromPath(params.population_assignment, checkIfExists: true)
         } else if (pmo_population_fields_norm) {
             EXTRACT_POPULATION_MAP_FROM_PMO(pmo_ch, pmo_population_fields_norm, params.pmo_population_separator)
             raw_population_assignment_ch = EXTRACT_POPULATION_MAP_FROM_PMO.out.population_map
         }
     } else if (params.allele_table) {
-        allele_table_ch = Channel.fromPath(params.allele_table, checkIfExists: true)
-        panel_info_bed_ch = Channel.fromPath(params.panel_info_bed, checkIfExists: true)
+        allele_table_ch = channel.fromPath(params.allele_table, checkIfExists: true)
+        panel_info_bed_ch = channel.fromPath(params.panel_info_bed, checkIfExists: true)
         if (params.population_assignment) {
-            raw_population_assignment_ch = Channel.fromPath(params.population_assignment, checkIfExists: true)
+            raw_population_assignment_ch = channel.fromPath(params.population_assignment, checkIfExists: true)
         }
     }
 
@@ -189,7 +189,7 @@ workflow PIPELINE_COMPLETION {
     //
     // Completion email and summary
     //
-    workflow.onComplete {
+    workflow.onComplete = {
         if (email || email_on_fail) {
             completionEmail(
                 summary_params,
@@ -208,7 +208,7 @@ workflow PIPELINE_COMPLETION {
         }
     }
 
-    workflow.onError {
+    workflow.onError = {
         log.error "Pipeline failed. Please refer to troubleshooting docs: https://nf-co.re/docs/usage/troubleshooting"
     }
 }
@@ -282,13 +282,13 @@ def validateInputParameters() {
     // Print warnings if any
     if (validation_warnings.size() > 0) {
         log.warn "Input validation warnings:\n" +
-            validation_warnings.collect { "- ${it}" }.join("\n")
+            validation_warnings.collect { warning -> "- ${warning}" }.join("\n")
     }
 
     // Report all errors at once
     if (validation_errors.size() > 0) {
         log.error "Input validation failed with the following errors:\n" +
-            validation_errors.collect { "- ${it}" }.join("\n")
+            validation_errors.collect { error -> "- ${error}" }.join("\n")
         exit 1
     }
 
