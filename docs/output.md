@@ -13,7 +13,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 1. Translate loci of interest ([`PGEcore`](https://github.com/PlasmoGenEpi/PGEcore))
 2. Split by population
 3. Estimate allele prevalence ([`PGEcore`](https://github.com/PlasmoGenEpi/PGEcore))
-4. Estimate multilocus allele frequency. Choice of method between:
+4. Estimate multilocus allele frequency (only when `--loci_groups` is provided). Choice of method between:
    1. [MultiLociBiallelicModel](https://www.frontiersin.org/articles/10.3389/fepid.2022.943625/full) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
    2. [FreqEstimationModel](https://doi.org/10.1186/1475-2875-13-102) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
    3. Naive method ([`PGEcore`](https://github.com/PlasmoGenEpi/PGEcore))
@@ -72,6 +72,7 @@ Tool-specific extra columns:
 <summary>Output files</summary>
 
 - `ml_summary.tsv`: Multi-locus summary table, merged across populations.
+  When `--loci_groups` is omitted, this file is still written but contains only the header row.
 
 </details>
 
@@ -100,6 +101,7 @@ Tool-specific extra columns:
 <summary>Output files</summary>
 
 - `sl_from_ml_summary.tsv`: Single-locus frequencies derived from multi-locus estimates.
+  When `--loci_groups` is omitted, this file is still written but contains only the header row.
 
 </details>
 

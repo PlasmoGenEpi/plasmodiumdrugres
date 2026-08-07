@@ -30,10 +30,10 @@ process MERGE_TABLES {
         true_population="${pop_index}"
     fi
 
-    slap_table=\$(ls ${pop_files} | grep 'prev')
+    slap_table=\$(ls ${pop_files} | grep -E 'allele_prev\\.tsv\$')
+    slaf_table=\$(ls ${pop_files} | grep -E 'aa_slaf\\.tsv\$' || ls ${pop_files} | grep -E '\\.slaf\\.tsv\$' | grep -v 'mhaps_slaf')
     mlaf_table=\$(ls ${pop_files} | grep -E 'aa_mlaf\\.tsv\$' || true)
-    slaf_table=\$(ls ${pop_files} | grep 'slaf')
-    sl_from_ml_table=\$(ls ${pop_files} | grep -E 'sl_from_ml\\.tsv\$' || true)
+    sl_from_ml_table=\$(ls ${pop_files} | grep -E 'aa_sl_from_ml\\.tsv\$' || true)
 
     Rscript ${projectDir}/bin/merge_tables.R --freq_table \${slaf_table} --population "\${true_population}" --prev_table \${slap_table} --output ${pop_index}.sl_summary.tsv
     if [ -n "\${mlaf_table}" ]; then
