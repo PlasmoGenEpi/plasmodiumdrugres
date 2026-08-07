@@ -4,7 +4,7 @@
 
 This document describes the output produced by the pipeline. All paths below are relative to the top-level results directory (`--outdir`).
 
-Column definitions in this page are based on current pipeline behavior and validated against example method outputs in `../DR_tool_outputs/`.
+Column definitions in this page reflect current pipeline behavior for each estimation method.
 
 ## Pipeline overview
 

@@ -11,7 +11,7 @@ nextflow_workflow {
                 """
                 input[0] = "IDM"
                 input[1] = channel.of(file(params.pipelines_testdata_base_path + 'testdata/amino_acid_calls.tsv', checkIfExists: true))
-                input[2] = Channel.empty()
+                input[2] = channel.empty()
                 """
             }
         }
@@ -30,7 +30,7 @@ nextflow_workflow {
                 """
                 input[0] = "naive"
                 input[1] = channel.of(file(params.pipelines_testdata_base_path + 'testdata/amino_acid_calls.tsv', checkIfExists: true))
-                input[2] = Channel.empty()
+                input[2] = channel.empty()
                 """
             }
         }
@@ -49,7 +49,7 @@ nextflow_workflow {
                 """
                 input[0] = "BAD_METHOD"
                 input[1] = channel.of(file(params.pipelines_testdata_base_path + 'testdata/amino_acid_calls.tsv', checkIfExists: true))
-                input[2] = Channel.empty()
+                input[2] = channel.empty()
                 """
             }
         }

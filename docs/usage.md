@@ -229,9 +229,9 @@ specimen_3  pop2
 
 - `--population_label` - If running one population used to label the dataset. (Default: pop1)
 - `--translate_loci_extra_args` - Extra arguments when translating loci of interest. [See documentation here](https://github.com/PlasmoGenEpi/PGEcore/tree/develop/scripts/translate_loci_of_interest).
-- `--slaf_method` - chosen method to estimate single locus allele frequencies (Default: IDM Options: ["IDM","naive","mhaps_freq"])
-- `--mlaf_method` - chosen method to estimate multi-locus allele frequencies (Default: MLBM Options: ["MLBM","FEM","naive"])
-- `--naive_slaf_method` - Chosen naive method when running `--slaf_method naive`. (Default:read_count_prop, Options: ["read_count_prop", "presence_absence])
+- `--slaf_method` - chosen method to estimate single locus allele frequencies (Default: `naive`; Options: `["IDM","naive","mhaps_freq"]`)
+- `--mlaf_method` - chosen method to estimate multi-locus allele frequencies (Default: `naive`; Options: `["MLBM","FEM","naive"]`)
+- `--naive_slaf_method` - Chosen naive method when running `--slaf_method naive`. (Default: `read_count_prop`; Options: `["read_count_prop", "presence_absence"]`)
 
 ## Running the pipeline
 

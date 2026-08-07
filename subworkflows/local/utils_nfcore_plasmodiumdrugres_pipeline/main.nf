@@ -128,11 +128,11 @@ workflow PIPELINE_INITIALISATION {
     // Initialise channels for all branches to avoid unbound variables
     // Note: avoid `def` here so Nextflow can statically detect these
     // variables for the `emit:` block.
-    allele_table_ch = Channel.empty()
-    panel_info_bed_ch = Channel.empty()
+    allele_table_ch = channel.empty()
+    panel_info_bed_ch = channel.empty()
     raw_population_assignment_ch = null
     if (params.pmo) {
-        def pmo_ch = Channel.fromPath(params.pmo, checkIfExists: true)
+        def pmo_ch = channel.fromPath(params.pmo, checkIfExists: true)
         EXTRACT_ALLELE_TABLE(pmo_ch)
         allele_table_ch = EXTRACT_ALLELE_TABLE.out.allele_table
         ch_versions = ch_versions.mix(EXTRACT_ALLELE_TABLE.out.versions)
@@ -140,17 +140,17 @@ workflow PIPELINE_INITIALISATION {
         panel_info_bed_ch = EXTRACT_BED_FILE_FROM_PMO.out.panel_info_bed
         ch_versions = ch_versions.mix(EXTRACT_BED_FILE_FROM_PMO.out.versions)
         if (params.population_assignment) {
-            raw_population_assignment_ch = Channel.fromPath(params.population_assignment, checkIfExists: true)
+            raw_population_assignment_ch = channel.fromPath(params.population_assignment, checkIfExists: true)
         } else if (pmo_population_fields_norm) {
             EXTRACT_POPULATION_MAP_FROM_PMO(pmo_ch, pmo_population_fields_norm, params.pmo_population_separator)
             raw_population_assignment_ch = EXTRACT_POPULATION_MAP_FROM_PMO.out.population_map
             ch_versions = ch_versions.mix(EXTRACT_POPULATION_MAP_FROM_PMO.out.versions)
         }
     } else if (params.allele_table) {
-        allele_table_ch = Channel.fromPath(params.allele_table, checkIfExists: true)
-        panel_info_bed_ch = Channel.fromPath(params.panel_info_bed, checkIfExists: true)
+        allele_table_ch = channel.fromPath(params.allele_table, checkIfExists: true)
+        panel_info_bed_ch = channel.fromPath(params.panel_info_bed, checkIfExists: true)
         if (params.population_assignment) {
-            raw_population_assignment_ch = Channel.fromPath(params.population_assignment, checkIfExists: true)
+            raw_population_assignment_ch = channel.fromPath(params.population_assignment, checkIfExists: true)
         }
     }
 

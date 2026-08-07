@@ -15,7 +15,7 @@ workflow EXTRACT_BED_FILE_FROM_PMO {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
     EXTRACT_PANEL_INFO_TO_BED(pmo, ref_type == "none" ? "TRUE" : "FALSE")
     ch_versions = ch_versions.mix(EXTRACT_PANEL_INFO_TO_BED.out.versions)
     if (ref_type == "targeted_reference") {
