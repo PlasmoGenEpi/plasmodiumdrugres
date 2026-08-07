@@ -28,13 +28,14 @@ process CONCAT_TABLES {
     script:
     """
     # Concatenate deterministically using R (avoids shell header/ordering drift).
+    # Use --flag='value' so empty lists stay empty args (bare "" can be dropped by the shell/optparse).
     Rscript ${projectDir}/bin/concat_tables.R \
-        --sl-files "${sl_files.join(',')}" \
-        --ml-files "${ml_files.join(',')}" \
-        --sl-from-ml-files "${sl_from_ml_files.join(',')}" \
-        --sl-out "sl_summary.tsv" \
-        --ml-out "ml_summary.tsv" \
-        --sl-from-ml-out "sl_from_ml_summary.tsv"
+        --sl-files='${sl_files.join(',')}' \
+        --ml-files='${ml_files.join(',')}' \
+        --sl-from-ml-files='${sl_from_ml_files.join(',')}' \
+        --sl-out='sl_summary.tsv' \
+        --ml-out='ml_summary.tsv' \
+        --sl-from-ml-out='sl_from_ml_summary.tsv'
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

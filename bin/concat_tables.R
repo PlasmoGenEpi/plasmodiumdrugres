@@ -19,9 +19,9 @@ parser <- OptionParser(option_list = opts)
 args <- parse_args(parser)
 
 split_files <- function(x) {
-  if (is.null(x) || is.na(x) || x == "") return(character(0))
+  if (is.null(x) || is.na(x) || !nzchar(x)) return(character(0))
   parts <- strsplit(x, ",", fixed = TRUE)[[1]]
-  parts <- parts[parts != ""]
+  parts <- parts[nzchar(parts)]
   return(parts)
 }
 
@@ -31,7 +31,9 @@ files_to_df <- function(files) {
   }
   # Keep column types stable-ish; most columns are numeric but we mostly sort on strings.
   dfs <- lapply(files, function(f) {
-    stopifnot(file.exists(f))
+    if (!file.exists(f)) {
+      stop(sprintf("Input file does not exist: '%s'", f))
+    }
     read_tsv(f, show_col_types = FALSE)
   })
   bind_rows(dfs)

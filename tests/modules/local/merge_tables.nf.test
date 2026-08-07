@@ -42,9 +42,9 @@ nextflow_process {
             process {
                 """
                 input[0] = tuple('pop1', [
-                file("${projectDir}/tests/input/example_allele_prev.tsv"),
-                file("${projectDir}/tests/input/example_aa_slaf.tsv")])
-                input[1] = file("${projectDir}/assets/empty_population_index_lookup.tsv")
+                file(params.pipelines_testdata_base_path + 'testdata/allele_prev.tsv', checkIfExists: true),
+                file(params.pipelines_testdata_base_path + 'testdata/aa_slaf.tsv', checkIfExists: true)])
+                input[1] = file(params.pipelines_testdata_base_path + 'testdata/empty_population_index_lookup.tsv', checkIfExists: true)
                 """
             }
         }
