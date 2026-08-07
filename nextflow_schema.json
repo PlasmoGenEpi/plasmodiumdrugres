@@ -148,14 +148,16 @@
             "properties": {
                 "mlaf_method": {
                     "type": "string",
-                    "description": "method for multi locus allele frequency estimates.",
+                    "description": "Method for multi-locus allele frequency estimates.",
                     "default": "naive",
+                    "enum": ["MLBM", "FEM", "naive"],
                     "fa_icon": "fas fa-users-cog"
                 },
                 "slaf_method": {
                     "type": "string",
-                    "description": "method for single locus allele frequency estimates.",
+                    "description": "Method for single-locus allele frequency estimates.",
                     "default": "naive",
+                    "enum": ["IDM", "naive", "mhaps_freq"],
                     "fa_icon": "fas fa-users-cog"
                 },
                 "translate_loci_extra_args": {
@@ -166,8 +168,9 @@
                 },
                 "naive_slaf_method": {
                     "type": "string",
-                    "description": "method options for single locus allele frequency estimates with naive method. read_count_prop or presence_absence.",
+                    "description": "Naive SLAF method when --slaf_method is naive.",
                     "default": "read_count_prop",
+                    "enum": ["read_count_prop", "presence_absence"],
                     "fa_icon": "fas fa-users-cog"
                 },
                 "population_label": {
@@ -177,30 +180,17 @@
                     "default": "pop1",
                     "fa_icon": "fas fa-users-cog"
                 },
-                "mlaf_method_options": {
-                    "type": "string",
-                    "description": "method options for multi locus allele frequency estimates.",
-                    "default": "['MLBM','FEM','naive']",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
-                },
                 "mlbm_wrapper_aa_specimen_occurence_cut_off": {
                     "type": ["integer", "null"],
                     "description": "when running MLBM, a cut off value for filtering amino acid calls.",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
-                "slaf_method_options": {
-                    "type": "string",
-                    "description": "method options for single locus allele frequency estimates.",
-                    "default": "['IDM','naive','mhaps_freq']",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
-                },
                 "naive_mlaf_method": {
                     "type": "string",
-                    "description": "method for naive multi locus allele frequency estimates.",
+                    "description": "Naive MLAF method when --mlaf_method is naive.",
                     "default": "wsaf_prop",
+                    "enum": ["wsaf_prop", "presence_absence"],
                     "fa_icon": "fas fa-users-cog"
                 },
                 "naive_multilocus_wsaf_cut_off": {
@@ -227,17 +217,11 @@
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
-                "slaf_method_mhaps_freq_method_options": {
-                    "type": "string",
-                    "description": "method options for mhaps_freq SLAF (e.g. dcifer).",
-                    "default": "['dcifer']",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
-                },
                 "slaf_method_mhaps_freq_method": {
                     "type": "string",
-                    "description": "method for mhaps_freq SLAF.",
+                    "description": "Tool used for --slaf_method mhaps_freq.",
                     "default": "dcifer",
+                    "enum": ["dcifer"],
                     "fa_icon": "fas fa-users-cog"
                 }
             }

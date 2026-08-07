@@ -38,7 +38,7 @@ workflow ESTIMATE_MLAF {
         sl_from_ml_output = ESTIMATE_ML_PREVFREQ_NAIVE.out.slaf_from_mlaf
         ch_versions = ch_versions.mix(ESTIMATE_ML_PREVFREQ_NAIVE.out.versions)
     } else {
-        throw new IllegalArgumentException("Error: 'mlaf_method' must be one of ${params.mlaf_method_options} Provided value: ${method}.")
+        throw new IllegalArgumentException("Error: 'mlaf_method' must be one of ['MLBM','FEM','naive']. Provided value: ${method}.")
     }
 
     emit:

@@ -37,7 +37,7 @@ workflow ESTIMATE_SLAF {
             : slaf_output_raw.map { tuple -> tuple[0] = "collapsed_amino_acid_calls"; tuple }
         ch_versions = ch_versions.mix(DCIFER_SLAF_WRAPPER.out.versions).mix(SLAF_FROM_MHAPS_FREQS.out.versions)
     } else {
-        throw new IllegalArgumentException("Error: 'slaf_method' must be one of ${params.slaf_method_options} Provided value: ${method}.")
+        throw new IllegalArgumentException("Error: 'slaf_method' must be one of ['IDM','naive','mhaps_freq']. Provided value: ${method}.")
     }
 
     emit:
