@@ -1,5 +1,13 @@
-lint: {}
-nf_core_version: 3.5.2
+lint:
+  files_exist:
+    - assets/multiqc_config.yml
+  files_unchanged:
+    - .gitignore
+    - assets/nf-core-plasmodiumdrugres_logo_light.png
+    - docs/images/nf-core-plasmodiumdrugres_logo_light.png
+    - docs/images/nf-core-plasmodiumdrugres_logo_dark.png
+  multiqc_config: false
+nf_core_version: 4.1.0
 repository_type: pipeline
 template:
   author: PlasmoGenEpi

@@ -22,6 +22,7 @@ nextflow_workflow {
                 input[6] = "MLBM"
                 input[7] = params.pipelines_testdata_base_path + 'testdata/loci_groups.tsv'
                 input[8] = "naive"
+                input[9] = Channel.empty()
                 """
             }
         }
@@ -51,6 +52,7 @@ nextflow_workflow {
                 input[6] = "FEM"
                 input[7] = params.pipelines_testdata_base_path + 'testdata/loci_groups.tsv'
                 input[8] = "IDM"
+                input[9] = Channel.empty()
                 """
             }
         }
@@ -80,6 +82,7 @@ nextflow_workflow {
                 input[6] = "naive"
                 input[7] = params.pipelines_testdata_base_path + 'testdata/loci_groups.tsv'
                 input[8] = "mhaps_freq"
+                input[9] = Channel.empty()
                 """
             }
         }
@@ -108,6 +111,7 @@ nextflow_workflow {
                 input[6] = "naive"
                 input[7] = params.pipelines_testdata_base_path + 'testdata/loci_groups.tsv'
                 input[8] = "mhaps_freq"
+                input[9] = Channel.empty()
                 """
             }
         }
