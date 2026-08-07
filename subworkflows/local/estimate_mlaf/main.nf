@@ -19,7 +19,7 @@ workflow ESTIMATE_MLAF {
     // TODO: add naive method (estimate_multilocus_prevfreq_naive) when groups are added in
     // TODO: These estimates should also include prev output
     // TODO: FEM needs to output population too
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
     if (method == "MLBM") {
         MLBM_WRAPPER(amino_acid_calls, loci_groups)
         mlaf_output = MLBM_WRAPPER.out.mlaf

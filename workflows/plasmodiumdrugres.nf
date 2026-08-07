@@ -102,10 +102,9 @@ workflow PLASMODIUMDRUGRES {
     if (has_population_assignment) {
         MERGE_TABLES(outputs_per_population, population_index_lookup_for_merge)
     } else {
-        updated_ch = outputs_per_population.map { tuple ->
-            tuple[0] = params.population_label
-            return tuple
-            }
+        updated_ch = outputs_per_population.map { _pop_index, files ->
+            [params.population_label, files]
+        }
         MERGE_TABLES(updated_ch, population_index_lookup_for_merge)
     }
     ch_versions = ch_versions.mix(MERGE_TABLES.out.versions)
