@@ -10,11 +10,8 @@
 
 include { UTILS_NFSCHEMA_PLUGIN     } from '../../nf-core/utils_nfschema_plugin'
 include { paramsSummaryMap          } from 'plugin/nf-schema'
-include { samplesheetToList         } from 'plugin/nf-schema'
-include { paramsHelp                } from 'plugin/nf-schema'
 include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
 include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
-include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
 include { EXTRACT_ALLELE_TABLE      } from '../../../modules/local/extract_allele_table'
@@ -74,7 +71,11 @@ workflow PIPELINE_INITIALISATION {
 * Software dependencies
     https://github.com/nf-core/plasmodiumdrugres/blob/master/CITATIONS.md
 """
-    command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
+    if (monochrome_logs) {
+        before_text = before_text.replaceAll(/\033\[[0-9;]*m/, '')
+    }
+
+    command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --pmo input.pmo.json --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --outdir <OUTDIR>"
 
     UTILS_NFSCHEMA_PLUGIN (
         workflow,
@@ -85,7 +86,8 @@ workflow PIPELINE_INITIALISATION {
         show_hidden,
         before_text,
         after_text,
-        command
+        command,
+        false
     )
 
     //
@@ -133,13 +135,16 @@ workflow PIPELINE_INITIALISATION {
         def pmo_ch = Channel.fromPath(params.pmo, checkIfExists: true)
         EXTRACT_ALLELE_TABLE(pmo_ch)
         allele_table_ch = EXTRACT_ALLELE_TABLE.out.allele_table
+        ch_versions = ch_versions.mix(EXTRACT_ALLELE_TABLE.out.versions)
         EXTRACT_BED_FILE_FROM_PMO(pmo_ch, ref_type, fasta)
         panel_info_bed_ch = EXTRACT_BED_FILE_FROM_PMO.out.panel_info_bed
+        ch_versions = ch_versions.mix(EXTRACT_BED_FILE_FROM_PMO.out.versions)
         if (params.population_assignment) {
             raw_population_assignment_ch = Channel.fromPath(params.population_assignment, checkIfExists: true)
         } else if (pmo_population_fields_norm) {
             EXTRACT_POPULATION_MAP_FROM_PMO(pmo_ch, pmo_population_fields_norm, params.pmo_population_separator)
             raw_population_assignment_ch = EXTRACT_POPULATION_MAP_FROM_PMO.out.population_map
+            ch_versions = ch_versions.mix(EXTRACT_POPULATION_MAP_FROM_PMO.out.versions)
         }
     } else if (params.allele_table) {
         allele_table_ch = Channel.fromPath(params.allele_table, checkIfExists: true)
@@ -155,6 +160,7 @@ workflow PIPELINE_INITIALISATION {
         INDEX_POPULATION_ASSIGNMENT(raw_population_assignment_ch)
         population_assignment_ch = INDEX_POPULATION_ASSIGNMENT.out.population_map_indexed
         population_index_lookup_ch = INDEX_POPULATION_ASSIGNMENT.out.population_index_lookup
+        ch_versions = ch_versions.mix(INDEX_POPULATION_ASSIGNMENT.out.versions)
     }
 
     emit:
@@ -179,12 +185,9 @@ workflow PIPELINE_COMPLETION {
     plaintext_email // boolean: Send plain-text email instead of HTML
     outdir          //    path: Path to output directory where results will be published
     monochrome_logs // boolean: Disable ANSI colour codes in log output
-    hook_url        //  string: hook URL for notifications
-    multiqc_report  //  string: Path to MultiQC report
 
     main:
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
-    def multiqc_reports = multiqc_report.toList()
 
     //
     // Completion email and summary
@@ -198,18 +201,14 @@ workflow PIPELINE_COMPLETION {
                 plaintext_email,
                 outdir,
                 monochrome_logs,
-                multiqc_reports.getVal(),
             )
         }
 
         completionSummary(monochrome_logs)
-        if (hook_url) {
-            imNotification(summary_params, hook_url)
-        }
     }
 
     workflow.onError {
-        log.error "Pipeline failed. Please refer to troubleshooting docs: https://nf-co.re/docs/usage/troubleshooting"
+        log.error "Pipeline failed. Please refer to troubleshooting docs for common issues: https://nf-co.re/docs/running/troubleshooting"
     }
 }
 
@@ -290,116 +289,4 @@ def validateInputParameters() {
     }
 
     log.info "All input validations passed successfully."
-}
-
-//
-// Validate channels from input samplesheet
-//
-def validateInputSamplesheet(input) {
-    def (metas, fastqs) = input[1..2]
-
-    // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
-    def endedness_ok = metas.collect{ meta -> meta.single_end }.unique().size == 1
-    if (!endedness_ok) {
-        error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
-    }
-
-    return [ metas[0], fastqs ]
-}
-//
-// Get attribute from genome config file e.g. fasta
-//
-def getGenomeAttribute(attribute) {
-    if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
-        if (params.genomes[ params.genome ].containsKey(attribute)) {
-            return params.genomes[ params.genome ][ attribute ]
-        }
-    }
-    return null
-}
-
-//
-// Exit pipeline if incorrect --genome key provided
-//
-def genomeExistsError() {
-    if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
-        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-            "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
-            "  Currently, the available genome keys are:\n" +
-            "  ${params.genomes.keySet().join(", ")}\n" +
-            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        error(error_string)
-    }
-}
-//
-// Generate methods description for MultiQC
-//
-def toolCitationText() {
-    def citations = ["Tools used in the workflow included:"]
-    if (params.slaf_method == "IDM") {
-        citations << "IDM (Hashemi M, Schneider KA 2024)"
-    }
-    if (params.mlaf_method == "MLBM") {
-        citations << "MultiLocusBiallelicModel (Tsoungui Obama and Schneider 2022)"
-    }
-    if (params.mlaf_method == "FEM") {
-        citations << "FreqEstimationModel (Taylor et al. 2014)"
-    }
-    if (params.slaf_method == "mhaps_freq" && params.slaf_method_mhaps_freq_method == "dcifer") {
-        citations << "Dcifer (Gerlovina et al. 2022)"
-    }
-    citations << "PGEcore (PlasmoGenEpi)"
-    return citations.join(", ") + "."
-}
-
-def toolBibliographyText() {
-    def refs = []
-    if (params.slaf_method == "IDM") {
-        refs << "<li>Hashemi M, Schneider KA (2024) Estimating multiplicity of infection, allele frequencies, and prevalences accounting for incomplete data. PLoS ONE 19(3): e0287161. doi: <a href='https://doi.org/10.1371/journal.pone.0287161'>10.1371/journal.pone.0287161</a></li>"
-    }
-    if (params.mlaf_method == "MLBM") {
-        refs << "<li>Tsoungui Obama HCJ, Schneider KA (2022) A Maximum-Likelihood Method to Estimate Haplotype Frequencies and Prevalence Alongside Multiplicity of Infection from SNP Data. Frontiers in Epidemiology 2. <a href='https://www.frontiersin.org/articles/10.3389/fepid.2022.943625/full'>10.3389/fepid.2022.943625</a></li>"
-    }
-    if (params.mlaf_method == "FEM") {
-        refs << "<li>Taylor AR, Flegg JA, Nsobya SL et al. (2014) Estimation of malaria haplotype and genotype frequencies: a statistical approach to overcome the challenge associated with multiclonal infections. Malar J 13, 102. doi: <a href='https://doi.org/10.1186/1475-2875-13-102'>10.1186/1475-2875-13-102</a></li>"
-    }
-    if (params.slaf_method == "mhaps_freq" && params.slaf_method_mhaps_freq_method == "dcifer") {
-        refs << "<li>Gerlovina I, Gerlovin B, Rodríguez-Barraquer I, Greenhouse B (2022) Dcifer: an IBD-based method to calculate genetic distance between polyclonal infections. Genetics 222(2). doi: <a href='https://doi.org/10.1093/genetics/iyac126'>10.1093/genetics/iyac126</a></li>"
-    }
-    refs << "<li>PGEcore: <a href='https://github.com/PlasmoGenEpi/PGEcore'>https://github.com/PlasmoGenEpi/PGEcore</a></li>"
-    refs << "<li>Ewels P, Magnusson M, Lundin S, Käller M (2016) MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics 32(19), 3047–3048. doi: <a href='https://doi.org/10.1093/bioinformatics/btw354'>10.1093/bioinformatics/btw354</a></li>"
-    return refs.join(" ")
-}
-
-def methodsDescriptionText(mqc_methods_yaml) {
-    // Convert  to a named map so can be used as with familiar NXF ${workflow} variable syntax in the MultiQC YML file
-    def meta = [:]
-    meta.workflow = workflow.toMap()
-    meta["manifest_map"] = workflow.manifest.toMap()
-
-    // Pipeline DOI
-    if (meta.manifest_map.doi) {
-        // Using a loop to handle multiple DOIs
-        // Removing `https://doi.org/` to handle pipelines using DOIs vs DOI resolvers
-        // Removing ` ` since the manifest.doi is a string and not a proper list
-        def temp_doi_ref = ""
-        def manifest_doi = meta.manifest_map.doi.tokenize(",")
-        manifest_doi.each { doi_ref ->
-            temp_doi_ref += "(doi: <a href=\'https://doi.org/${doi_ref.replace("https://doi.org/", "").replace(" ", "")}\'>${doi_ref.replace("https://doi.org/", "").replace(" ", "")}</a>), "
-        }
-        meta["doi_text"] = temp_doi_ref.substring(0, temp_doi_ref.length() - 2)
-    } else meta["doi_text"] = ""
-    meta["nodoi_text"] = meta.manifest_map.doi ? "" : "<li>If available, make sure to update the text to include the Zenodo DOI of version of the pipeline used. </li>"
-
-    // Tool references
-    meta["tool_citations"] = toolCitationText().replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
-    meta["tool_bibliography"] = toolBibliographyText()
-
-
-    def methods_text = mqc_methods_yaml.text
-
-    def engine =  new groovy.text.SimpleTemplateEngine()
-    def description_html = engine.createTemplate(methods_text).make(meta)
-
-    return description_html.toString()
 }
