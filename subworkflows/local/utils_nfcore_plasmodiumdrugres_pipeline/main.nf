@@ -254,15 +254,6 @@ def validateInputParameters() {
     if ((params.population_assignment) && (params.population_label!='pop1')) {
         validation_warnings.add("WARNING: both '--population_assignment' and --'population_label' set. '--population_assignment' will be used.")
     }
-    // Check if `mlaf_method` is valid
-    if (params.loci_groups && !params.mlaf_method_options.contains(params.mlaf_method)) {
-        validation_errors.add("Invalid mlaf_method specified: '${params.mlaf_method}'. Allowed methods are: ${params.mlaf_method_options}.")
-    }
-
-    // Check if `slaf_method` is valid
-    if (!params.slaf_method_options.contains(params.slaf_method)) {
-        validation_errors.add("Invalid slaf_method specified: '${params.slaf_method}'. Allowed methods are: ${params.slaf_method_options}.")
-    }
 
     // Check required files and validate optional files when provided
     if (!params.loci_of_interest_bed) {

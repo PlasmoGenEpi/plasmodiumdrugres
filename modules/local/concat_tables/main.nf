@@ -12,8 +12,6 @@ process CONCAT_TABLES {
 ?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/25/25ec37d72caff047524cad028f190afbd7e97ff61cba29d8172883993c8a5c75/data'
 :         'community.wave.seqera.io/library/r_tidyverse:4e1e0dec2f11d009' }"
 
-    publishDir "${params.outdir}", mode: 'copy', overwrite: true
-
     input:
     path sl_files
     path ml_files
