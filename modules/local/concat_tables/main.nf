@@ -1,7 +1,6 @@
 /*
  * STEP - CONCAT_TABLES
- * Concatenate per-population summaries into standardized SL/ML tables and
- * archive full tool-specific columns under raw_summaries/
+ * concatenate output tables
  */
 
 process CONCAT_TABLES {
