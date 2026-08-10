@@ -10,8 +10,8 @@
 [![GitHub Actions Linting Status](https://github.com/nf-core/plasmodiumdrugres/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/plasmodiumdrugres/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/plasmodiumdrugres/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
-[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.04.0-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
-[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.5.2-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.5.2)
+[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
+[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.1.0-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.1.0)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
@@ -37,14 +37,12 @@
    2. [Naive `PGEcore` method](https://github.com/PlasmoGenEpi/PGEcore)
    3. [mhaps_freq (from microhaplotype frequencies via DCIFER)](https://github.com/PlasmoGenEpi/PGEcore)
 6. Merge prevalence and frequency outputs
-7. Concatenate population outputs into standardized summary tables, while preserving raw tool-specific SL-from-ML outputs in `raw_summaries/`
+7. Concatenate population outputs into standardized summary tables, while preserving full tool-specific columns in `raw_summaries/`
 
 ## Usage
 
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
-
-We currently do not support nextflow v26.0.0 or higher. Please ensure you install a version lower than this.
 
 ### Getting set up
 
@@ -333,6 +331,8 @@ Full concatenated outputs with all tool-specific columns are written to `raw_sum
 - `raw_summaries/raw_ml_summary.tsv`: Full multi-locus summary before column standardization.
 - `raw_summaries/raw_sl_from_ml_summary.tsv`: Single-locus frequencies derived from multi-locus estimates.
 
+See [output documentation](https://nf-co.re/plasmodiumdrugres/output) for column definitions and method-specific extras.
+
 ## Credits
 
 nf-core/plasmodiumdrugres was originally written by PlasmoGenEpi.
@@ -348,7 +348,7 @@ A special thanks to everyone in the community who contributes to PGEcore and con
 
 ## Contributions and Support
 
-If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
+If you would like to contribute to this pipeline, please see the [contributing guidelines](docs/CONTRIBUTING.md).
 
 For further information or help, don't hesitate to get in touch on the [Slack `#plasmodiumdrugres` channel](https://nfcore.slack.com/channels/plasmodiumdrugres) (you can join with [this invite](https://nf-co.re/join/slack)).
 

@@ -3,10 +3,7 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-// include { paramsSummaryMap } from 'plugin/nf-schema'
-// include { paramsSummaryMultiqc } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-// include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-// include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_plasmodiumdrugres_pipeline'
+include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 
 include { TRANSLATE_LOCI_OF_INTEREST } from '../modules/local/translate_loci_of_interest'
 include { SPLIT_AA_TABLE_BY_POP } from '../modules/local/split_aa_table_by_population'
@@ -33,6 +30,7 @@ workflow PLASMODIUMDRUGRES {
     mlaf_method
     loci_groups
     slaf_method
+    ch_versions
 
     main:
     // Avoid gating on `population_map` directly: this is a channel handle and can be truthy
@@ -41,38 +39,44 @@ workflow PLASMODIUMDRUGRES {
     def has_population_assignment = params.population_assignment || (params.pmo && params.pmo_population_fields)
 
     TRANSLATE_LOCI_OF_INTEREST(allele_table, panel_info_bed_with_ref, file(loci_of_interest_bed), translate_loci_extra_args)
+    ch_versions = ch_versions.mix(TRANSLATE_LOCI_OF_INTEREST.out.versions)
 
     // Split allele table by population for mhaps_freq (only when population_map)
     if (slaf_method == "mhaps_freq" && has_population_assignment) {
         SPLIT_ALLELE_TABLE_BY_POP(allele_table, population_assignment)
         mhaps_allele_table_ch = (SPLIT_ALLELE_TABLE_BY_POP.out.per_pop_tables).flatten()
+        ch_versions = ch_versions.mix(SPLIT_ALLELE_TABLE_BY_POP.out.versions)
     } else if (slaf_method == "mhaps_freq") {
         mhaps_allele_table_ch = allele_table
     } else {
-        mhaps_allele_table_ch = Channel.empty()
+        mhaps_allele_table_ch = channel.empty()
     }
 
     // Split amino acid table if population map is provided
     if (has_population_assignment) {
         SPLIT_AA_TABLE_BY_POP(TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls, population_assignment)
         aa_table_ch = (SPLIT_AA_TABLE_BY_POP.out.per_pop_tables).flatten()
+        ch_versions = ch_versions.mix(SPLIT_AA_TABLE_BY_POP.out.versions)
     } else {
         aa_table_ch = TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls
     }
 
     // Estimate Single Locus Allele Prevalence
     ESTIMATE_ALLELE_PREVALENCE_NAIVE(aa_table_ch)
+    ch_versions = ch_versions.mix(ESTIMATE_ALLELE_PREVALENCE_NAIVE.out.versions)
     // Estimate Multi Locus Allele Frequency
     ESTIMATE_MLAF(mlaf_method, aa_table_ch, file(loci_groups))
+    ch_versions = ch_versions.mix(ESTIMATE_MLAF.out.versions)
 
     // Estimate Single Locus Allele Frequency. Select appropriate input channel based on slaf_method.
     slaf_method_input = slaf_method == "mhaps_freq" ? mhaps_allele_table_ch : aa_table_ch
     ESTIMATE_SLAF(
         slaf_method,
         slaf_method_input,
-        slaf_method == "mhaps_freq" ? TRANSLATE_LOCI_OF_INTEREST.out.loci_of_interest_for_target_for_microhap : Channel.empty()
+        slaf_method == "mhaps_freq" ? TRANSLATE_LOCI_OF_INTEREST.out.loci_of_interest_for_target_for_microhap : channel.empty()
     )
     slaf_output = ESTIMATE_SLAF.out.slaf_output
+    ch_versions = ch_versions.mix(ESTIMATE_SLAF.out.versions)
 
     // -------------------------------------------------------------------------
     // Merge per-population outputs and concat into final summaries
@@ -85,7 +89,7 @@ workflow PLASMODIUMDRUGRES {
 
     population_index_lookup_for_merge = has_population_assignment
         ? population_index_lookup.first()
-        : Channel.value(file("${projectDir}/assets/empty_population_index_lookup.tsv"))
+        : channel.value(file("${projectDir}/assets/empty_population_index_lookup.tsv"))
 
     if (has_population_assignment) {
         MERGE_TABLES(outputs_per_population, population_index_lookup_for_merge)
@@ -93,30 +97,32 @@ workflow PLASMODIUMDRUGRES {
         updated_ch = outputs_per_population.map { tuple ->
             tuple[0] = params.population_label
             return tuple
-        }
+            }
         MERGE_TABLES(updated_ch, population_index_lookup_for_merge)
     }
+    ch_versions = ch_versions.mix(MERGE_TABLES.out.versions)
 
     all_sl_summary_ch = MERGE_TABLES.out.sl_summary.collect()
     all_ml_summary_ch = MERGE_TABLES.out.ml_summary.collect()
     all_sl_from_ml_summary_ch = MERGE_TABLES.out.sl_from_ml_summary.collect()
 
     CONCAT_TABLES(all_sl_summary_ch, all_ml_summary_ch, all_sl_from_ml_summary_ch)
-    // // //
-    // // Collate and save software versions
-    // //
-    // // softwareVersionsToYAML(ch_versions)
-    // //     .collectFile(
-    // //         storeDir: "${params.outdir}/pipeline_info",
-    // //         name: 'nf_core_' + 'pipeline_software_' + 'mqc_' + 'versions.yml',
-    // //         sort: true,
-    // //         newLine: true,
-    // //     )
-    // //     .set { ch_collated_versions }
+    ch_versions = ch_versions.mix(CONCAT_TABLES.out.versions)
+
+    //
+    // Collate and save software versions
+    //
+    softwareVersionsToYAML(ch_versions)
+        .collectFile(
+            storeDir: "${params.outdir}/pipeline_info",
+            name: 'nf_core_plasmodiumdrugres_software_versions.yml',
+            sort: true,
+            newLine: true
+        )
 
     emit:
-    sl_summary = CONCAT_TABLES.out.sl_summary
-    ml_summary = CONCAT_TABLES.out.ml_summary
-    sl_from_ml_summary = CONCAT_TABLES.out.sl_from_ml_summary
-    // // versions = ch_versions // channel: [ path(versions.yml) ]
+    sl_summary     = CONCAT_TABLES.out.sl_summary
+    ml_summary     = CONCAT_TABLES.out.ml_summary
+    raw_summaries  = CONCAT_TABLES.out.raw_summaries
+    versions       = ch_versions
 }
