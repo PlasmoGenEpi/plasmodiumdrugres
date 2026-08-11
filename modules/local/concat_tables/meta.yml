@@ -1,13 +1,18 @@
 name: concat_tables
-description: Concatenate per-population summary tables into final pipeline outputs
+description: |
+  Concatenate per-population summary tables into standardized SL/ML outputs,
+  and archive full tool-specific columns under raw_summaries/.
 keywords:
   - concatenate
   - summary
   - tables
+  - standardize
 tools:
   - concat_tables:
       description: |
-        R helper that row-binds SL/ML/SL-from-ML summary tables.
+        R helper that row-binds SL/ML/SL-from-ML summary tables, writes full
+        concatenated tables to raw_summaries/, and emits standardized
+        sl_summary.tsv / ml_summary.tsv with a fixed column schema.
       homepage: https://github.com/PlasmoGenEpi/plasmodiumdrugres
       documentation: https://github.com/PlasmoGenEpi/plasmodiumdrugres
       licence: ["MIT"]
@@ -28,18 +33,24 @@ output:
   - sl_summary:
       - sl_summary.tsv:
           type: file
-          description: Concatenated single-locus summary table
+          description: |
+            Standardized single-locus summary table (population, variant, prev,
+            sample_count, sample_total, freq).
           pattern: sl_summary.tsv
   - ml_summary:
       - ml_summary.tsv:
           type: file
-          description: Concatenated multilocus summary table
+          description: |
+            Standardized multilocus summary table (population, group_id, variant,
+            optional prev/sample_count/sample_total, freq).
           pattern: ml_summary.tsv
-  - sl_from_ml_summary:
-      - sl_from_ml_summary.tsv:
-          type: file
-          description: Concatenated SL-from-ML summary table
-          pattern: sl_from_ml_summary.tsv
+  - raw_summaries:
+      - raw_summaries:
+          type: directory
+          description: |
+            Directory of concatenated summaries before column standardization
+            (raw_sl_summary.tsv, raw_ml_summary.tsv, raw_sl_from_ml_summary.tsv).
+          pattern: raw_summaries
   - versions:
       - versions.yml:
           type: file

@@ -20,7 +20,7 @@ process CONCAT_TABLES {
     output:
     path "sl_summary.tsv", emit: sl_summary
     path "ml_summary.tsv", emit: ml_summary
-    path "sl_from_ml_summary.tsv", emit: sl_from_ml_summary
+    path "raw_summaries", emit: raw_summaries
     path "versions.yml", emit: versions
 
     script:
@@ -32,7 +32,7 @@ process CONCAT_TABLES {
         --sl-from-ml-files "${sl_from_ml_files.join(',')}" \
         --sl-out "sl_summary.tsv" \
         --ml-out "ml_summary.tsv" \
-        --sl-from-ml-out "sl_from_ml_summary.tsv"
+        --raw-out-dir "raw_summaries"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

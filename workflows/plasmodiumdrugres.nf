@@ -121,8 +121,8 @@ workflow PLASMODIUMDRUGRES {
         )
 
     emit:
-    sl_summary = CONCAT_TABLES.out.sl_summary
-    ml_summary = CONCAT_TABLES.out.ml_summary
-    sl_from_ml_summary = CONCAT_TABLES.out.sl_from_ml_summary
-    versions = ch_versions
+    sl_summary     = CONCAT_TABLES.out.sl_summary
+    ml_summary     = CONCAT_TABLES.out.ml_summary
+    raw_summaries  = CONCAT_TABLES.out.raw_summaries
+    versions       = ch_versions
 }

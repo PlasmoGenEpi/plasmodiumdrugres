@@ -11,6 +11,7 @@ Initial release of nf-core/plasmodiumdrugres, created with the [nf-core](https:/
 
 - Sync with nf-core template version 4.1.0
 - Collect local module software versions into `pipeline_info/nf_core_plasmodiumdrugres_software_versions.yml`
+- Standardize `sl_summary.tsv` / `ml_summary.tsv` column schemas and archive full tool-specific concatenated tables under `raw_summaries/`
 
 ### `Fixed`
 
