@@ -51,9 +51,11 @@ nextflow_process {
 
         then {
             assert process.success
-            assert path(process.out.sl_summary.get(0)).md5 == "43310cf33d5f288f15f96f9d53fa4826"
-            assert path(process.out.ml_summary.get(0)).text == ""
-            assert path(process.out.sl_from_ml_summary.get(0)).text == ""
+            assert path(process.out.sl_summary.get(0)).md5 == "d0b472499f5a1ef562d4e428434184c6"
+            assert path(process.out.ml_summary.get(0)).text == "population\tgroup_id\tvariant\tfreq\n"
+            def raw_dir = process.out.raw_summaries.get(0)
+            assert path("${raw_dir}/raw_ml_summary.tsv").text == "population\tgroup_id\tvariant\tfreq\n"
+            assert path("${raw_dir}/raw_sl_from_ml_summary.tsv").text == "population\tgroup_id\tvariant\tsample_total\tallele_total\tallele_count\tsample_count\tfreq\tprev\n"
         }
 
     }
