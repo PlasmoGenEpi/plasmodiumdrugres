@@ -26,7 +26,6 @@ process CONCAT_TABLES {
     script:
     """
     # Concatenate deterministically using R (avoids shell header/ordering drift).
-    # Use --flag='value' so empty lists stay empty args (bare "" can be dropped by the shell/optparse).
     Rscript ${projectDir}/bin/concat_tables.R \
         --sl-files='${sl_files.join(',')}' \
         --ml-files='${ml_files.join(',')}' \

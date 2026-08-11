@@ -55,7 +55,3 @@ process MERGE_TABLES {
     END_VERSIONS
     """
 }
-
-// slap naive now outputs stave
-// do any of the slaf methods output stave - IDM
-// do any of the mlaf methods output stave
