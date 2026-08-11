@@ -57,15 +57,13 @@ standardize_sl_summary <- function(df) {
 }
 
 standardize_ml_summary <- function(df) {
-  missing <- setdiff(ML_SUMMARY_REQUIRED_COLS, colnames(df))
+  required <- c(ML_SUMMARY_REQUIRED_COLS, ML_SUMMARY_FREQ_COL)
+  missing <- setdiff(required, colnames(df))
   if (length(missing) > 0) {
     stop(
       "ml_summary missing required columns: ",
       paste(missing, collapse = ", ")
     )
-  }
-  if (!ML_SUMMARY_FREQ_COL %in% colnames(df)) {
-    stop("ml_summary missing required column: ", ML_SUMMARY_FREQ_COL)
   }
 
   optional_present <- ML_SUMMARY_OPTIONAL_COLS[
