@@ -34,7 +34,9 @@ workflow ESTIMATE_SLAF {
         // No population_assignment: use "collapsed_amino_acid_calls" as group_name for merge consistency
         slaf_output = params.population_assignment
             ? slaf_output_raw
-            : slaf_output_raw.map { tuple -> tuple[0] = "collapsed_amino_acid_calls"; tuple }
+            : slaf_output_raw.map { _group_name, slaf_file ->
+                ["collapsed_amino_acid_calls", slaf_file]
+            }
         ch_versions = ch_versions.mix(DCIFER_SLAF_WRAPPER.out.versions).mix(SLAF_FROM_MHAPS_FREQS.out.versions)
     } else {
         throw new IllegalArgumentException("Error: 'slaf_method' must be one of ['IDM','naive','mhaps_freq']. Provided value: ${method}.")

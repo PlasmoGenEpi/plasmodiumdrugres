@@ -37,6 +37,29 @@ nextflow_process {
 
     }
 
+    test("Should run without failures when ML summary inputs are empty") {
+
+        when {
+            process {
+                """
+                input[0] = file(params.pipelines_testdata_base_path + 'testdata/sl_pop1.tsv', checkIfExists: true)
+                input[1] = []
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert path(process.out.sl_summary.get(0)).md5 == "d0b472499f5a1ef562d4e428434184c6"
+            assert path(process.out.ml_summary.get(0)).text == "population\tgroup_id\tvariant\tfreq\n"
+            def raw_dir = process.out.raw_summaries.get(0)
+            assert path("${raw_dir}/raw_ml_summary.tsv").text == "population\tgroup_id\tvariant\tfreq\n"
+            assert path("${raw_dir}/raw_sl_from_ml_summary.tsv").text == "population\tgroup_id\tvariant\tsample_total\tallele_total\tallele_count\tsample_count\tfreq\tprev\n"
+        }
+
+    }
+
     test("Should run without failures with channel input") {
 
         when {

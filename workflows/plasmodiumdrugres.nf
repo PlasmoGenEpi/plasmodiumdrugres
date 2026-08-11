@@ -64,9 +64,17 @@ workflow PLASMODIUMDRUGRES {
     // Estimate Single Locus Allele Prevalence
     ESTIMATE_ALLELE_PREVALENCE_NAIVE(aa_table_ch)
     ch_versions = ch_versions.mix(ESTIMATE_ALLELE_PREVALENCE_NAIVE.out.versions)
-    // Estimate Multi Locus Allele Frequency
-    ESTIMATE_MLAF(mlaf_method, aa_table_ch, file(loci_groups))
-    ch_versions = ch_versions.mix(ESTIMATE_MLAF.out.versions)
+
+    // Estimate Multi Locus Allele Frequency (requires --loci_groups)
+    if (loci_groups) {
+        ESTIMATE_MLAF(mlaf_method, aa_table_ch, file(loci_groups))
+        mlaf_output_ch = ESTIMATE_MLAF.out.mlaf_output
+        sl_from_ml_output_ch = ESTIMATE_MLAF.out.sl_from_ml_output
+        ch_versions = ch_versions.mix(ESTIMATE_MLAF.out.versions)
+    } else {
+        mlaf_output_ch = channel.empty()
+        sl_from_ml_output_ch = channel.empty()
+    }
 
     // Estimate Single Locus Allele Frequency. Select appropriate input channel based on slaf_method.
     slaf_method_input = slaf_method == "mhaps_freq" ? mhaps_allele_table_ch : aa_table_ch
@@ -82,8 +90,8 @@ workflow PLASMODIUMDRUGRES {
     // Merge per-population outputs and concat into final summaries
     // -------------------------------------------------------------------------
     all_outputs = ESTIMATE_ALLELE_PREVALENCE_NAIVE.out.allele_prevalence.mix(
-        ESTIMATE_MLAF.out.mlaf_output,
-        ESTIMATE_MLAF.out.sl_from_ml_output,
+        mlaf_output_ch,
+        sl_from_ml_output_ch,
         slaf_output)
     outputs_per_population = all_outputs.groupTuple()
 
@@ -94,10 +102,9 @@ workflow PLASMODIUMDRUGRES {
     if (has_population_assignment) {
         MERGE_TABLES(outputs_per_population, population_index_lookup_for_merge)
     } else {
-        updated_ch = outputs_per_population.map { tuple ->
-            tuple[0] = params.population_label
-            return tuple
-            }
+        updated_ch = outputs_per_population.map { _pop_index, files ->
+            [params.population_label, files]
+        }
         MERGE_TABLES(updated_ch, population_index_lookup_for_merge)
     }
     ch_versions = ch_versions.mix(MERGE_TABLES.out.versions)

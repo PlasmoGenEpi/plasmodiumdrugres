@@ -30,14 +30,24 @@ process MERGE_TABLES {
         true_population="${pop_index}"
     fi
 
-    slap_table=\$(ls ${pop_files} | grep 'prev')
-    mlaf_table=\$(ls ${pop_files} | grep 'mlaf')
-    slaf_table=\$(ls ${pop_files} | grep 'slaf')
-    sl_from_ml_table=\$(ls ${pop_files} | grep 'sl_from_ml')
+    # Match published estimate suffixes explicitly (avoid substring greps like 'prev'/'slaf').
+    slap_table=\$(ls ${pop_files} | grep -E 'allele_prev\\.tsv\$')
+    slaf_table=\$(ls ${pop_files} | grep -E 'aa_slaf\\.tsv\$' || ls ${pop_files} | grep -E '\\.slaf\\.tsv\$' | grep -v 'mhaps_slaf')
+    mlaf_table=\$(ls ${pop_files} | grep -E 'aa_mlaf\\.tsv\$' || true)
+    # Matches pipeline outputs (*.aa_sl_from_ml.tsv) and nf-test fixtures (sl_from_ml.tsv).
+    sl_from_ml_table=\$(ls ${pop_files} | grep -E 'sl_from_ml\\.tsv\$' || true)
 
     Rscript ${projectDir}/bin/merge_tables.R --freq_table \${slaf_table} --population "\${true_population}" --prev_table \${slap_table} --output ${pop_index}.sl_summary.tsv
-    Rscript ${projectDir}/bin/add_population_column.R --table \${mlaf_table} --population "\${true_population}" --output ${pop_index}.ml_summary.tsv
-    Rscript ${projectDir}/bin/add_population_column.R --table \${sl_from_ml_table} --population "\${true_population}" --output ${pop_index}.sl_from_ml_summary.tsv
+    if [ -n "\${mlaf_table}" ]; then
+        Rscript ${projectDir}/bin/add_population_column.R --table \${mlaf_table} --population "\${true_population}" --output ${pop_index}.ml_summary.tsv
+    else
+        printf 'population\\tgroup_id\\tvariant\\tfreq\\n' > ${pop_index}.ml_summary.tsv
+    fi
+    if [ -n "\${sl_from_ml_table}" ]; then
+        Rscript ${projectDir}/bin/add_population_column.R --table \${sl_from_ml_table} --population "\${true_population}" --output ${pop_index}.sl_from_ml_summary.tsv
+    else
+        printf 'population\\tgroup_id\\tvariant\\tsample_total\\tallele_total\\tallele_count\\tsample_count\\tfreq\\tprev\\n' > ${pop_index}.sl_from_ml_summary.tsv
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -45,7 +55,3 @@ process MERGE_TABLES {
     END_VERSIONS
     """
 }
-
-// slap naive now outputs stave
-// do any of the slaf methods output stave - IDM
-// do any of the mlaf methods output stave

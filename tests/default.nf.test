@@ -36,6 +36,30 @@ nextflow_pipeline {
         }
     }
 
+    // conf/test.config sets loci_groups; clear it to assert ML steps are skipped.
+    test("-profile test without loci_groups") {
+
+        when {
+            params {
+                outdir       = "$outputDir"
+                loci_groups  = null
+            }
+        }
+
+        then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt,yml}'])
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_plasmodiumdrugres_software_versions.yml"),
+                    stable_name,
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+
     // Same file is fine; nf-test 0.9.x only allows `profile` on the suite, not per test().
     // Global profile "test" still sets allele_table, so PMO inputs must be set here and
     // allele-table params cleared (mirrors conf/test_pmo.config).

@@ -29,15 +29,17 @@ Use `-profile docker` when you run the pipeline so Nextflow uses that container.
 There are two supported entry points into the pipeline:
 
 1. **PMO input**
-   - Required: `--pmo`, `--loci_of_interest_bed`, `--loci_groups`
+   - Required: `--pmo`, `--loci_of_interest_bed`
    - Optional:
+     - `--loci_groups` to enable multi-locus allele frequency estimation
      - `--pmo_population_fields` (+ optional `--pmo_population_separator`) to derive population assignment from PMO metadata
      - `--population_assignment` (recommended if running by population)
      - `--genome_reference` or `--targeted_reference` if PMO does not include usable reference sequence information
 
 2. **Allele table input**
-   - Required: `--allele_table`, `--panel_info_bed`, `--loci_of_interest_bed`, `--loci_groups`
+   - Required: `--allele_table`, `--panel_info_bed`, `--loci_of_interest_bed`
    - Optional:
+     - `--loci_groups` to enable multi-locus allele frequency estimation
      - `--population_assignment` for multi-population analysis
      - `--population_label` for single-population runs (default: `pop1`)
 
@@ -98,7 +100,9 @@ An [example loci of interest bed file](../assets/loci_of_interest.bed) has been 
 
 ## Loci groups
 
-Before running the pipeline, you will need to create a BED file that defines the groups of loci for which you want to generate multi-locus estimates. It has to be a tab-separated file with 3 columns, and a header row as shown in the examples below.
+`--loci_groups` is optional. When provided, the pipeline runs multi-locus allele frequency (MLAF) estimation and writes `ml_summary.tsv` and `sl_from_ml_summary.tsv`. When omitted, those ML steps are skipped; the summary files are still produced as header-only stubs so downstream outputs stay consistent.
+
+Before running multi-locus estimates, create a tab-separated file that defines the groups of loci. It must have 3 columns and a header row as shown below.
 
 ```bash
 --loci_groups '[path to loci groups file]'

@@ -117,11 +117,11 @@ workflow PIPELINE_INITIALISATION {
         def raw = params.pmo_population_fields
         def fields = []
         if (raw instanceof List) {
-            fields = raw.collect { it?.toString() ?: '' }
+            fields = raw.collect { field -> field?.toString() ?: '' }
         } else {
             fields = raw.toString().split(',') as List
         }
-        fields = fields.collect { it.trim() }.findAll { it }
+        fields = fields.collect { field -> field.trim() }.findAll { field -> field }
         // Join with spaces so the shell splits into multiple `--fields` arguments.
         pmo_population_fields_norm = fields.join(' ')
     }
@@ -255,30 +255,27 @@ def validateInputParameters() {
         validation_warnings.add("WARNING: both '--population_assignment' and --'population_label' set. '--population_assignment' will be used.")
     }
 
-    // Check other required files: `loci_of_interest_bed`, `loci_groups`
-    def required_files = [
-        'loci_of_interest_bed': params.loci_of_interest_bed,
-        'loci_groups': params.loci_groups
-    ]
+    // Check required files and validate optional files when provided
+    if (!params.loci_of_interest_bed) {
+        validation_errors.add("Missing required file parameter: 'loci_of_interest_bed' is not set.")
+    } else if (!file(params.loci_of_interest_bed).exists()) {
+        validation_errors.add("File not found: 'loci_of_interest_bed' at path '${params.loci_of_interest_bed}'.")
+    }
 
-    required_files.each { file_label, file_path ->
-        if (!file_path) {
-            validation_errors.add("Missing required file parameter: '${file_label}' is not set.")
-        } else if (!file(file_path).exists()) {
-            validation_errors.add("File not found: '${file_label}' at path '${file_path}'.")
-        }
+    if (params.loci_groups && !file(params.loci_groups).exists()) {
+        validation_errors.add("File not found: 'loci_groups' at path '${params.loci_groups}'.")
     }
 
     // Print warnings if any
     if (validation_warnings.size() > 0) {
         log.warn "Input validation warnings:\n" +
-            validation_warnings.collect { "- ${it}" }.join("\n")
+            validation_warnings.collect { warning -> "- ${warning}" }.join("\n")
     }
 
     // Report all errors at once
     if (validation_errors.size() > 0) {
         log.error "Input validation failed with the following errors:\n" +
-            validation_errors.collect { "- ${it}" }.join("\n")
+            validation_errors.collect { error -> "- ${error}" }.join("\n")
         exit 1
     }
 

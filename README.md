@@ -80,16 +80,17 @@ The most simple way to run this pipeline is by using a [Portable Microhaplotype 
 There are two supported entry points:
 
 1. **PMO input**
-   - Required: `--pmo`, `--loci_of_interest_bed`, `--loci_groups`
+   - Required: `--pmo`, `--loci_of_interest_bed`
    - Optional:
+     - `--loci_groups` to enable multi-locus allele frequency estimation
      - `--pmo_population_fields` (comma-separated fields) to derive populations from PMO specimen metadata
      - `--population_assignment` table of specimen_name and which 'population' it belongs to
      - `--pmo_population_separator`
      - `--genome_reference` or `--targeted_reference`
 
 2. **Allele-table input**
-   - Required: `--allele_table`, `--panel_info_bed`, `--loci_of_interest_bed`, `--loci_groups`
-   - Optional: `--population_assignment`, `--population_label`
+   - Required: `--allele_table`, `--panel_info_bed`, `--loci_of_interest_bed`
+   - Optional: `--loci_groups`, `--population_assignment`, `--population_label`
 
 You must provide exactly one of `--pmo` or `--allele_table`.
 
@@ -100,7 +101,7 @@ You must provide exactly one of `--pmo` or `--allele_table`.
 > This can be any grouping level you choose (e.g. country, health facility, year, or combinations).
 > If you don’t provide a population assignment file, all samples are analysed together as one group (label controlled by `--population_label`, default `pop1`).
 
-For either input option, you will first need to prepare two required inputs: [loci of interest](#loci-of-interest) and [loci groups](#loci-groups).
+For either input option, you will first need to prepare [loci of interest](#loci-of-interest). Optionally prepare [loci groups](#loci-groups) if you want multi-locus estimates.
 
 ### Loci of interest
 
@@ -122,7 +123,7 @@ Pf3D7_07_v3 403623  403626  PF3D7_0709000.1-AA76  3 + crt 76  PF3D7_0709000.1
 
 ### Loci groups
 
-You will also need to define groups of loci you would like to estimate multi-locus allele frequencies for.
+Optional. Provide `--loci_groups` to estimate multi-locus allele frequencies. When omitted, multi-locus steps are skipped and `ml_summary.tsv` / `sl_from_ml_summary.tsv` are written as header-only stubs.
 
 **loci_groups.tsv**
 
