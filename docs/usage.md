@@ -27,8 +27,8 @@ There are two supported entry points into the pipeline:
    - Required: `--pmo`, `--loci_of_interest_bed`
    - Optional:
      - `--loci_groups` to enable multi-locus allele frequency estimation
-     - `--pmo_population_fields` (+ optional `--pmo_population_separator`) to derive population assignment from PMO metadata
-     - `--population_assignment` (recommended if running by population)
+     - `--pmo_population_fields` (+ optional `--pmo_population_separator`) to derive population assignment from PMO specimen metadata
+     - `--population_assignment` to supply a population assignment table manually (use this instead of `--pmo_population_fields` if you prefer to define populations yourself)
      - `--genome_reference` or `--targeted_reference` if PMO does not include usable reference sequence information
 
 2. **Allele table input**
