@@ -8,35 +8,15 @@
 
 **nf-core/plasmodiumdrugres** is a bioinformatics pipeline for analyzing drug resistance markers from microhaplotype data. It translates variants into amino acid changes at drug resistance loci and estimates allele frequencies and prevalences at both single-locus and multi-locus levels. Microhaplotype data can be supplied in the form of an allele table or a [PMO](https://plasmogenepi.github.io/PMO_Docs/) file.
 
-Key words
+> [!NOTE]
+> Software is provided **per process** via Docker/Singularity/Apptainer containers (or Conda as a last resort). There is no monolithic pipeline image to pull — choose a `-profile` such as `docker` or `singularity` and Nextflow fetches containers automatically. For environment setup, see the [nf-core getting started guide](https://nf-co.re/docs/get_started/environment_setup/overview).
 
-- population
-- locus
-- multi-locus
-
-## Getting set up
-
-Software dependencies are managed **per process** (there is no monolithic pipeline Docker image to pull). Install a container runtime, then let Nextflow fetch each module's container when the workflow runs:
-
-1. Install [Nextflow](https://nf-co.re/docs/usage/installation) (see the required version on the pipeline README).
-2. Install one of [Docker](https://www.docker.com/get-started), [Singularity](https://sylabs.io/docs/), [Apptainer](https://apptainer.org/), or (last resort) [Conda](https://docs.conda.io/).
-3. Run with a matching profile, for example `-profile docker` or `-profile singularity`. Images are pulled automatically from [Seqera Containers](https://seqera.io/containers/) / Biocontainers as needed.
-
-If you clone the repository locally (instead of `nextflow run nf-core/plasmodiumdrugres`), initialize Git submodules so bundled `PGEcore` scripts are available:
+If you clone this repository for local development (instead of `nextflow run nf-core/plasmodiumdrugres`), initialize Git submodules so the bundled `PGEcore` scripts are available:
 
 ```bash
 git clone --recurse-submodules https://github.com/nf-core/plasmodiumdrugres.git
-cd plasmodiumdrugres
 # or, if already cloned:
 git submodule update --init --recursive
-```
-
-On Apple Silicon Macs, if Docker reports architecture/manifest errors, add the `emulate_amd64` profile (e.g. `-profile docker,emulate_amd64`). For native ARM containers, use `-profile docker,arm64,wave`.
-
-Confirm your setup with the bundled test profile:
-
-```bash
-nextflow run nf-core/plasmodiumdrugres -profile test,docker --outdir results
 ```
 
 ## Entry points
@@ -115,7 +95,7 @@ An [example loci of interest bed file](../assets/loci_of_interest.bed) has been 
 
 ## Loci groups
 
-`--loci_groups` is optional. When provided, the pipeline runs multi-locus allele frequency (MLAF) estimation and writes `ml_summary.tsv` and `sl_from_ml_summary.tsv`. When omitted, those ML steps are skipped; the summary files are still produced as header-only stubs so downstream outputs stay consistent.
+`--loci_groups` is optional. When provided, the pipeline runs multi-locus allele frequency (MLAF) estimation and writes `ml_summary.tsv` plus `raw_summaries/raw_sl_from_ml_summary.tsv`. When omitted, those ML steps are skipped; `ml_summary.tsv` and the corresponding raw SL-from-ML table are still written as header-only stubs so outputs stay consistent.
 
 Before running multi-locus estimates, create a tab-separated file that defines the groups of loci. It must have 3 columns and a header row as shown below.
 
@@ -383,7 +363,6 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   - Includes links to test data so needs no other parameters
 - `docker`
   - A generic configuration profile to be used with [Docker](https://docker.com/)
-  - Each process uses its own container; Nextflow pulls images as needed (see [Getting set up](#getting-set-up))
 - `singularity`
   - A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
 - `podman`
@@ -395,11 +374,11 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `apptainer`
   - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
 - `wave`
-  - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow `24.03.0-edge` or later). Useful with `arm64` for native ARM builds.
+  - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow `24.03.0-edge` or later).
 - `emulate_amd64`
-  - Forces Docker to run containers as `linux/amd64` (helpful on Apple Silicon when using the default amd64 images)
+  - Run Docker containers as `linux/amd64` (useful on Apple Silicon when using default amd64 images)
 - `arm64`
-  - Selects arm64 container variants where available; typically combined with `wave`
+  - Prefer arm64 container variants where available; typically used with `wave`
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 
