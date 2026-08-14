@@ -59,18 +59,18 @@ If you already cloned without submodules, run:
 git submodule update --init --recursive
 ```
 
-The simplest way to get the software you need is to use [Docker](https://www.docker.com/get-started). Install Docker, then pull the pipeline image (do this when you first set up, and again when you upgrade the pipeline or want the latest image):
+Software dependencies are managed **per process** (not via a single pipeline Docker image). Install a container runtime, then let Nextflow pull the images declared by each module when you run the pipeline:
+
+1. Install [Nextflow](https://nf-co.re/docs/usage/installation) (>= 25.10.4; see the badge above).
+2. Install one of [Docker](https://www.docker.com/get-started), [Singularity](https://sylabs.io/docs/), [Apptainer](https://apptainer.org/), or (last resort) [Conda](https://docs.conda.io/).
+3. Run with a matching profile, e.g. `-profile docker` or `-profile singularity`. Containers are fetched automatically from [Seqera Containers](https://seqera.io/containers/) / Biocontainers.
+
+On Apple Silicon Macs, if you hit architecture errors with Docker, add the `emulate_amd64` profile (e.g. `-profile docker,emulate_amd64`). Native ARM can use `-profile docker,arm64,wave` (Wave builds containers for arm64).
+
+Test your setup with:
 
 ```bash
-docker pull plasmogenepi/plasmodiumdrugres:main
-```
-
-Run the workflow with `-profile docker` so Nextflow uses that container.
-
-**Note:** If you are using an Apple Silicon Mac (M1/M2/M3) and encounter an error such as `no matching manifest for linux/arm64/v8 in the manifest list entries` please pull and run the container using the following command
-
-```bash
-docker pull --platform linux/amd64 plasmogenepi/plasmodiumdrugres:main
+nextflow run . -profile test,docker --outdir results
 ```
 
 The most simple way to run this pipeline is by using a [Portable Microhaplotype Object (PMO)](https://plasmogenepi.github.io/PMO_Docs/) file. To maximize flexibility, the pipeline also allows users to provide a PMO with reference sequences separately, or to supply an allele table with panel information in a separate file.

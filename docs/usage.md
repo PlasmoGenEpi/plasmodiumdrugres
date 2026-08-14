@@ -16,13 +16,28 @@ Key words
 
 ## Getting set up
 
-The simplest way to get the software you need is to use [Docker](https://www.docker.com/get-started). Install Docker, then pull the pipeline image (when you first set up, and again when you upgrade the pipeline or want the latest image):
+Software dependencies are managed **per process** (there is no monolithic pipeline Docker image to pull). Install a container runtime, then let Nextflow fetch each module's container when the workflow runs:
+
+1. Install [Nextflow](https://nf-co.re/docs/usage/installation) (see the required version on the pipeline README).
+2. Install one of [Docker](https://www.docker.com/get-started), [Singularity](https://sylabs.io/docs/), [Apptainer](https://apptainer.org/), or (last resort) [Conda](https://docs.conda.io/).
+3. Run with a matching profile, for example `-profile docker` or `-profile singularity`. Images are pulled automatically from [Seqera Containers](https://seqera.io/containers/) / Biocontainers as needed.
+
+If you clone the repository locally (instead of `nextflow run nf-core/plasmodiumdrugres`), initialize Git submodules so bundled `PGEcore` scripts are available:
 
 ```bash
-docker pull plasmogenepi/plasmodiumdrugres
+git clone --recurse-submodules https://github.com/nf-core/plasmodiumdrugres.git
+cd plasmodiumdrugres
+# or, if already cloned:
+git submodule update --init --recursive
 ```
 
-Use `-profile docker` when you run the pipeline so Nextflow uses that container.
+On Apple Silicon Macs, if Docker reports architecture/manifest errors, add the `emulate_amd64` profile (e.g. `-profile docker,emulate_amd64`). For native ARM containers, use `-profile docker,arm64,wave`.
+
+Confirm your setup with the bundled test profile:
+
+```bash
+nextflow run nf-core/plasmodiumdrugres -profile test,docker --outdir results
+```
 
 ## Entry points
 
@@ -368,7 +383,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   - Includes links to test data so needs no other parameters
 - `docker`
   - A generic configuration profile to be used with [Docker](https://docker.com/)
-  - See [Getting set up](#getting-set-up) for installing Docker and pulling the `plasmogenepi/plasmodiumdrugres` image.
+  - Each process uses its own container; Nextflow pulls images as needed (see [Getting set up](#getting-set-up))
 - `singularity`
   - A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
 - `podman`
@@ -380,7 +395,11 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `apptainer`
   - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
 - `wave`
-  - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow `24.03.0-edge` or later).
+  - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow `24.03.0-edge` or later). Useful with `arm64` for native ARM builds.
+- `emulate_amd64`
+  - Forces Docker to run containers as `linux/amd64` (helpful on Apple Silicon when using the default amd64 images)
+- `arm64`
+  - Selects arm64 container variants where available; typically combined with `wave`
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 
