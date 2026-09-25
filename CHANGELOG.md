@@ -20,6 +20,8 @@ Initial release of nf-core/plasmodiumdrugres, created with the [nf-core](https:/
 
 ### `Dependencies`
 
+- Use Bioconda `r-pgecore=0.1.0` instead of the `bin/PGEcore` git submodule; update modules to the packaged CLI flag names
+
 ### `Deprecated`
 
 - Remove unused FastQC and MultiQC modules (lint ignores MultiQC config; pipeline does not run MultiQC)

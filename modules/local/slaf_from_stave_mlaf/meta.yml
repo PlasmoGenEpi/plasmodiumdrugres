@@ -10,7 +10,7 @@ tools:
       description: |
         PGEcore R script that converts stave MLAF output to SLAF tables.
       homepage: https://github.com/PlasmoGenEpi/plasmodiumdrugres
-      documentation: https://github.com/PlasmoGenEpi/PGEcore/tree/develop/scripts/slaf_from_stave_mlaf
+      documentation: https://plasmogenepi.github.io/PGEcore/reference/slaf_from_stave_mlaf.html
       licence: ["MIT"]
 input:
   - mlaf_base:
@@ -38,14 +38,14 @@ maintainers:
 containers:
   docker:
     linux/amd64:
-      name: community.wave.seqera.io/library/variantstring:baf88b1c56575a41
-      build_id: bd-baf88b1c56575a41_1
-      scan_id: sc-537aa174a86d0f0d_1
+      name: community.wave.seqera.io/library/slaf_from_stave_mlaf:4c32c036540c052e
+      build_id: bd-4c32c036540c052e_2
+      scan_id: sc-72c48cf6d91434ef_1
   singularity:
     linux/amd64:
-      name: oras://community.wave.seqera.io/library/variantstring:43bf268eba967f23
-      build_id: bd-43bf268eba967f23_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/81/81b920f9fbdfb306833b8fb40a0613cc6ab2ceb9ed5f185957da55b00e4d5281/data
+      name: oras://community.wave.seqera.io/library/slaf_from_stave_mlaf:1b44980fc997ad26
+      build_id: bd-1b44980fc997ad26_2
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/59/59694b9b3a63712c65ca417044bd5fb4d3927d9958fcf033bfa528a64d04caf8/data
   conda:
     linux/amd64:
-      lock_file: modules/local/slaf_from_stave_mlaf/.conda-lock/linux_amd64-bd-baf88b1c56575a41_1.txt
+      lock_file: modules/local/slaf_from_stave_mlaf/.conda-lock/linux_amd64-bd-4c32c036540c052e_2.txt

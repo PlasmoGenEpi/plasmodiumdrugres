@@ -9,8 +9,8 @@ process SLAF_FROM_MHAPS_FREQS {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b8/b8b5976e182bb3b8f3b3073fe7ccb663bfa240ef8476d59faf2cccf8b180fe6f/data'
-:         'community.wave.seqera.io/library/pgecore_r:b3d363b44f3cab5e' }"
+?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/71/71e5209ab05c23f35342479478217ecb098fba221344a8b3a36654d215bf0cbd/data'
+:         'community.wave.seqera.io/library/r-pgecore:2b87bb570d668c51' }"
 
     input:
     tuple val(group_name), path(mhaps_slaf_fnp)
@@ -23,14 +23,16 @@ process SLAF_FROM_MHAPS_FREQS {
     script:
 
     """
-    Rscript ${projectDir}/bin/PGEcore/scripts/calc_slaf_based_on_mhap_freqs/slaf_from_mhaps_freqs.R \
-        --mhaps_slaf_fnp ${mhaps_slaf_fnp}  \
-        --loci_of_interest_per_microhaps_fnp ${loci_of_interest_per_microhaps_fnp}  \
+    export PATH="\$(Rscript -e 'cat(system.file(\"exec\", package = \"PGEcore\"))'):\${PATH}"
+    slaf_from_mhaps_freqs \\
+        --mhaps_slaf ${mhaps_slaf_fnp} \\
+        --loci_of_interest_per_microhaps ${loci_of_interest_per_microhaps_fnp} \\
         --slaf_output ${group_name}.slaf.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         r-base: \$( R --version | sed -n '1s/.*\\([0-9]\\+\\.[0-9]\\+\\.[0-9]\\+\\).*/\\1/p' )
+        r-pgecore: \$( Rscript -e 'cat(as.character(packageVersion("PGEcore")))' )
     END_VERSIONS
     """
 }

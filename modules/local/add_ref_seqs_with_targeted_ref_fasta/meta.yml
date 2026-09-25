@@ -10,7 +10,7 @@ tools:
       description: |
         PGEcore R script that matches target IDs to sequences in a targeted FASTA.
       homepage: https://github.com/PlasmoGenEpi/plasmodiumdrugres
-      documentation: https://github.com/PlasmoGenEpi/PGEcore/tree/develop/scripts/add_ref_seq_to_ref_bed_table
+      documentation: https://plasmogenepi.github.io/PGEcore/reference/add_ref_seqs_with_targeted_ref_fasta.html
       licence: ["MIT"]
 input:
   - ref_bed:
@@ -39,14 +39,14 @@ maintainers:
 containers:
   docker:
     linux/amd64:
-      name: community.wave.seqera.io/library/bioc_biostrings:4bff14692906e36a
-      build_id: bd-4bff14692906e36a_1
-      scan_id: sc-d8d0c5a4f911fca1_1
+      name: community.wave.seqera.io/library/add_ref_seqs_biostrings:18ac1e5b6fdf043b
+      build_id: bd-18ac1e5b6fdf043b_1
+      scan_id: sc-18a0d5ea3a65858b_1
   singularity:
     linux/amd64:
-      name: oras://community.wave.seqera.io/library/bioc_biostrings:97843eaee53666b9
-      build_id: bd-97843eaee53666b9_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/fa/fa5e7a47124ffe90a02dcbdc8d87234f42aa88ec26014d4f45928f92b647052a/data
+      name: oras://community.wave.seqera.io/library/add_ref_seqs_biostrings:6416162e38208eec
+      build_id: bd-6416162e38208eec_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/a1/a1ec4aede8ca7ce3bbde592f7b88678ff5ccff21283a0f20f61f5fdca1a13db0/data
   conda:
     linux/amd64:
-      lock_file: modules/local/add_ref_seqs_with_targeted_ref_fasta/.conda-lock/linux_amd64-bd-4bff14692906e36a_1.txt
+      lock_file: modules/local/add_ref_seqs_with_targeted_ref_fasta/.conda-lock/linux_amd64-bd-18ac1e5b6fdf043b_1.txt

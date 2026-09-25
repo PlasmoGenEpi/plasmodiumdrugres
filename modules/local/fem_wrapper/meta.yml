@@ -9,7 +9,7 @@ tools:
       description: |
         Wrapper around the FreqEstimationModel R package for MLAF estimation.
       homepage: https://github.com/aimeertaylor/FreqEstimationModel
-      documentation: https://github.com/PlasmoGenEpi/PGEcore/tree/develop/scripts/FreqEstimationModel_wrapper
+      documentation: https://plasmogenepi.github.io/PGEcore/reference/FreqEstimationModel_wrapper.html
       licence: ["MIT"]
 input:
   - aa_calls:
@@ -38,14 +38,14 @@ maintainers:
 containers:
   docker:
     linux/amd64:
-      name: community.wave.seqera.io/library/fem_wrapper:c76f649ce875f71b
-      build_id: bd-c76f649ce875f71b_1
-      scan_id: sc-d24084080f878546_1
+      name: community.wave.seqera.io/library/fem_wrapper:c635184d8a5a3158
+      build_id: bd-c635184d8a5a3158_2
+      scan_id: sc-6d9133782f5a5e54_1
   singularity:
     linux/amd64:
-      name: oras://community.wave.seqera.io/library/fem_wrapper:6a6a23fb62a74291
-      build_id: bd-6a6a23fb62a74291_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/80/80a01e74c5e39ae20dfe8bfd9d0e1096372cd489febd1efc85f902f9ee880949/data
+      name: oras://community.wave.seqera.io/library/fem_wrapper:cad7a98cbdd65943
+      build_id: bd-cad7a98cbdd65943_2
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/bc/bc03a3feb106dd1a29e88a302f4b1606164b9801b0470a3ef29968cf03f42700/data
   conda:
     linux/amd64:
-      lock_file: modules/local/fem_wrapper/.conda-lock/linux_amd64-bd-c76f649ce875f71b_1.txt
+      lock_file: modules/local/fem_wrapper/.conda-lock/linux_amd64-bd-c635184d8a5a3158_2.txt

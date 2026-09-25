@@ -163,7 +163,7 @@
                 "translate_loci_extra_args": {
                     "type": "string",
                     "description": "Extra arguments supplied when translating loci of interest",
-                    "help_text": "See https://github.com/PlasmoGenEpi/PGEcore/tree/develop/scripts/translate_loci_of_interest",
+                    "help_text": "See https://plasmogenepi.github.io/PGEcore/reference/translate_loci_of_interest.html",
                     "fa_icon": "fas fa-users-cog"
                 },
                 "naive_slaf_method": {

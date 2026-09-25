@@ -28,13 +28,16 @@ All module dependencies are on Bioconda/conda-forge, including:
 
 | Package             | Conda name                    | Channel     |
 | ------------------- | ----------------------------- | ----------- |
+| PGEcore             | `r-pgecore=0.1.0`             | bioconda    |
 | pmotools            | `pmotools=1.1.0`              | bioconda    |
 | dcifer              | `r-dcifer=1.5.2`              | conda-forge |
 | variantstring       | `r-variantstring=1.8.7`       | bioconda    |
 | FreqEstimationModel | `r-freqestimationmodel=0.1.0` | bioconda    |
 
-Note: `r-variantstring`, `r-freqestimationmodel`, and Biostrings/`pwalign` modules pin `r-base=4.5` (Bioconductor 3.22 builds). Other R modules remain on `r-base=4.4`.
+PGEcore CLIs are invoked from `system.file("exec", package = "PGEcore")` (not on `PATH` by default). Wrapper modules also install the corresponding Suggests packages (e.g. Biostrings, `r-dcifer`).
 
-**Apple Silicon + conda:** `r-validate` has no `osx-arm64` build. Use `CONDA_SUBDIR=osx-64` (Rosetta) for local conda tests, or prefer `--profile docker`.
+Note: PGEcore and Bioconductor-dependent modules pin `r-base=4.5`.
+
+**Apple Silicon + conda:** `r-pgecore` and `r-validate` have no `osx-arm64` builds. Use `CONDA_SUBDIR=osx-64` (Rosetta) for local conda tests, or prefer `--profile docker`.
 
 **Host pyenv:** The `conda` / `mamba` profiles strip `~/.pyenv` from `PATH` so process CLIs (e.g. `pmotools-python`) come from the conda env, not a host install.

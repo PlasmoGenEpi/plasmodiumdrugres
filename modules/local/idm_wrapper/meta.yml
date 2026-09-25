@@ -9,7 +9,7 @@ tools:
       description: |
         PGEcore Incomplete Data Model wrapper for SLAF estimation.
       homepage: https://github.com/PlasmoGenEpi/plasmodiumdrugres
-      documentation: https://github.com/PlasmoGenEpi/PGEcore/tree/develop/scripts/IDM_wrapper
+      documentation: https://plasmogenepi.github.io/PGEcore/reference/IDM_wrapper.html
       licence: ["MIT"]
 input:
   - aa_calls_input:
@@ -34,14 +34,14 @@ maintainers:
 containers:
   docker:
     linux/amd64:
-      name: community.wave.seqera.io/library/idm_wrapper:bbf090b308b798b9
-      build_id: bd-bbf090b308b798b9_2
-      scan_id: sc-016e7532666dadfc_1
+      name: community.wave.seqera.io/library/idm_wrapper:1a9e1a40d75bade3
+      build_id: bd-1a9e1a40d75bade3_1
+      scan_id: sc-d210e97119d68ec2_1
   singularity:
     linux/amd64:
-      name: oras://community.wave.seqera.io/library/idm_wrapper:f93aded561925363
-      build_id: bd-f93aded561925363_2
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/90/90d55445518a2cd019ee14b614bf95a334d7f4a6f431fd118f54b7efdef72c2a/data
+      name: oras://community.wave.seqera.io/library/idm_wrapper:604feb09387e9ed8
+      build_id: bd-604feb09387e9ed8_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/09/095a76bcdad467aecddbf4109b65c1dc1ec1a624a30c19a0cf1c4e9aded6b604/data
   conda:
     linux/amd64:
-      lock_file: modules/local/idm_wrapper/.conda-lock/linux_amd64-bd-bbf090b308b798b9_2.txt
+      lock_file: modules/local/idm_wrapper/.conda-lock/linux_amd64-bd-1a9e1a40d75bade3_1.txt

@@ -8,8 +8,8 @@ process TRANSLATE_LOCI_OF_INTEREST {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/3d/3d094be5e8095ff83cf9b7bf80b33b60f14a0690d9ea93079eb1c4ff6949e422/data'
-:         'community.wave.seqera.io/library/translate_loci_of_interest:dd81facbe62d2c91' }"
+?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/aa/aa9ef580720050e47cf35c8e9bf304181d75f083469f481c2c8e188af16e443b/data'
+:         'community.wave.seqera.io/library/translate_loci_of_interest:b373d6f56b2b4b34' }"
 
     input:
     path allele_table
@@ -26,16 +26,18 @@ process TRANSLATE_LOCI_OF_INTEREST {
 
     script:
     """
-    Rscript ${projectDir}/bin/PGEcore/scripts/translate_loci_of_interest/translate_loci_of_interest.R \
-        --allele_table ${allele_table} \
-        --ref_bed ${ref_bed} \
-        --loci_of_interest ${loci_of_interest} \
-        --output_directory translated_loci \
+    export PATH="\$(Rscript -e 'cat(system.file(\"exec\", package = \"PGEcore\"))'):\${PATH}"
+    translate_loci_of_interest \\
+        --allele_table ${allele_table} \\
+        --ref_bed ${ref_bed} \\
+        --loci_of_interest ${loci_of_interest} \\
+        --output_dir translated_loci \\
         ${extra_args}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         r-base: \$( R --version | sed -n '1s/.*\\([0-9]\\+\\.[0-9]\\+\\.[0-9]\\+\\).*/\\1/p' )
+        r-pgecore: \$( Rscript -e 'cat(as.character(packageVersion("PGEcore")))' )
         bioconductor-biostrings: \$( Rscript -e 'cat(as.character(packageVersion("Biostrings")))' 2>/dev/null || echo 'N/A' )
         bioconductor-pwalign: \$( Rscript -e 'cat(as.character(packageVersion("pwalign")))' 2>/dev/null || echo 'N/A' )
     END_VERSIONS
