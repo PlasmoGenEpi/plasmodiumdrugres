@@ -10,7 +10,7 @@ process EXTRACT_ALLELE_TABLE {
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
 ?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/18/189c44118da9b46a927fb57c5ca01460fb93bfbc4b85bcb4484036888b8d5878/data'
-:         'community.wave.seqera.io/library/pmotools:95ef48ca9c18fa35' }"
+:         'community.wave.seqera.io/library/pmotools:49e8a88de6f47183' }"
 
     input:
     path pmo

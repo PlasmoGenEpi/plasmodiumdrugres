@@ -7,7 +7,7 @@ channels:
 dependencies:
   - conda-forge::r-base=4.5
   - bioconda::r-pgecore=0.1.0
-  - bioconda::r-freqestimationmodel=0.1.0
+  - bioconda::r-freqestimationmodel=0.1.1
   - bioconda::r-variantstring=1.8.7
   - conda-forge::r-posterior
   - conda-forge::r-foreach

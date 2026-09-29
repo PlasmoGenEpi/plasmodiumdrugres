@@ -65,11 +65,21 @@ containers:
       name: community.wave.seqera.io/library/translate_loci_of_interest:b373d6f56b2b4b34
       build_id: bd-b373d6f56b2b4b34_1
       scan_id: sc-77d4ac68d6691f8f_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/translate_loci_of_interest:02fe1797e703fd21
+      build_id: bd-02fe1797e703fd21_3
+      scan_id: sc-10b710296c131660_1
   singularity:
     linux/amd64:
       name: oras://community.wave.seqera.io/library/translate_loci_of_interest:d7b967c006ca2cf8
       build_id: bd-d7b967c006ca2cf8_1
       https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/aa/aa9ef580720050e47cf35c8e9bf304181d75f083469f481c2c8e188af16e443b/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/translate_loci_of_interest:6b284990e8e52aa4
+      build_id: bd-6b284990e8e52aa4_3
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/fb/fbef6e0429b22c1df79a4e1e3f60c711e6287132124fe54b6ef9f6bca0899b87/data
   conda:
     linux/amd64:
       lock_file: modules/local/translate_loci_of_interest/.conda-lock/linux_amd64-bd-b373d6f56b2b4b34_1.txt
+    linux/arm64:
+      lock_file: modules/local/translate_loci_of_interest/.conda-lock/linux_arm64-bd-02fe1797e703fd21_3.txt
