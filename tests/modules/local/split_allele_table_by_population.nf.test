@@ -30,12 +30,8 @@ nextflow_process {
         when {
             process {
                 """
-                def pop_lines = file(params.pipelines_testdata_base_path + 'testdata/population_assignment_indexed.tsv', checkIfExists: true).readLines()
-                def pop_missing_two = file("${launchDir}/population_assignment_missing_two.tsv")
-                pop_missing_two.text = ([pop_lines[0]] + pop_lines.drop(3)).join('\\n') + '\\n'
-
                 input[0] = file(params.pipelines_testdata_base_path + 'testdata/allele_table.tsv', checkIfExists: true)
-                input[1] = pop_missing_two
+                input[1] = file(params.pipelines_testdata_base_path + 'testdata/population_assignment_indexed_unassigned.tsv', checkIfExists: true)
                 """
             }
         }

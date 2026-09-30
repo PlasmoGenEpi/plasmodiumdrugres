@@ -19,6 +19,25 @@ nextflow_process {
             assert process.success
             assert path(process.out.per_pop_tables.get(0)[0]).md5 == "e2f0fab0d8a9b88d32bfd1bd9d9f4648"
             assert path(process.out.per_pop_tables.get(0)[1]).md5 == "9d66f68ef70dcf63f092277c69cb4f9b"
+            assert process.out.unassigned_report == []
+        }
+
+    }
+
+    test("Should report specimens missing from the population map") {
+
+        when {
+            process {
+                """
+                input[0] = file(params.pipelines_testdata_base_path + 'testdata/amino_acid_calls.tsv', checkIfExists: true)
+                input[1] = file(params.pipelines_testdata_base_path + 'testdata/population_assignment_indexed_unassigned.tsv', checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert path(process.out.unassigned_report.get(0)).readLines() == ["Vietnam2018-23", "Vietnam2018-24"]
         }
 
     }
