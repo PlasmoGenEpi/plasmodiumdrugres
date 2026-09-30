@@ -11,14 +11,6 @@
 > [!NOTE]
 > Software is provided **per process** via Docker/Singularity/Apptainer containers (or Conda as a last resort). There is no monolithic pipeline image to pull — choose a `-profile` such as `docker` or `singularity` and Nextflow fetches containers automatically. For environment setup, see the [nf-core getting started guide](https://nf-co.re/docs/get_started/environment_setup/overview).
 
-If you clone this repository for local development (instead of `nextflow run nf-core/plasmodiumdrugres`), initialize Git submodules so the bundled `PGEcore` scripts are available:
-
-```bash
-git clone --recurse-submodules https://github.com/nf-core/plasmodiumdrugres.git
-# or, if already cloned:
-git submodule update --init --recursive
-```
-
 ## Entry points
 
 There are two supported entry points into the pipeline:
@@ -254,7 +246,7 @@ Do not set both `--population_assignment` and `--pmo_population_fields`; use one
 
 ## Other params
 
-- `--translate_loci_extra_args` - Extra arguments when translating loci of interest. [See documentation here](https://github.com/PlasmoGenEpi/PGEcore/tree/develop/scripts/translate_loci_of_interest).
+- `--translate_loci_extra_args` - Extra arguments when translating loci of interest. [See PGEcore docs](https://plasmogenepi.github.io/PGEcore/reference/translate_loci_of_interest.html).
 - `--slaf_method` - chosen method to estimate single locus allele frequencies (Default: `naive`; Options: `["IDM","naive","mhaps_freq"]`)
 - `--mlaf_method` - chosen method to estimate multi-locus allele frequencies (Default: `naive`; Options: `["MLBM","FEM","naive"]`)
 - `--naive_slaf_method` - Chosen naive method when running `--slaf_method naive`. (Default: `read_count_prop`; Options: `["read_count_prop", "presence_absence"]`)

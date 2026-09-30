@@ -9,8 +9,8 @@ process ESTIMATE_ALLELE_FREQUENCY_NAIVE {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b8/b8b5976e182bb3b8f3b3073fe7ccb663bfa240ef8476d59faf2cccf8b180fe6f/data'
-:         'community.wave.seqera.io/library/pgecore_r:b3d363b44f3cab5e' }"
+?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/7b/7b7ca5eb26f1bbaf3fba4ea585e789071aa49902df3182030df649f596ac97b1/data'
+:         'community.wave.seqera.io/library/pgecore:e9024a6dc6e9a694' }"
 
     input:
     path aa_calls
@@ -22,14 +22,16 @@ process ESTIMATE_ALLELE_FREQUENCY_NAIVE {
 
     script:
     """
-    Rscript ${projectDir}/bin/PGEcore/scripts/estimate_allele_frequency_naive/estimate_allele_frequency_naive.R \
-        --aa_calls ${aa_calls} \
-        --method ${method} \
+    export PATH="\$(Rscript -e 'cat(system.file(\"exec\", package = \"PGEcore\"))'):\${PATH}"
+    estimate_allele_frequency_naive \\
+        --aa_calls ${aa_calls} \\
+        --method ${method} \\
         --output "${aa_calls.getBaseName(3)}.aa_slaf.tsv"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         r-base: \$( R --version | sed -n '1s/.*\\([0-9]\\+\\.[0-9]\\+\\.[0-9]\\+\\).*/\\1/p' )
+        r-pgecore: \$( Rscript -e 'cat(as.character(packageVersion("PGEcore")))' )
     END_VERSIONS
     """
 }

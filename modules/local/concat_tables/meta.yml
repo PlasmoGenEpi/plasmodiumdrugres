@@ -62,14 +62,14 @@ maintainers:
   - "@PlasmoGenEpi"
 containers:
   docker:
-    linux/amd64:
-      name: community.wave.seqera.io/library/r_tidyverse:4e1e0dec2f11d009
-      build_id: bd-4e1e0dec2f11d009_1
-      scan_id: sc-06ac88301c562b70_1
     linux/arm64:
-      name: community.wave.seqera.io/library/r_tidyverse:15b9e098f3fff0e2
-      build_id: bd-15b9e098f3fff0e2_1
-      scan_id: sc-9a22b02cec159dd7_1
+      name: community.wave.seqera.io/library/r_tidyverse:eb2b4c90329c339e
+      build_id: bd-eb2b4c90329c339e_1
+      scan_id: sc-ba0f472262d21b0a_1
+    linux/amd64:
+      name: community.wave.seqera.io/library/r_tidyverse:7733a7ba430c76e1
+      build_id: bd-7733a7ba430c76e1_1
+      scan_id: sc-92daba94ecf3c394_1
   singularity:
     linux/amd64:
       name: oras://community.wave.seqera.io/library/r_tidyverse:902ddf85391a9ad0
@@ -81,6 +81,6 @@ containers:
       https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/7f/7f5e0a41f2a79c39b4a63597087fe5b7c189098b13da95622d4be00e11b7b28f/data
   conda:
     linux/amd64:
-      lock_file: modules/local/concat_tables/.conda-lock/linux_amd64-bd-4e1e0dec2f11d009_1.txt
+      lock_file: modules/local/concat_tables/.conda-lock/linux_amd64-bd-7733a7ba430c76e1_1.txt
     linux/arm64:
-      lock_file: modules/local/concat_tables/.conda-lock/linux_arm64-bd-15b9e098f3fff0e2_1.txt
+      lock_file: modules/local/concat_tables/.conda-lock/linux_arm64-bd-eb2b4c90329c339e_1.txt

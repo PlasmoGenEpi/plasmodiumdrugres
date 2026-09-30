@@ -9,7 +9,7 @@ process SPLIT_AA_TABLE_BY_POP {
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
 ?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/25/25ec37d72caff047524cad028f190afbd7e97ff61cba29d8172883993c8a5c75/data'
-:         'community.wave.seqera.io/library/r_tidyverse:4e1e0dec2f11d009' }"
+:         'community.wave.seqera.io/library/r_tidyverse:7733a7ba430c76e1' }"
 
     input:
     path aa_table

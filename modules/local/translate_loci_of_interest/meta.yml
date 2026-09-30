@@ -11,7 +11,7 @@ tools:
         Wrapper around the PGEcore translate_loci_of_interest.R script.
         Aligns alleles to reference codons and produces collapsed amino acid calls.
       homepage: https://github.com/PlasmoGenEpi/PGEcore
-      documentation: https://github.com/PlasmoGenEpi/PGEcore/tree/develop/scripts/translate_loci_of_interest
+      documentation: https://plasmogenepi.github.io/PGEcore/reference/translate_loci_of_interest.html
       licence: ["MIT"]
 input:
   - allele_table:
@@ -62,14 +62,24 @@ maintainers:
 containers:
   docker:
     linux/amd64:
-      name: community.wave.seqera.io/library/translate_loci_of_interest:dd81facbe62d2c91
-      build_id: bd-dd81facbe62d2c91_1
-      scan_id: sc-b73e79a4ae23ef43_1
+      name: community.wave.seqera.io/library/translate_loci_of_interest:b373d6f56b2b4b34
+      build_id: bd-b373d6f56b2b4b34_1
+      scan_id: sc-77d4ac68d6691f8f_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/translate_loci_of_interest:02fe1797e703fd21
+      build_id: bd-02fe1797e703fd21_3
+      scan_id: sc-10b710296c131660_1
   singularity:
     linux/amd64:
-      name: oras://community.wave.seqera.io/library/translate_loci_of_interest:a447d335d5f0f448
-      build_id: bd-a447d335d5f0f448_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/3d/3d094be5e8095ff83cf9b7bf80b33b60f14a0690d9ea93079eb1c4ff6949e422/data
+      name: oras://community.wave.seqera.io/library/translate_loci_of_interest:d7b967c006ca2cf8
+      build_id: bd-d7b967c006ca2cf8_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/aa/aa9ef580720050e47cf35c8e9bf304181d75f083469f481c2c8e188af16e443b/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/translate_loci_of_interest:6b284990e8e52aa4
+      build_id: bd-6b284990e8e52aa4_3
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/fb/fbef6e0429b22c1df79a4e1e3f60c711e6287132124fe54b6ef9f6bca0899b87/data
   conda:
     linux/amd64:
-      lock_file: modules/local/translate_loci_of_interest/.conda-lock/linux_amd64-bd-dd81facbe62d2c91_1.txt
+      lock_file: modules/local/translate_loci_of_interest/.conda-lock/linux_amd64-bd-b373d6f56b2b4b34_1.txt
+    linux/arm64:
+      lock_file: modules/local/translate_loci_of_interest/.conda-lock/linux_arm64-bd-02fe1797e703fd21_3.txt

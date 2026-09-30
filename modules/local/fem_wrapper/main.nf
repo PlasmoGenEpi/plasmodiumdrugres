@@ -10,8 +10,8 @@ process FEM_WRAPPER {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/80/80a01e74c5e39ae20dfe8bfd9d0e1096372cd489febd1efc85f902f9ee880949/data'
-:         'community.wave.seqera.io/library/fem_wrapper:c76f649ce875f71b' }"
+?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/e7/e71d228e76032b27c6fe6a5cabf12b9e8988d15d66f9bbc4d92a53b884801760/data'
+:         'community.wave.seqera.io/library/fem_wrapper:5fbe1aa4f80981ca' }"
 
     input:
     path aa_calls
@@ -23,12 +23,17 @@ process FEM_WRAPPER {
 
     script:
     """
-    Rscript ${projectDir}/bin/PGEcore/scripts/FreqEstimationModel_wrapper/FreqEstimationModel_wrapper.R \\
-        --aa_calls ${aa_calls} --groups ${loci_group_table}  --coi 3 --mlaf_output "${aa_calls.getBaseName(3)}.aa_mlaf.tsv"
+    export PATH="\$(Rscript -e 'cat(system.file(\"exec\", package = \"PGEcore\"))'):\${PATH}"
+    FreqEstimationModel_wrapper \\
+        --aa_calls ${aa_calls} \\
+        --loci_groups ${loci_group_table} \\
+        --coi 3 \\
+        --mlaf_output "${aa_calls.getBaseName(3)}.aa_mlaf.tsv"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         r-base: \$( R --version | sed -n '1s/.*\\([0-9]\\+\\.[0-9]\\+\\.[0-9]\\+\\).*/\\1/p' )
+        r-pgecore: \$( Rscript -e 'cat(as.character(packageVersion("PGEcore")))' )
         freqestimationmodel: \$( Rscript -e 'cat(as.character(packageVersion("FreqEstimationModel")))' 2>/dev/null || echo 'N/A' )
     END_VERSIONS
     """

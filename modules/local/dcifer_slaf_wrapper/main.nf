@@ -9,8 +9,8 @@ process DCIFER_SLAF_WRAPPER {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/05/05f1d70c93e8c8b63e03d0b0e1e29d4fedf8994a66f43a8886539bcbadafe10e/data'
-:         'community.wave.seqera.io/library/dcifer_slaf_wrapper:4d87f0ecbaaf98ef' }"
+?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/9b/9bab54983c4e424479bda4b7b8d6a17b403205bc68e93dc3078485f6b6528d3a/data'
+:         'community.wave.seqera.io/library/dcifer_slaf_wrapper:d418b71ff1cb5828' }"
 
     input:
     path allele_table
@@ -23,14 +23,16 @@ process DCIFER_SLAF_WRAPPER {
     def extra_args = task.ext.args ? task.ext.args : ''
 
     """
-    Rscript ${projectDir}/bin/PGEcore/scripts/dcifer_slaf_wrapper/dcifer_slaf_wrapper.R \
-        --allele_table ${allele_table}  \
-        --slaf_output "${allele_table.getBaseName(3)}.mhaps_slaf.tsv" \
+    export PATH="\$(Rscript -e 'cat(system.file(\"exec\", package = \"PGEcore\"))'):\${PATH}"
+    dcifer_slaf_wrapper \\
+        --allele_table ${allele_table} \\
+        --slaf_output "${allele_table.getBaseName(3)}.mhaps_slaf.tsv" \\
         ${extra_args}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         r-base: \$( R --version | sed -n '1s/.*\\([0-9]\\+\\.[0-9]\\+\\.[0-9]\\+\\).*/\\1/p' )
+        r-pgecore: \$( Rscript -e 'cat(as.character(packageVersion("PGEcore")))' )
         dcifer: \$( Rscript -e 'cat(as.character(packageVersion("dcifer")))' 2>/dev/null || echo 'N/A' )
     END_VERSIONS
     """
