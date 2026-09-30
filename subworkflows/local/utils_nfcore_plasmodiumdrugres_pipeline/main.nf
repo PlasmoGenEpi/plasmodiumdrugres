@@ -185,9 +185,11 @@ workflow PIPELINE_COMPLETION {
     plaintext_email // boolean: Send plain-text email instead of HTML
     outdir          //    path: Path to output directory where results will be published
     monochrome_logs // boolean: Disable ANSI colour codes in log output
+    unassigned_count // channel: number of specimens missing from the population assignment
 
     main:
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+    def unassigned_counts = unassigned_count.toList()
 
     //
     // Completion email and summary
@@ -205,6 +207,13 @@ workflow PIPELINE_COMPLETION {
         }
 
         completionSummary(monochrome_logs)
+
+        // Repeated from the mid-run warning, which the ANSI progress display can overwrite
+        def n_unassigned = unassigned_counts.isBound() ? unassigned_counts.getVal().sum() ?: 0 : 0
+        if (n_unassigned > 0) {
+            log.warn "${n_unassigned} specimen(s) not found in the population assignment were excluded from all outputs. " +
+                "See ${outdir}/unassigned_specimens.txt"
+        }
     }
 
     workflow.onError {
