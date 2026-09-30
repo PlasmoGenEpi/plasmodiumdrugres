@@ -249,6 +249,7 @@ Do not set both `--population_assignment` and `--pmo_population_fields`; use one
 - `--translate_loci_extra_args` - Extra arguments when translating loci of interest. [See PGEcore docs](https://plasmogenepi.github.io/PGEcore/reference/translate_loci_of_interest.html).
 - `--slaf_method` - chosen method to estimate single locus allele frequencies (Default: `naive`; Options: `["IDM","naive","mhaps_freq"]`)
 - `--mlaf_method` - chosen method to estimate multi-locus allele frequencies (Default: `naive`; Options: `["MLBM","FEM","naive"]`)
+- `--fem_coi` - Average complexity of infection (COI) assumed for every specimen when running `--mlaf_method FEM` (Default: `3`). The pipeline does not estimate COI, so FEM applies this single value to all specimens. The default is a generic assumption rather than an estimate from your data; set it to the expected mean COI for your study population.
 - `--naive_slaf_method` - Chosen naive method when running `--slaf_method naive`. (Default: `read_count_prop`; Options: `["read_count_prop", "presence_absence"]`)
 
 ## Running the pipeline
