@@ -75,7 +75,7 @@ workflow PIPELINE_INITIALISATION {
         before_text = before_text.replaceAll(/\033\[[0-9;]*m/, '')
     }
 
-    command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --pmo input.pmo.json --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --outdir <OUTDIR>"
+    command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --pmo input.json --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --outdir <OUTDIR>"
 
     UTILS_NFSCHEMA_PLUGIN (
         workflow,
@@ -133,7 +133,7 @@ workflow PIPELINE_INITIALISATION {
     raw_population_assignment_ch = null
     if (params.pmo) {
         def pmo_ch = channel.fromPath(params.pmo, checkIfExists: true)
-        EXTRACT_ALLELE_TABLE(pmo_ch)
+        EXTRACT_ALLELE_TABLE(pmo_ch, params.pmo_replicate_libraries)
         allele_table_ch = EXTRACT_ALLELE_TABLE.out.allele_table
         ch_versions = ch_versions.mix(EXTRACT_ALLELE_TABLE.out.versions)
         EXTRACT_BED_FILE_FROM_PMO(pmo_ch, ref_type, fasta)

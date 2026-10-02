@@ -14,6 +14,7 @@ process EXTRACT_ALLELE_TABLE {
 
     input:
     path pmo
+    val replicate_libraries
 
     output:
     path "allele_table.tsv", emit: allele_table
@@ -24,8 +25,14 @@ process EXTRACT_ALLELE_TABLE {
     pmotools-python extract_allele_table \
         --file ${pmo} \
         --microhap_fields "reads" \
-        --default_base_col_names specimen_name,target_name,seq \
-        --output allele_table
+        --default_base_col_names library_sample_name,target_name,seq \
+        --specimen_info_meta_fields specimen_name \
+        --output pmo_allele_table.tsv
+
+    python3 ${projectDir}/bin/pmo_allele_table_to_specimens.py \
+        --input pmo_allele_table.tsv \
+        --method ${replicate_libraries} \
+        --output allele_table.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

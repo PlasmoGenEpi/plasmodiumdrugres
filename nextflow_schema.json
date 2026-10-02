@@ -16,10 +16,9 @@
                     "type": "string",
                     "format": "file-path",
                     "exists": true,
-                    "mimetype": "json",
-                    "pattern": "^\\S+\\.json$",
+                    "pattern": "^\\S+\\.json(\\.gz)?$",
                     "description": "Path to json file containing metadata and microhaplotypes according to pmo format.",
-                    "help_text": "This parameter is *mandatory* if `--allele_table` is not specified. You will need to create a PMO file before running the pipeline. Use this parameter to specify its location. It has to be json formatted and include metadata and microhaplotypes. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#pmo-input).",
+                    "help_text": "This parameter is *mandatory* if `--allele_table` is not specified. You will need to create a PMO file before running the pipeline. Use this parameter to specify its location. It has to be json formatted (`.json`, or gzip-compressed `.json.gz`) and include metadata and microhaplotypes. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#pmo-input).",
                     "fa_icon": "fas fa-file"
                 },
                 "allele_table": {
@@ -96,6 +95,14 @@
                     "default": "_",
                     "fa_icon": "fas fa-link"
                 },
+                "pmo_replicate_libraries": {
+                    "type": "string",
+                    "description": "How to handle specimens with more than one library sample in the PMO.",
+                    "help_text": "Used only when providing `--pmo`. The allele table is built per specimen. `combine` keeps every library sample of a specimen and sums reads of identical microhaplotypes. `max_reads` keeps only the library sample with the highest total read count for each specimen.",
+                    "enum": ["combine", "max_reads"],
+                    "default": "combine",
+                    "fa_icon": "fas fa-clone"
+                },
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
@@ -159,6 +166,13 @@
                     "default": "naive",
                     "enum": ["IDM", "naive", "mhaps_freq"],
                     "fa_icon": "fas fa-users-cog"
+                },
+                "collapse_calls_by_summing": {
+                    "type": "boolean",
+                    "description": "Sum amino acid calls across all targets covering a locus instead of using only the target with the highest read count.",
+                    "help_text": "When a locus of interest is covered by more than one target, calls from every covering target are combined by summing reads. Set `--collapse_calls_by_summing false` to keep only the calls from the target with the most reads for each specimen and locus.",
+                    "default": true,
+                    "fa_icon": "fas fa-layer-group"
                 },
                 "translate_loci_extra_args": {
                     "type": "string",
