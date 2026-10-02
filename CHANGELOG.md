@@ -13,6 +13,7 @@ Initial release of nf-core/plasmodiumdrugres, created with the [nf-core](https:/
 - Collect local module software versions into `pipeline_info/nf_core_plasmodiumdrugres_software_versions.yml`
 - Standardize `sl_summary.tsv` / `ml_summary.tsv` column schemas and archive full tool-specific concatenated tables under `raw_summaries/`
 - Multi-arch (`linux/amd64` and `linux/arm64`) Docker and Singularity containers and conda lock files for all local modules, built with `nf-core modules container create`
+- `--fem_coi` parameter for the average complexity of infection FEM assumes for every specimen (default `3`, previously hard-coded in `FEM_WRAPPER`)
 
 ### `Fixed`
 

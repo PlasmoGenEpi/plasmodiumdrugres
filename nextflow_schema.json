@@ -186,6 +186,14 @@
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
+                "fem_coi": {
+                    "type": "number",
+                    "description": "Average complexity of infection (COI) assumed for every specimen when --mlaf_method is FEM.",
+                    "help_text": "FreqEstimationModel needs a COI for each specimen. The pipeline does not estimate COI, so this single value is applied to all specimens. Set it to the expected mean COI for your study population; the default of 3 is a generic assumption, not an estimate from your data.",
+                    "default": 3,
+                    "minimum": 1,
+                    "fa_icon": "fas fa-users-cog"
+                },
                 "naive_mlaf_method": {
                     "type": "string",
                     "description": "Naive MLAF method when --mlaf_method is naive.",
