@@ -61,6 +61,8 @@ workflow PLASMODIUMDRUGRES {
         // Specimens missing from the population assignment are excluded from every population-level output
         ch_unassigned_count = SPLIT_AA_TABLE_BY_POP.out.unassigned_report
             .map { report -> report.readLines().findAll { line -> line.trim() }.size() }
+        // Warn as soon as the split finishes; the ANSI progress display can overwrite this line, so
+        // PIPELINE_COMPLETION repeats it after the run summary where it stays visible
         ch_unassigned_count.subscribe { n_unassigned ->
             log.warn "${n_unassigned} specimen(s) not found in the population assignment were excluded from all outputs. " +
                 "See ${params.outdir}/unassigned_specimens.txt"
