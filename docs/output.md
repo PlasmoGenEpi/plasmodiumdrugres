@@ -98,6 +98,15 @@ Tool-specific columns are removed during standardization. See [Raw summary table
 
 </details>
 
+### Unassigned specimens
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `unassigned_specimens.txt`: Specimens with amino acid calls that are missing from the population assignment (`--population_assignment` or `--pmo_population_fields`), one per line. These specimens are excluded from all population-level outputs. Only written when at least one specimen is unassigned, in which case the pipeline also logs a warning with the number of excluded specimens.
+
+</details>
+
 ### Raw summary tables
 
 <details markdown="1">

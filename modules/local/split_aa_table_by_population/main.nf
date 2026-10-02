@@ -17,7 +17,7 @@ process SPLIT_AA_TABLE_BY_POP {
 
     output:
     path "*.collapsed_amino_acid_calls.tsv.gz", emit: per_pop_tables
-    path "unmapped_specimens.txt", optional: true, emit: unmapped_report
+    path "unassigned_specimens.txt", optional: true, emit: unassigned_report
     path "versions.yml", emit: versions
 
     script:

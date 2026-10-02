@@ -20,6 +20,7 @@ Initial release of nf-core/plasmodiumdrugres, created with the [nf-core](https:/
 - Align README Nextflow / template badges with manifest and `.nf-core.yml`
 - Point contributing guidelines at `docs/CONTRIBUTING.md`
 - `docker` profile no longer forces `linux/amd64` emulation, so Apple Silicon uses native arm64 images (use `-profile docker,emulate_amd64` to opt back in)
+- Specimens missing from the population assignment are no longer dropped silently: they are listed in `unassigned_specimens.txt` in the output directory and the run logs a warning with their count. The report name is now spelt consistently in `split_table_by_population_map.R` and both split modules
 
 ### `Dependencies`
 

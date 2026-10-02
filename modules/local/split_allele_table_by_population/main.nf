@@ -18,7 +18,7 @@ process SPLIT_ALLELE_TABLE_BY_POP {
 
     output:
     path "*.allele_table.tsv.gz", emit: per_pop_tables
-    path "unmapped_identifers.txt", optional: true, emit: unmapped_report
+    path "unassigned_specimens.txt", optional: true, emit: unassigned_report
     path "versions.yml", emit: versions
 
     script:
