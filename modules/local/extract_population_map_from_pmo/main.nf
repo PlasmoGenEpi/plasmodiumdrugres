@@ -4,7 +4,6 @@
  */
 
 process EXTRACT_POPULATION_MAP_FROM_PMO {
-
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -18,8 +17,8 @@ process EXTRACT_POPULATION_MAP_FROM_PMO {
     val separator
 
     output:
-    path "population_map.tsv", emit: population_map
-    path "versions.yml", emit: versions
+    path "population_map.tsv" , emit: population_map
+    path "versions.yml"       , emit: versions
 
     script:
     """

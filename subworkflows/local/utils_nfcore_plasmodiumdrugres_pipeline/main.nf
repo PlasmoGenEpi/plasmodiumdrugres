@@ -75,7 +75,7 @@ workflow PIPELINE_INITIALISATION {
         before_text = before_text.replaceAll(/\033\[[0-9;]*m/, '')
     }
 
-    command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --pmo input.pmo.json --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --outdir <OUTDIR>"
+    command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --pmo input.json --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --outdir <OUTDIR>"
 
     UTILS_NFSCHEMA_PLUGIN (
         workflow,
@@ -105,7 +105,6 @@ workflow PIPELINE_INITIALISATION {
     //
     // Create allele table input for pipeline
     //
-    // TODO: add option to split pmo and then run it in chunks
     def ref_type = params.targeted_reference ? "targeted_reference" :
         params.genome_reference ? "genome_reference" : "none"
     def fasta = params.targeted_reference ?: params.genome_reference ?: ""
@@ -133,7 +132,7 @@ workflow PIPELINE_INITIALISATION {
     raw_population_assignment_ch = null
     if (params.pmo) {
         def pmo_ch = channel.fromPath(params.pmo, checkIfExists: true)
-        EXTRACT_ALLELE_TABLE(pmo_ch)
+        EXTRACT_ALLELE_TABLE(pmo_ch, params.pmo_replicate_libraries)
         allele_table_ch = EXTRACT_ALLELE_TABLE.out.allele_table
         ch_versions = ch_versions.mix(EXTRACT_ALLELE_TABLE.out.versions)
         EXTRACT_BED_FILE_FROM_PMO(pmo_ch, ref_type, fasta)
@@ -185,9 +184,11 @@ workflow PIPELINE_COMPLETION {
     plaintext_email // boolean: Send plain-text email instead of HTML
     outdir          //    path: Path to output directory where results will be published
     monochrome_logs // boolean: Disable ANSI colour codes in log output
+    unassigned_count // channel: number of specimens missing from the population assignment
 
     main:
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+    def unassigned_counts = unassigned_count.toList()
 
     //
     // Completion email and summary
@@ -205,6 +206,13 @@ workflow PIPELINE_COMPLETION {
         }
 
         completionSummary(monochrome_logs)
+
+        // Repeated from the mid-run warning, which the ANSI progress display can overwrite
+        def n_unassigned = unassigned_counts.isBound() ? unassigned_counts.getVal().sum() ?: 0 : 0
+        if (n_unassigned > 0) {
+            log.warn "${n_unassigned} specimen(s) not found in the population assignment were excluded from all outputs. " +
+                "See ${outdir}/unassigned_specimens.txt"
+        }
     }
 
     workflow.onError {

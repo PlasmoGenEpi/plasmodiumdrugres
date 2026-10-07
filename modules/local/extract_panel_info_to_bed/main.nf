@@ -4,7 +4,6 @@
  */
 
 process EXTRACT_PANEL_INFO_TO_BED {
-
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -17,8 +16,8 @@ process EXTRACT_PANEL_INFO_TO_BED {
     val add_ref_seqs
 
     output:
-    path "panel_info.bed", emit: panel_info_bed
-    path "versions.yml", emit: versions
+    path "panel_info.bed" , emit: panel_info_bed
+    path "versions.yml"   , emit: versions
 
     script:
     def parameter_string = add_ref_seqs == "TRUE"

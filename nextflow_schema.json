@@ -16,10 +16,9 @@
                     "type": "string",
                     "format": "file-path",
                     "exists": true,
-                    "mimetype": "json",
-                    "pattern": "^\\S+\\.json$",
+                    "pattern": "^\\S+\\.json(\\.gz)?$",
                     "description": "Path to json file containing metadata and microhaplotypes according to pmo format.",
-                    "help_text": "This parameter is *mandatory* if `--allele_table` is not specified. You will need to create a PMO file before running the pipeline. Use this parameter to specify its location. It has to be json formatted and include metadata and microhaplotypes. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#pmo-input).",
+                    "help_text": "This parameter is *mandatory* if `--allele_table` is not specified. You will need to create a PMO file before running the pipeline. Use this parameter to specify its location. It has to be json formatted (`.json`, or gzip-compressed `.json.gz`) and include metadata and microhaplotypes. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#pmo-input).",
                     "fa_icon": "fas fa-file"
                 },
                 "allele_table": {
@@ -69,7 +68,7 @@
                     "mimetype": "bed",
                     "pattern": "^\\S+\\.bed$",
                     "description": "Path to BED file containing panel location information.",
-                    "help_text": "This file is used to define coordinates for the targets in the panel. Use this parameter to specify its location. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#panel-info-bed).",
+                    "help_text": "Required with `--allele_table`. Defines the coordinates and reference sequence (`ref_seq` column) of each target in the panel. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#panel-info).",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "population_assignment": {
@@ -95,6 +94,14 @@
                     "description": "String used to join the selected `pmo_population_fields` when building the population label.",
                     "default": "_",
                     "fa_icon": "fas fa-link"
+                },
+                "pmo_replicate_libraries": {
+                    "type": "string",
+                    "description": "How to handle specimens with more than one library sample in the PMO.",
+                    "help_text": "Used only when providing `--pmo`. The allele table is built per specimen. `combine` keeps every library sample of a specimen and sums reads of identical microhaplotypes. `max_reads` keeps only the library sample with the highest total read count for each specimen.",
+                    "enum": ["combine", "max_reads"],
+                    "default": "combine",
+                    "fa_icon": "fas fa-clone"
                 },
                 "outdir": {
                     "type": "string",
@@ -125,7 +132,7 @@
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "description": "Path to FASTA file containing the full genome.",
-                    "help_text": "This parameter is *mandatory* if `--targeted_reference` is not specified and `--allele_table` is specified. This is used to extract the reference for the targets.",
+                    "help_text": "Only used with `--pmo`, when the PMO does not include reference sequences for the targets. The target reference sequences are extracted from this genome. Ignored with `--allele_table`, where the reference must be in the `ref_seq` column of `--panel_info_bed`.",
                     "fa_icon": "far fa-file-code"
                 },
                 "targeted_reference": {
@@ -135,7 +142,7 @@
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "description": "Path to FASTA file containing the reference for only the targets.",
-                    "help_text": "This parameter is *mandatory* if `--genome_reference` is not specified and `--allele_table` is specified.",
+                    "help_text": "Only used with `--pmo`, when the PMO does not include reference sequences for the targets. Sequence names must match the PMO target names. Takes precedence over `--genome_reference` if both are set. Ignored with `--allele_table`, where the reference must be in the `ref_seq` column of `--panel_info_bed`.",
                     "fa_icon": "far fa-file-code"
                 }
             }
@@ -159,6 +166,13 @@
                     "default": "naive",
                     "enum": ["IDM", "naive", "mhaps_freq"],
                     "fa_icon": "fas fa-users-cog"
+                },
+                "collapse_calls_by_summing": {
+                    "type": "boolean",
+                    "description": "Sum amino acid calls across all targets covering a locus instead of using only the target with the highest read count.",
+                    "help_text": "When a locus of interest is covered by more than one target, calls from every covering target are combined by summing reads. Set `--collapse_calls_by_summing false` to keep only the calls from the target with the most reads for each specimen and locus.",
+                    "default": true,
+                    "fa_icon": "fas fa-layer-group"
                 },
                 "translate_loci_extra_args": {
                     "type": "string",
@@ -184,6 +198,14 @@
                     "type": ["integer", "null"],
                     "description": "when running MLBM, a cut off value for filtering amino acid calls.",
                     "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "fem_coi": {
+                    "type": "number",
+                    "description": "Average complexity of infection (COI) assumed for every specimen when --mlaf_method is FEM.",
+                    "help_text": "FreqEstimationModel needs a COI for each specimen. The pipeline does not estimate COI, so this single value is applied to all specimens. Set it to the expected mean COI for your study population; the default of 3 is a generic assumption, not an estimate from your data.",
+                    "default": 3,
+                    "minimum": 1,
                     "fa_icon": "fas fa-users-cog"
                 },
                 "naive_mlaf_method": {

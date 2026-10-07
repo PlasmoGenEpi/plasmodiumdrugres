@@ -3,9 +3,7 @@
  * Run the FreqEstimationModel (FEM) wrapper script
  */
 
-// TODO: handle coi
 process FEM_WRAPPER {
-
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -18,17 +16,19 @@ process FEM_WRAPPER {
     path loci_group_table
 
     output:
-    tuple val("${aa_calls.getBaseName(3)}"), path("${aa_calls.getBaseName(3)}.aa_mlaf.tsv"), emit: mlaf
-    path "versions.yml", emit: versions
+    tuple val("${aa_calls.getBaseName(3)}"), path("${aa_calls.getBaseName(3)}.aa_mlaf.tsv") , emit: mlaf
+    path "versions.yml"                                                                     , emit: versions
 
     script:
+    def extra_args = task.ext.args ? task.ext.args : ''
+
     """
     export PATH="\$(Rscript -e 'cat(system.file(\"exec\", package = \"PGEcore\"))'):\${PATH}"
     FreqEstimationModel_wrapper \\
         --aa_calls ${aa_calls} \\
         --loci_groups ${loci_group_table} \\
-        --coi 3 \\
-        --mlaf_output "${aa_calls.getBaseName(3)}.aa_mlaf.tsv"
+        --mlaf_output "${aa_calls.getBaseName(3)}.aa_mlaf.tsv" \\
+        ${extra_args}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

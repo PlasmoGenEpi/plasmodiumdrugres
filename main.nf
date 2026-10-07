@@ -47,7 +47,7 @@ workflow {
         PIPELINE_INITIALISATION.out.allele_table_ch,
         PIPELINE_INITIALISATION.out.panel_info_bed_ch,
         params.loci_of_interest_bed,
-        params.translate_loci_extra_args,
+        [params.collapse_calls_by_summing ? '--collapse_calls_by_summing' : '', params.translate_loci_extra_args ?: ''].join(' ').trim(),
         PIPELINE_INITIALISATION.out.population_assignment_ch,
         PIPELINE_INITIALISATION.out.population_index_lookup_ch,
         params.mlaf_method,
@@ -64,6 +64,7 @@ workflow {
         params.plaintext_email,
         params.outdir,
         params.monochrome_logs,
+        NFCORE_PLASMODIUMDRUGRES.out.unassigned_count,
     )
 }
 
@@ -107,4 +108,6 @@ workflow NFCORE_PLASMODIUMDRUGRES {
         ch_versions
     )
 
+    emit:
+    unassigned_count = PLASMODIUMDRUGRES.out.unassigned_count
 }
