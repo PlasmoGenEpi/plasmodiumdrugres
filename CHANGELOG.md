@@ -9,7 +9,7 @@ Initial release of nf-core/plasmodiumdrugres, created with the [nf-core](https:/
 
 nf-core/plasmodiumdrugres estimates the prevalence and frequency of drug resistance markers from targeted amplicon sequencing (microhaplotype) data. It was developed for _Plasmodium falciparum_, but can be applied to any polyclonal organism with microhaplotype data, a matching reference and a BED file of loci of interest.
 
-Thanks to everyone who contributed to this release: @kathrynmurie, @nickjhathaway, @a-hubbard.
+Thanks to everyone who contributed to this release: @kathrynmurie, @nickjhathaway, @a-hubbard, @jorgeamaya.
 
 ### `Added`
 
