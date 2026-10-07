@@ -4,7 +4,6 @@
  */
 
 process EXTRACT_ALLELE_TABLE {
-
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -17,8 +16,8 @@ process EXTRACT_ALLELE_TABLE {
     val replicate_libraries
 
     output:
-    path "allele_table.tsv", emit: allele_table
-    path "versions.yml", emit: versions
+    path "allele_table.tsv" , emit: allele_table
+    path "versions.yml"     , emit: versions
 
     script:
     """

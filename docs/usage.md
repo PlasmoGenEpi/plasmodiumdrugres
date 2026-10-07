@@ -6,33 +6,22 @@
 
 ## Introduction
 
-**nf-core/plasmodiumdrugres** is a bioinformatics pipeline for analyzing drug resistance markers from microhaplotype data. It translates variants into amino acid changes at drug resistance loci and estimates allele frequencies and prevalences at both single-locus and multi-locus levels. Microhaplotype data can be supplied in the form of an allele table or a [PMO](https://plasmogenepi.github.io/PMO_Docs/) file.
+This page explains how to prepare the inputs and run the pipeline. For an overview of what the pipeline does, see the [introduction](https://nf-co.re/plasmodiumdrugres). For what it produces, see the [output documentation](https://nf-co.re/plasmodiumdrugres/output). Every parameter is listed in the [parameter documentation](https://nf-co.re/plasmodiumdrugres/parameters).
 
-> [!NOTE]
-> Software is provided **per process** via Docker/Singularity/Apptainer containers (or Conda as a last resort). There is no monolithic pipeline image to pull — choose a `-profile` such as `docker` or `singularity` and Nextflow fetches containers automatically. For environment setup, see the [nf-core getting started guide](https://nf-co.re/docs/get_started/environment_setup/overview).
+## Inputs overview
 
-## Entry points
+Required:
 
-There are two supported entry points into the pipeline:
+- Microhaplotype calls, in one of two forms (provide exactly one):
+  - a [PMO file](#pmo-inputs), or
+  - an [allele table](#allele-table-inputs) together with a [panel info BED file](#panel-info) that includes the reference sequence of each target
+- A [loci of interest BED file](#loci-of-interest-input)
 
-1. **PMO input**
-   - Required: `--pmo`, `--loci_of_interest_bed`
-   - Optional:
-     - `--loci_groups` to enable multi-locus allele frequency estimation
-     - `--pmo_population_fields` (+ optional `--pmo_population_separator`) to derive population assignment from PMO specimen metadata
-     - `--population_assignment` to supply a population assignment table manually (use this instead of `--pmo_population_fields` if you prefer to define populations yourself)
-     - `--population_label` for single-population runs (default: `pop1`)
-     - `--genome_reference` or `--targeted_reference` if PMO does not include usable reference sequence information
-     - `--pmo_replicate_libraries` to choose how specimens with several library samples are handled (default: `combine`)
+Optional:
 
-2. **Allele table input**
-   - Required: `--allele_table`, `--panel_info_bed`, `--loci_of_interest_bed`
-   - Optional:
-     - `--loci_groups` to enable multi-locus allele frequency estimation
-     - `--population_assignment` for multi-population analysis
-     - `--population_label` for single-population runs (default: `pop1`)
-
-The pipeline enforces that exactly one of `--pmo` or `--allele_table` is provided.
+- A [loci groups file](#loci-groups), to estimate multi-locus allele frequencies
+- [Population grouping](#population-grouping-optional), to estimate prevalence and frequency separately for each population
+- For PMO input, a [reference](#pmo-inputs) if the PMO has no reference sequences, and a choice of [how replicate libraries are handled](#pmo-inputs)
 
 > **Terminology note: “population”**
 >
@@ -181,6 +170,8 @@ specimen_3  target1 AATAAAGAAGAAGATAAATATGGAAAAAATGAAAAAAACGAAAAATATGACAAATATGAC
 
 Next, prepare a panel info bed file. This will define the locations of the targets in the `target_name` column in the allele table. It has to be a tab-separated file with 7 columns.
 
+The panel info bed file must include the reference sequence of each target in the `ref_seq` column. `--genome_reference` and `--targeted_reference` only apply to PMO input and are ignored when running from an allele table.
+
 ```bash
 --panel_info_bed '[path to panel info file]'
 ```
@@ -203,7 +194,7 @@ Pf3D7_01_v3     162889  163091  target2   202     +       ATATACCAATAATACTTTTTTT
 | `target_name` | Identifier for the genomic region being sequenced.                                                                                            |
 | `length`      | Length in base pairs.                                                                                                                         |
 | `strand`      | Strand orientation (+ or -) relative to the reference genome.                                                                                 |
-| `ref_seq`     | reference sequence for the target (optional if genome_reference or targeted reference supplied)                                               |
+| `ref_seq`     | Reference sequence for the target. Required.                                                                                                  |
 
 ### Population grouping (optional)
 

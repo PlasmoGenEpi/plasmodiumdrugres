@@ -8,21 +8,15 @@ Column definitions in this page reflect current pipeline behavior for each estim
 
 ## Pipeline overview
 
-The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
+The pipeline steps and estimation methods are described in the [introduction](https://nf-co.re/plasmodiumdrugres). The outputs are:
 
-1. Translate loci of interest ([`PGEcore`](https://github.com/PlasmoGenEpi/PGEcore))
-2. Split by population
-3. Estimate allele prevalence ([`PGEcore`](https://github.com/PlasmoGenEpi/PGEcore))
-4. Estimate multilocus allele frequency (only when `--loci_groups` is provided). Choice of method between:
-   1. [MultiLociBiallelicModel](https://www.frontiersin.org/articles/10.3389/fepid.2022.943625/full) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
-   2. [FreqEstimationModel](https://doi.org/10.1186/1475-2875-13-102) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
-   3. Naive method ([`PGEcore`](https://github.com/PlasmoGenEpi/PGEcore))
-5. Estimate single locus allele frequency. Choice of method between:
-   1. [Incomplete data model (IDM)](https://doi.org/10.1371/journal.pone.0287161) ([`PGEcore` wrapper script](https://github.com/PlasmoGenEpi/PGEcore))
-   2. [Naive `PGEcore` method](https://github.com/PlasmoGenEpi/PGEcore)
-   3. [mhaps_freq (from microhaplotype frequencies via DCIFER)](https://github.com/PlasmoGenEpi/PGEcore)
-6. Merge prevalence and frequency outputs
-7. Concatenate population outputs into standardized summary tables, while preserving raw tool-specific outputs in `raw_summaries/`
+- [Single Locus Allele Frequencies](#single-locus-allele-frequencies): prevalence and frequency of each amino acid at each locus of interest
+- [Multi Locus Allele Frequencies](#multi-locus-allele-frequencies): prevalence and frequency of haplotypes across groups of loci
+- [SL-from-ML Summary](#sl-from-ml-summary): single-locus frequencies derived from the multi-locus estimates
+- [Translated Loci](#translated-loci): amino acid calls for each specimen at each locus of interest
+- [Unassigned specimens](#unassigned-specimens): specimens left out because they have no population
+- [Raw summary tables](#raw-summary-tables): the full tool-specific tables behind the summaries
+- [Pipeline information](#pipeline-information): reports and software versions from the run
 
 ### Single Locus Allele Frequencies
 

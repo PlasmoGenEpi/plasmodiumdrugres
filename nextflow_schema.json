@@ -68,7 +68,7 @@
                     "mimetype": "bed",
                     "pattern": "^\\S+\\.bed$",
                     "description": "Path to BED file containing panel location information.",
-                    "help_text": "This file is used to define coordinates for the targets in the panel. Use this parameter to specify its location. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#panel-info-bed).",
+                    "help_text": "Required with `--allele_table`. Defines the coordinates and reference sequence (`ref_seq` column) of each target in the panel. See [usage docs](https://nf-co.re/plasmodiumdrugres/usage#panel-info).",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "population_assignment": {
@@ -132,7 +132,7 @@
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "description": "Path to FASTA file containing the full genome.",
-                    "help_text": "This parameter is *mandatory* if `--targeted_reference` is not specified and `--allele_table` is specified. This is used to extract the reference for the targets.",
+                    "help_text": "Only used with `--pmo`, when the PMO does not include reference sequences for the targets. The target reference sequences are extracted from this genome. Ignored with `--allele_table`, where the reference must be in the `ref_seq` column of `--panel_info_bed`.",
                     "fa_icon": "far fa-file-code"
                 },
                 "targeted_reference": {
@@ -142,7 +142,7 @@
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "description": "Path to FASTA file containing the reference for only the targets.",
-                    "help_text": "This parameter is *mandatory* if `--genome_reference` is not specified and `--allele_table` is specified.",
+                    "help_text": "Only used with `--pmo`, when the PMO does not include reference sequences for the targets. Sequence names must match the PMO target names. Takes precedence over `--genome_reference` if both are set. Ignored with `--allele_table`, where the reference must be in the `ref_seq` column of `--panel_info_bed`.",
                     "fa_icon": "far fa-file-code"
                 }
             }

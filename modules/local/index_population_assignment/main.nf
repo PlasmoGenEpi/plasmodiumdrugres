@@ -4,7 +4,6 @@
  */
 
 process INDEX_POPULATION_ASSIGNMENT {
-
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -16,9 +15,9 @@ process INDEX_POPULATION_ASSIGNMENT {
     path population_map
 
     output:
-    path "population_map_indexed.tsv", emit: population_map_indexed
-    path "population_index_lookup.tsv", emit: population_index_lookup
-    path "versions.yml", emit: versions
+    path "population_map_indexed.tsv"  , emit: population_map_indexed
+    path "population_index_lookup.tsv" , emit: population_index_lookup
+    path "versions.yml"                , emit: versions
 
     script:
     """

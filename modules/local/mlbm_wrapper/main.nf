@@ -4,7 +4,6 @@
  */
 
 process MLBM_WRAPPER {
-
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -17,8 +16,8 @@ process MLBM_WRAPPER {
     path loci_group_table
 
     output:
-    tuple val("${aa_calls.getBaseName(3)}"), path("${aa_calls.getBaseName(3)}.aa_mlaf.tsv"), emit: mlaf
-    path "versions.yml", emit: versions
+    tuple val("${aa_calls.getBaseName(3)}"), path("${aa_calls.getBaseName(3)}.aa_mlaf.tsv") , emit: mlaf
+    path "versions.yml"                                                                     , emit: versions
 
     script:
     def extra_args = task.ext.args ? task.ext.args : ''
