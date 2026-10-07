@@ -18,11 +18,11 @@ process TRANSLATE_LOCI_OF_INTEREST {
     val extra_args
 
     output:
-    path ("translated_loci/collapsed_amino_acid_calls.tsv.gz"), emit: collapsed_amino_acid_calls
-    path ("translated_loci/amino_acid_calls.tsv.gz"), emit: amino_acid_calls
-    path ("translated_loci/loci_covered_by_target_samples_info.tsv"), emit: loci_covered_by_target_samples_info
-    path ("translated_loci/loci_of_interest_for_target_for_microhap.tsv.gz"), emit: loci_of_interest_for_target_for_microhap
-    path "versions.yml", emit: versions
+    path ("translated_loci/collapsed_amino_acid_calls.tsv.gz")               , emit: collapsed_amino_acid_calls
+    path ("translated_loci/amino_acid_calls.tsv.gz")                         , emit: amino_acid_calls
+    path ("translated_loci/loci_covered_by_target_samples_info.tsv")         , emit: loci_covered_by_target_samples_info
+    path ("translated_loci/loci_of_interest_for_target_for_microhap.tsv.gz") , emit: loci_of_interest_for_target_for_microhap
+    path "versions.yml"                                                      , emit: versions
 
     script:
     """

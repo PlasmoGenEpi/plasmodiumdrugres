@@ -4,7 +4,6 @@
  */
 
 process SLAF_FROM_MHAPS_FREQS {
-
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
@@ -17,8 +16,8 @@ process SLAF_FROM_MHAPS_FREQS {
     path loci_of_interest_per_microhaps_fnp
 
     output:
-    tuple val("${group_name}"), path("${group_name}.slaf.tsv"), emit: slaf
-    path "versions.yml", emit: versions
+    tuple val("${group_name}"), path("${group_name}.slaf.tsv") , emit: slaf
+    path "versions.yml"                                        , emit: versions
 
     script:
 

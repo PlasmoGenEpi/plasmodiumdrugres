@@ -105,7 +105,6 @@ workflow PIPELINE_INITIALISATION {
     //
     // Create allele table input for pipeline
     //
-    // TODO: add option to split pmo and then run it in chunks
     def ref_type = params.targeted_reference ? "targeted_reference" :
         params.genome_reference ? "genome_reference" : "none"
     def fasta = params.targeted_reference ?: params.genome_reference ?: ""
