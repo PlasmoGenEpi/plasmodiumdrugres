@@ -108,7 +108,13 @@ In a polyclonal infection it is usually not possible to tell which amino acids c
 | `sample_total` | Total number of samples considered (included when available).                                      |
 | `freq`         | Estimated multi-locus haplotype frequency.                                                         |
 
-Not all methods report `prev`, `sample_count` and `sample_total`. When present, they are included in the order shown above; otherwise the table contains only `population`, `group_id`, `variant` and `freq`.
+Not all methods report `prev`, `sample_count` and `sample_total`. Those that are reported are included in the order shown above:
+
+| MLAF method | Columns in `ml_summary.tsv`                                                         |
+| ----------- | ----------------------------------------------------------------------------------- |
+| `naive`     | `population`, `group_id`, `variant`, `prev`, `sample_count`, `sample_total`, `freq` |
+| `MLBM`      | `population`, `group_id`, `variant`, `freq`                                         |
+| `FEM`       | `population`, `group_id`, `variant`, `prev`, `sample_total`, `freq`                 |
 
 Method-specific columns are left out of this table and kept in [`raw_summaries/raw_ml_summary.tsv`](#raw-summary-tables).
 
@@ -149,33 +155,39 @@ To keep `sl_summary.tsv` and `ml_summary.tsv` the same whichever method is used,
 
 </details>
 
-### Single-locus method-specific columns
+Columns appear in the order each method writes them, so the order can differ from the standardised summaries.
 
-Extra columns in `raw_summaries/raw_sl_summary.tsv`:
+### `raw_sl_summary.tsv` columns by SLAF method
 
-| SLAF method               | Extra columns                                                                                |
-| ------------------------- | -------------------------------------------------------------------------------------------- |
-| `IDM`                     | None.                                                                                        |
-| `naive`                   | `allele_count`, `allele_total` (from prevalence estimation).                                 |
-| `mhaps_freq` (via Dcifer) | `sample_total_for_allele_freq` (sample total associated with the frequency estimate output). |
+| SLAF method  | Columns in `raw_sl_summary.tsv`                                                                         |
+| ------------ | ------------------------------------------------------------------------------------------------------- |
+| `naive`      | `population`, `variant`, `prev`, `sample_count`, `sample_total`, `freq`                                 |
+| `IDM`        | `population`, `variant`, `prev`, `sample_count`, `sample_total`, `freq`                                 |
+| `mhaps_freq` | `population`, `variant`, `prev`, `sample_count`, `sample_total`, `freq`, `sample_total_for_allele_freq` |
 
-### Multi-locus method-specific columns
+Only `mhaps_freq` adds a column: `sample_total_for_allele_freq`, the number of specimens Dcifer used to estimate the frequency. `prev`, `sample_count` and `sample_total` always come from the naive prevalence estimate, whichever SLAF method is used.
 
-Extra columns in `raw_summaries/raw_ml_summary.tsv`:
+### `raw_ml_summary.tsv` columns by MLAF method
 
-| MLAF method | Extra columns                                  |
-| ----------- | ---------------------------------------------- |
-| `MLBM`      | None.                                          |
-| `FEM`       | `sequence`, `median_freq`, `CI_2.5`, `CI_97.5` |
-| `naive`     | `allele_count`, `allele_total`                 |
+| MLAF method | Columns in `raw_ml_summary.tsv`                                                                                     |
+| ----------- | ------------------------------------------------------------------------------------------------------------------- |
+| `naive`     | `population`, `variant`, `sample_total`, `sample_count`, `prev`, `freq`, `group_id`                                 |
+| `MLBM`      | `population`, `group_id`, `variant`, `freq`                                                                         |
+| `FEM`       | `population`, `sequence`, `freq`, `median_freq`, `CI_2.5`, `CI_97.5`, `prev`, `variant`, `sample_total`, `group_id` |
+
+Only `FEM` adds columns:
+
+- `sequence`: FEM's internal code for the haplotype, one digit per locus in the group.
+- `median_freq`: posterior median of the haplotype frequency (`freq` is the posterior mean).
+- `CI_2.5`, `CI_97.5`: lower and upper bounds of the 95% credible interval for the frequency.
 
 ### `raw_sl_from_ml_summary.tsv` columns by MLAF method
 
-| MLAF method | Columns in `raw_sl_from_ml_summary.tsv`                                                                             |
-| ----------- | ------------------------------------------------------------------------------------------------------------------- |
-| `MLBM`      | `population`, `variant`, `freq`                                                                                     |
-| `FEM`       | `population`, `variant`, `freq`                                                                                     |
-| `naive`     | `population`, `group_id`, `variant`, `prev`, `sample_count`, `sample_total`, `allele_count`, `allele_total`, `freq` |
+| MLAF method | Columns in `raw_sl_from_ml_summary.tsv`                                             |
+| ----------- | ----------------------------------------------------------------------------------- |
+| `naive`     | `population`, `group_id`, `variant`, `sample_total`, `sample_count`, `freq`, `prev` |
+| `MLBM`      | `population`, `variant`, `freq`                                                     |
+| `FEM`       | `population`, `variant`, `freq`                                                     |
 
 ## Pipeline information
 
