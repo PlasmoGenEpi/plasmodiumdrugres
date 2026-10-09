@@ -55,7 +55,10 @@ CAPTION_FONT_SCALE = 0.85  # fraction of the station label size; nf-metro uses 0
 LOGO_SCALE = 0.6  # logo size in the stacked legend, relative to nf-metro's side-by-side size
 # (station, line) whose vertical slot should match another line's at that
 # station, so a line changing colour there runs straight through it.
-ALIGNED_SLOTS = {("extract", "input"): ("extract", "step")}
+ALIGNED_SLOTS = {
+    ("extract", "input"): ("extract", "step"),
+    ("_mlaf", "optin"): ("_mlaf", "opt"),
+}
 # Input sections that are alternatives to each other (upper, lower), joined by an "OR" marker.
 ALTERNATIVE_SECTIONS = ("table_input", "prep")
 CHOICE_PILL_WIDTH = 54

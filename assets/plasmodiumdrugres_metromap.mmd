@@ -58,39 +58,29 @@ graph LR
     end
 
     subgraph single [Single-locus estimates]
-        slaf_naive[SLAF: naive]
-        slaf_idm[SLAF: IDM]
-        slaf_dcifer[SLAF: Dcifer]
+        slaf[SLAF\n(naive, IDM, Dcifer)]
         slap[SLAP]
         single_out[ ]
-        slaf_naive -->|step| single_out
-        slaf_idm -->|opt| single_out
-        slaf_dcifer -->|opt| single_out
+        slaf -->|step,opt| single_out
         slap -->|step| single_out
     end
 
     subgraph multi [Multi-locus estimates]
         variant_in[ ]
         _mlaf
-        mlaf_naive[MLAF: naive]
-        mlaf_mlbm[MLAF: MLBM]
-        mlaf_fem[MLAF: FEM]
+        mlaf[MLAF/P\n(naive, MLBM, FEM)]
+        _mlaf_out
         multi_out[ ]
         variant_in -->|optin| _mlaf
-        _mlaf -->|opt| mlaf_naive
-        _mlaf -->|opt| mlaf_mlbm
-        _mlaf -->|opt| mlaf_fem
-        mlaf_naive -->|opt| multi_out
-        mlaf_mlbm -->|opt| multi_out
-        mlaf_fem -->|opt| multi_out
+        _mlaf -->|opt| mlaf
+        mlaf -->|opt| _mlaf_out
+        _mlaf_out -->|opt| multi_out
     end
 
     extract -->|step| translate
     gen_pop -->|opt| translate
     add_ref -->|opt| translate
     _table_join -->|input| translate
-    split -->|step| slaf_naive
-    split -->|opt| slaf_idm
-    split -->|opt| slaf_dcifer
+    split -->|step,opt| slaf
     split -->|step| slap
     split -->|opt| _mlaf
