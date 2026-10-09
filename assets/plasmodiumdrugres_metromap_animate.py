@@ -50,6 +50,7 @@ END_PAUSE = 1.5  # seconds every ball is hidden before the loop restarts
 LINE_PRIORITY = ["step", "input", "opt", "optin"]
 BALL_RADIUS = 5.0
 ICON_SCALE = 1.6
+LINE_WIDTH_SCALE = 5 / 3  # nfcore theme draws 3 px lines
 CAPTION_FONT_SCALE = 0.85  # fraction of the station label size; nf-metro uses 0.6
 LOGO_SCALE = 0.6  # logo size in the stacked legend, relative to nf-metro's side-by-side size
 # (station, line) whose vertical slot should match another line's at that
@@ -220,6 +221,7 @@ def _enlarge_icons() -> None:
             terminus_width=theme.terminus_width * ICON_SCALE,
             terminus_height=theme.terminus_height * ICON_SCALE,
             terminus_fold_size=theme.terminus_fold_size * ICON_SCALE,
+            line_width=theme.line_width * LINE_WIDTH_SCALE,
         )
 
     svg._scale_theme_fonts = scale_theme_fonts
