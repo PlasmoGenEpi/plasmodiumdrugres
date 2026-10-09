@@ -49,6 +49,7 @@ SPEED = 160.0  # px per second
 END_PAUSE = 1.5  # seconds every ball is hidden before the loop restarts
 LINE_PRIORITY = ["step", "input", "opt", "optin"]
 BALL_RADIUS = 5.0
+BALL_OUTLINE = "#7f414d"  # PGE maroon
 ICON_SCALE = 1.6
 LINE_WIDTH_SCALE = 5 / 3  # nfcore theme draws 3 px lines
 CAPTION_FONT_SCALE = 0.85  # fraction of the station label size; nf-metro uses 0.6
@@ -260,7 +261,7 @@ def _priority(line_id: str) -> int:
 
 
 def _ball_prefix(color: str) -> str:
-    return f'<circle r="{BALL_RADIUS}" fill="{color}" stroke="#ffffff" stroke-width="1.5" '
+    return f'<circle r="{BALL_RADIUS}" fill="{color}" stroke="{BALL_OUTLINE}" stroke-width="1.5" '
 
 
 def _track(
