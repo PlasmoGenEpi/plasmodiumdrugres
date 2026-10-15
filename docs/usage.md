@@ -6,32 +6,22 @@
 
 ## Introduction
 
-**nf-core/plasmodiumdrugres** is a bioinformatics pipeline for analyzing drug resistance markers from microhaplotype data. It translates variants into amino acid changes at drug resistance loci and estimates allele frequencies and prevalences at both single-locus and multi-locus levels. Microhaplotype data can be supplied in the form of an allele table or a [PMO](https://plasmogenepi.github.io/PMO_Docs/) file.
+This page explains how to prepare the inputs and run the pipeline. For an overview of what the pipeline does, see the [introduction](https://nf-co.re/plasmodiumdrugres). For what it produces, see the [output documentation](https://nf-co.re/plasmodiumdrugres/output). Every parameter is listed in the [parameter documentation](https://nf-co.re/plasmodiumdrugres/parameters).
 
-> [!NOTE]
-> Software is provided **per process** via Docker/Singularity/Apptainer containers (or Conda as a last resort). There is no monolithic pipeline image to pull — choose a `-profile` such as `docker` or `singularity` and Nextflow fetches containers automatically. For environment setup, see the [nf-core getting started guide](https://nf-co.re/docs/get_started/environment_setup/overview).
+## Inputs overview
 
-## Entry points
+Required:
 
-There are two supported entry points into the pipeline:
+- Microhaplotype calls, in one of two forms (provide exactly one):
+  - a [PMO file](#pmo-inputs), or
+  - an [allele table](#allele-table-inputs) together with a [panel info BED file](#panel-info) that includes the reference sequence of each target
+- A [loci of interest BED file](#loci-of-interest-input)
 
-1. **PMO input**
-   - Required: `--pmo`, `--loci_of_interest_bed`
-   - Optional:
-     - `--loci_groups` to enable multi-locus allele frequency estimation
-     - `--pmo_population_fields` (+ optional `--pmo_population_separator`) to derive population assignment from PMO specimen metadata
-     - `--population_assignment` to supply a population assignment table manually (use this instead of `--pmo_population_fields` if you prefer to define populations yourself)
-     - `--population_label` for single-population runs (default: `pop1`)
-     - `--genome_reference` or `--targeted_reference` if PMO does not include usable reference sequence information
+Optional:
 
-2. **Allele table input**
-   - Required: `--allele_table`, `--panel_info_bed`, `--loci_of_interest_bed`
-   - Optional:
-     - `--loci_groups` to enable multi-locus allele frequency estimation
-     - `--population_assignment` for multi-population analysis
-     - `--population_label` for single-population runs (default: `pop1`)
-
-The pipeline enforces that exactly one of `--pmo` or `--allele_table` is provided.
+- A [loci groups file](#loci-groups), to estimate multi-locus allele frequencies
+- [Population grouping](#population-grouping-optional), to estimate prevalence and frequency separately for each population
+- For PMO input, a [reference](#pmo-inputs) if the PMO has no reference sequences, and a choice of [how replicate libraries are handled](#pmo-inputs)
 
 > **Terminology note: “population”**
 >
@@ -134,7 +124,9 @@ Shared optional inputs such as [population grouping](#population-grouping-option
 
 ### PMO Inputs
 
-Generate a PMO file using [this documentation](https://plasmogenepi.github.io/PMO_Docs/). If you include reference sequences in your PMO then this is all you need. If you don't then you should provide a reference with either `--genome_reference` or `--targeted_reference`. `--genome_reference` can be a fasta file including a full genome. `--targeted_reference` is a fasta file where sequence names match up with target_names.
+Generate a PMO file using [this documentation](https://plasmogenepi.github.io/PMO_Docs/). The PMO can be supplied as plain JSON (`.json`) or gzip-compressed JSON (`.json.gz`). If you include reference sequences in your PMO then this is all you need. If you don't then you should provide a reference with either `--genome_reference` or `--targeted_reference`. `--genome_reference` can be a fasta file including a full genome. `--targeted_reference` is a fasta file where sequence names match up with target_names.
+
+The allele table extracted from the PMO is keyed by `specimen_name`. If a specimen has more than one library sample (for example, technical replicates or several panels), `--pmo_replicate_libraries` controls how they are used. `combine` (default) keeps all of them and sums the reads of identical microhaplotypes. `max_reads` keeps only the library sample with the highest total read count.
 
 For population grouping with PMO runs (manual assignment table, derive labels from specimen metadata, or a single `--population_label`), see [Population grouping (optional)](#population-grouping-optional).
 
@@ -178,6 +170,8 @@ specimen_3  target1 AATAAAGAAGAAGATAAATATGGAAAAAATGAAAAAAACGAAAAATATGACAAATATGAC
 
 Next, prepare a panel info bed file. This will define the locations of the targets in the `target_name` column in the allele table. It has to be a tab-separated file with 7 columns.
 
+The panel info bed file must include the reference sequence of each target in the `ref_seq` column. `--genome_reference` and `--targeted_reference` only apply to PMO input and are ignored when running from an allele table.
+
 ```bash
 --panel_info_bed '[path to panel info file]'
 ```
@@ -200,7 +194,7 @@ Pf3D7_01_v3     162889  163091  target2   202     +       ATATACCAATAATACTTTTTTT
 | `target_name` | Identifier for the genomic region being sequenced.                                                                                            |
 | `length`      | Length in base pairs.                                                                                                                         |
 | `strand`      | Strand orientation (+ or -) relative to the reference genome.                                                                                 |
-| `ref_seq`     | reference sequence for the target (optional if genome_reference or targeted reference supplied)                                               |
+| `ref_seq`     | Reference sequence for the target. Required.                                                                                                  |
 
 ### Population grouping (optional)
 
@@ -246,9 +240,11 @@ Do not set both `--population_assignment` and `--pmo_population_fields`; use one
 
 ## Other params
 
+- `--collapse_calls_by_summing` - When a locus of interest is covered by more than one target, sum calls across all covering targets (Default: `true`). Set to `false` to use only the target with the highest read count for each specimen and locus.
 - `--translate_loci_extra_args` - Extra arguments when translating loci of interest. [See PGEcore docs](https://plasmogenepi.github.io/PGEcore/reference/translate_loci_of_interest.html).
 - `--slaf_method` - chosen method to estimate single locus allele frequencies (Default: `naive`; Options: `["IDM","naive","mhaps_freq"]`)
 - `--mlaf_method` - chosen method to estimate multi-locus allele frequencies (Default: `naive`; Options: `["MLBM","FEM","naive"]`)
+- `--fem_coi` - Average complexity of infection (COI) assumed for every specimen when running `--mlaf_method FEM` (Default: `3`). The pipeline does not estimate COI, so FEM applies this single value to all specimens. The default is a generic assumption rather than an estimate from your data; set it to the expected mean COI for your study population.
 - `--naive_slaf_method` - Chosen naive method when running `--slaf_method naive`. (Default: `read_count_prop`; Options: `["read_count_prop", "presence_absence"]`)
 
 ## Running the pipeline
@@ -258,26 +254,26 @@ Do not set both `--population_assignment` and `--pmo_population_fields`; use one
 Minimal PMO run:
 
 ```bash
-nextflow run nf-core/plasmodiumdrugres --pmo input_file.pmo --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --outdir ./results -profile docker
+nextflow run nf-core/plasmodiumdrugres --pmo input_file.json --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --outdir ./results -profile docker
 ```
 
 If your PMO does not provide the reference context needed for loci translation, add `--genome_reference`:
 
 ```bash
-nextflow run nf-core/plasmodiumdrugres --pmo input_file.pmo --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --genome_reference genome_reference.fasta --outdir ./results -profile docker
+nextflow run nf-core/plasmodiumdrugres --pmo input_file.json --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv --genome_reference genome_reference.fasta --outdir ./results -profile docker
 ```
 
 If you have a targeted reference FASTA instead, use `--targeted_reference`:
 
 ```bash
-nextflow run nf-core/plasmodiumdrugres --pmo input_file.pmo --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv  --targeted_reference genome_reference.fasta --outdir ./results -profile docker
+nextflow run nf-core/plasmodiumdrugres --pmo input_file.json --loci_of_interest_bed loci_of_interest.bed --loci_groups loci_groups.tsv  --targeted_reference genome_reference.fasta --outdir ./results -profile docker
 ```
 
 To derive populations from PMO metadata fields, provide a comma-separated list:
 
 ```bash
 nextflow run nf-core/plasmodiumdrugres \
-  --pmo input_file.pmo \
+  --pmo input_file.json \
   --pmo_population_fields "collection_country,collection_date" \
   --loci_of_interest_bed loci_of_interest.bed \
   --loci_groups loci_groups.tsv \
@@ -326,7 +322,7 @@ nextflow run nf-core/plasmodiumdrugres -profile docker -params-file params.yaml
 with:
 
 ```yaml title="params.yaml"
-pmo: './input_file.pmo'
+pmo: './input_file.json'
 loci_of_interest_bed: './loci_of_interest.bed'
 loci_groups: './loci_groups.tsv'
 outdir: './results/'

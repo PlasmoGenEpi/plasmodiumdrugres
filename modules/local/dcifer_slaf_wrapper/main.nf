@@ -4,7 +4,6 @@
  */
 
 process DCIFER_SLAF_WRAPPER {
-
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
@@ -16,8 +15,8 @@ process DCIFER_SLAF_WRAPPER {
     path allele_table
 
     output:
-    tuple val("${allele_table.getBaseName(3)}"), path("${allele_table.getBaseName(3)}.mhaps_slaf.tsv"), emit: mhaps_slaf
-    path "versions.yml", emit: versions
+    tuple val("${allele_table.getBaseName(3)}"), path("${allele_table.getBaseName(3)}.mhaps_slaf.tsv") , emit: mhaps_slaf
+    path "versions.yml"                                                                                , emit: versions
 
     script:
     def extra_args = task.ext.args ? task.ext.args : ''
@@ -37,9 +36,3 @@ process DCIFER_SLAF_WRAPPER {
     END_VERSIONS
     """
 }
-
-//@todo need to figure out a way to add an optional --coi_table data/example_coi_table.tsv
-//the below defaults are handled by the parmas.dcifer_slaf_wraper_* arguments which then gets added to task.ext.args
-//--coi_lrank 2
-//--qstart 0.5
-//--tol 0.0001

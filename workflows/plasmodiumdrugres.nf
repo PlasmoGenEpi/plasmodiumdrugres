@@ -57,8 +57,19 @@ workflow PLASMODIUMDRUGRES {
         SPLIT_AA_TABLE_BY_POP(TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls, population_assignment)
         aa_table_ch = (SPLIT_AA_TABLE_BY_POP.out.per_pop_tables).flatten()
         ch_versions = ch_versions.mix(SPLIT_AA_TABLE_BY_POP.out.versions)
+
+        // Specimens missing from the population assignment are excluded from every population-level output
+        ch_unassigned_count = SPLIT_AA_TABLE_BY_POP.out.unassigned_report
+            .map { report -> report.readLines().findAll { line -> line.trim() }.size() }
+        // Warn as soon as the split finishes; the ANSI progress display can overwrite this line, so
+        // PIPELINE_COMPLETION repeats it after the run summary where it stays visible
+        ch_unassigned_count.subscribe { n_unassigned ->
+            log.warn "${n_unassigned} specimen(s) not found in the population assignment were excluded from all outputs. " +
+                "See ${params.outdir}/unassigned_specimens.txt"
+        }
     } else {
         aa_table_ch = TRANSLATE_LOCI_OF_INTEREST.out.collapsed_amino_acid_calls
+        ch_unassigned_count = channel.empty()
     }
 
     // Estimate Single Locus Allele Prevalence
@@ -131,5 +142,6 @@ workflow PLASMODIUMDRUGRES {
     sl_summary     = CONCAT_TABLES.out.sl_summary
     ml_summary     = CONCAT_TABLES.out.ml_summary
     raw_summaries  = CONCAT_TABLES.out.raw_summaries
+    unassigned_count = ch_unassigned_count
     versions       = ch_versions
 }

@@ -4,7 +4,6 @@
  */
 
 process ADD_REF_SEQS_WITH_TARGETED_REF_FASTA {
-
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -17,8 +16,8 @@ process ADD_REF_SEQS_WITH_TARGETED_REF_FASTA {
     path fasta
 
     output:
-    path ("ref_bed_with_seqs.bed"), emit: ref_bed_with_seqs
-    path "versions.yml", emit: versions
+    path ("ref_bed_with_seqs.bed") , emit: ref_bed_with_seqs
+    path "versions.yml"            , emit: versions
 
     script:
     """
