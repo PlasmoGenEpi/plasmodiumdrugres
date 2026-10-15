@@ -20,6 +20,25 @@ nextflow_process {
             assert path(process.out.per_pop_tables.get(0)[0]).md5 == "b32c48e492b19eca30f36893b2c0963e"
             assert path(process.out.per_pop_tables.get(0)[1]).md5 == "0964d377bdef4edd0c8fef9e226d160e"
             assert path(process.out.per_pop_tables.get(0)[2]).md5 == "a0bd92fbdb98f240e45e237386152086"
+            assert process.out.unassigned_report == []
+        }
+
+    }
+
+    test("Should report specimens missing from the population map") {
+
+        when {
+            process {
+                """
+                input[0] = file(params.pipelines_testdata_base_path + 'testdata/allele_table.tsv', checkIfExists: true)
+                input[1] = file(params.pipelines_testdata_base_path + 'testdata/population_assignment_indexed_unassigned.tsv', checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert path(process.out.unassigned_report.get(0)).readLines() == ["Vietnam2018-23", "Vietnam2018-24"]
         }
 
     }

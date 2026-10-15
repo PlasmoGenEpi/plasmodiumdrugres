@@ -4,7 +4,6 @@
  */
 
 process IDM_WRAPPER {
-
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -16,8 +15,8 @@ process IDM_WRAPPER {
     path aa_calls_input
 
     output:
-    tuple val("${aa_calls_input.getBaseName(3)}"), path("${aa_calls_input.getBaseName(3)}.aa_slaf.tsv"), emit: slaf
-    path "versions.yml", emit: versions
+    tuple val("${aa_calls_input.getBaseName(3)}"), path("${aa_calls_input.getBaseName(3)}.aa_slaf.tsv") , emit: slaf
+    path "versions.yml"                                                                                 , emit: versions
 
     script:
     """

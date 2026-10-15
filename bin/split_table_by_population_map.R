@@ -91,10 +91,10 @@ opts <- list(
         default = "specimen_name"
     ),
     make_option(
-        c("--unmapped_identifiers_output"),
-        help = "otuput file name for unmapped_identifers.txt, if left as default will be written in the --output_directory, otherwise set to set a new ouput location and name: Default: %default",
+        c("--unassigned_specimens_output"),
+        help = "Output file listing identifiers missing from the population map. A bare file name is written in --output_directory; include a directory to write elsewhere. Default: %default",
         type = "character",
-        default = "unmapped_identifers.txt"
+        default = "unassigned_specimens.txt"
     )
 )
 
@@ -134,7 +134,16 @@ for (pop_index in names(input_table_with_pop_split)) {
 }
 
 if(nrow(input_table_with_no_pop) > 0){
-    output_unmapped_identifiers_output = ifelse(args$unmapped_identifiers_output == "",
-        paste0(args$output_directory, "/", args$unmapped_identifiers_output), args$unmapped_identifiers_output)
-    cat(unique(sort(input_table_with_no_pop[[args$identifier_col]])), sep = "\n", file = output_unmapped_identifiers_output)
+    unassigned_identifiers = sort(unique(input_table_with_no_pop[[args$identifier_col]]))
+    unassigned_output = if (dirname(args$unassigned_specimens_output) == ".") {
+        file.path(sub("/+$", "", args$output_directory), args$unassigned_specimens_output)
+    } else {
+        args$unassigned_specimens_output
+    }
+    writeLines(unassigned_identifiers, unassigned_output)
+    message(
+        "WARNING: ", length(unassigned_identifiers), " ", args$identifier_col,
+        " value(s) in ", args$input_table_fnp, " not found in ", args$population_map,
+        " were excluded; see ", unassigned_output
+    )
 }

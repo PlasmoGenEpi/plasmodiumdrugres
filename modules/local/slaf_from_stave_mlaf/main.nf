@@ -4,7 +4,6 @@
  */
 
 process SLAF_FROM_STAVE_MLAF {
-
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -16,8 +15,8 @@ process SLAF_FROM_STAVE_MLAF {
     tuple val(mlaf_base), path(mlaf_input)
 
     output:
-    tuple val("${mlaf_input.getBaseName(3)}"), path("${mlaf_input.getBaseName(3)}.aa_sl_from_ml.tsv"), emit: slaf
-    path "versions.yml", emit: versions
+    tuple val("${mlaf_input.getBaseName(3)}"), path("${mlaf_input.getBaseName(3)}.aa_sl_from_ml.tsv") , emit: slaf
+    path "versions.yml"                                                                               , emit: versions
 
     script:
     """
