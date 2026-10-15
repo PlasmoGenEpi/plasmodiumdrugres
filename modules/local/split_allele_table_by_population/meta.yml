@@ -26,11 +26,11 @@ output:
           type: file
           description: Per-population allele tables
           pattern: "*.allele_table.tsv.gz"
-  - unmapped_report:
-      - unmapped_identifers.txt:
+  - unassigned_report:
+      - unassigned_specimens.txt:
           type: file
           description: Optional list of specimens not in the population map
-          pattern: unmapped_identifers.txt
+          pattern: unassigned_specimens.txt
   - versions:
       - versions.yml:
           type: file

@@ -3,35 +3,42 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.0.0 - [2026-09-29]
-
-Initial release of nf-core/plasmodiumdrugres, created with the [nf-core](https://nf-co.re/) template.
-
-### `Added`
-
-- Sync with nf-core template version 4.1.0
-- Collect local module software versions into `pipeline_info/nf_core_plasmodiumdrugres_software_versions.yml`
-- Standardize `sl_summary.tsv` / `ml_summary.tsv` column schemas and archive full tool-specific concatenated tables under `raw_summaries/`
-- Multi-arch (`linux/amd64` and `linux/arm64`) Docker and Singularity containers and conda lock files for all local modules, built with `nf-core modules container create`
+## v1.1.0dev - [unreleased]
 
 ### `Fixed`
 
-- Align README Nextflow / template badges with manifest and `.nf-core.yml`
-- Point contributing guidelines at `docs/CONTRIBUTING.md`
-- `docker` profile no longer forces `linux/amd64` emulation, so Apple Silicon uses native arm64 images (use `-profile docker,emulate_amd64` to opt back in)
-- `TRANSLATE_LOCI_OF_INTEREST` takes `--translate_loci_extra_args` through `ext.args` (set in `conf/tools.config`) like the other wrappers, instead of a `val` input
+- `TRANSLATE_LOCI_OF_INTEREST` takes `--translate_loci_extra_args` and `--collapse_calls_by_summing` through `ext.args` (set in `conf/tools.config`) like the other wrappers, instead of a `val` input
 - Add `tag` and `when: task.ext.when == null || task.ext.when` to all local modules
 - Report `dplyr`, `readr`, `tibble` and `optparse` versions for the tidyverse-based local modules, drop `N/A` fallbacks from `versions.yml` and report the bare `pmotools-python` version number
 - Pin all local module conda dependencies to the versions in their lock files
-- Remove stale TODO comments from the `ESTIMATE_MLAF` subworkflow
+
+## v1.0.0 - [2026-10-09]
+
+Initial release of nf-core/plasmodiumdrugres, created with the [nf-core](https://nf-co.re/) template.
+
+nf-core/plasmodiumdrugres estimates the prevalence and frequency of drug resistance markers from targeted amplicon sequencing (microhaplotype) data. It was developed for _Plasmodium falciparum_, but can be applied to any polyclonal organism with microhaplotype data, a matching reference and a BED file of loci of interest.
+
+Thanks to everyone who contributed to this release: @kathrynmurie, @nickjhathaway, @a-hubbard, @jorgeamaya.
+
+### `Added`
+
+- Input
+  - Microhaplotype calls from a [Portable Microhaplotype Object (PMO)](https://plasmogenepi.github.io/PMO_Docs/) (`--pmo`, plain or gzip-compressed) or an allele table (`--allele_table`)
+  - Populations taken from PMO metadata fields (`--pmo_population_fields`) or a population assignment file (`--population_assignment`); specimens without a population are reported in `unassigned_specimens.txt` and logged as a warning
+  - Choice of how specimens with several library samples in a PMO are handled (`--pmo_replicate_libraries`)
+  - Reference sequences from either a targeted reference (`--targeted_reference`) or a full genome reference (`--genome_reference`)
+- Translation of microhaplotypes into amino acid calls at the drug resistance codons in `--loci_of_interest_bed`, summing calls across all targets covering a locus by default (`--collapse_calls_by_summing`)
+- Single-locus allele frequency estimation with IDM, a naive estimator, or from microhaplotype frequencies estimated with Dcifer
+- Multi-locus allele frequency estimation for haplotypes defined in `--loci_groups`, with MLBM, FEM or a naive estimator, plus single-locus frequencies derived from the multi-locus estimates
+- Naive allele prevalence estimation
+- Per-population analysis, with results merged into standardised `sl_summary.tsv` and `ml_summary.tsv` tables and the full tool-specific tables kept under `raw_summaries/`
+- Estimation methods provided by the [PGEcore](https://github.com/PlasmoGenEpi/PGEcore) R package (Bioconda `r-pgecore`)
+- Per-module Docker, Singularity and Conda environments for `linux/amd64` and `linux/arm64`
+- `test` profile on a small PMO and `test_full` profile on MAD4HatTeR surveillance data from Eswatini, Namibia, South Africa and Zambia (1,646 specimens, Dataset 1 of the PMO paper, [Zenodo 10.5281/zenodo.20550920](https://doi.org/10.5281/zenodo.20550920))
 
 ### `Dependencies`
 
-- Use Bioconda `r-pgecore=0.1.0` instead of the `bin/PGEcore` git submodule; update modules to the packaged CLI flag names
-- Bump `r-freqestimationmodel` to 0.1.1 (adds MCMC seeding required by PGEcore's FEM wrapper)
-
-### `Deprecated`
-
-- Remove unused FastQC and MultiQC modules (lint ignores MultiQC config; pipeline does not run MultiQC)
-- Hide unused `--input` template parameter (kept for nf-core lint compatibility)
-- Remove the monolithic `plasmogenepi/plasmodiumdrugres` Docker image fallback; every local module now declares its own container
+| Dependency              | Version |
+| ----------------------- | ------- |
+| `r-pgecore`             | 0.1.0   |
+| `r-freqestimationmodel` | 0.1.1   |

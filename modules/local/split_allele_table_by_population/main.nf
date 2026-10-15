@@ -3,7 +3,6 @@
  * Split allele tables into seperate populations based on specimen_name
  */
 
-// TODO: update this to work off of column names
 process SPLIT_ALLELE_TABLE_BY_POP {
     tag "${allele_table.name}"
     label 'process_single'
@@ -18,15 +17,14 @@ process SPLIT_ALLELE_TABLE_BY_POP {
     path population_map
 
     output:
-    path "*.allele_table.tsv.gz", emit: per_pop_tables
-    path "unmapped_identifers.txt", optional: true, emit: unmapped_report
-    path "versions.yml", emit: versions
+    path "*.allele_table.tsv.gz"    , emit: per_pop_tables
+    path "unassigned_specimens.txt" , optional: true, emit: unassigned_report
+    path "versions.yml"             , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    //@todo consider being able to supply population_col and identifier_col, will use defaults of the piepline for now
     """
 
     ${projectDir}/bin/split_table_by_population_map.R \

@@ -4,7 +4,6 @@
  */
 
 process ADD_REF_SEQS_WITH_FULL_GENOME_REF_FASTA {
-
     tag "${ref_bed.name}"
     label 'process_single'
 
@@ -18,8 +17,8 @@ process ADD_REF_SEQS_WITH_FULL_GENOME_REF_FASTA {
     path genome
 
     output:
-    path ("ref_bed_with_seqs.bed"), emit: ref_bed_with_seqs
-    path "versions.yml", emit: versions
+    path ("ref_bed_with_seqs.bed") , emit: ref_bed_with_seqs
+    path "versions.yml"            , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

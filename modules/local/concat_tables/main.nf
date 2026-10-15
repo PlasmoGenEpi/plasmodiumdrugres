@@ -4,7 +4,6 @@
  */
 
 process CONCAT_TABLES {
-
     tag "all populations"
     label 'process_single'
 
@@ -19,10 +18,10 @@ process CONCAT_TABLES {
     path sl_from_ml_files
 
     output:
-    path "sl_summary.tsv", emit: sl_summary
-    path "ml_summary.tsv", emit: ml_summary
-    path "raw_summaries", emit: raw_summaries
-    path "versions.yml", emit: versions
+    path "sl_summary.tsv" , emit: sl_summary
+    path "ml_summary.tsv" , emit: ml_summary
+    path "raw_summaries"  , emit: raw_summaries
+    path "versions.yml"   , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

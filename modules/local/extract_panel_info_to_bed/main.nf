@@ -4,7 +4,6 @@
  */
 
 process EXTRACT_PANEL_INFO_TO_BED {
-
     tag "${pmo.name}"
     label 'process_single'
 
@@ -18,8 +17,8 @@ process EXTRACT_PANEL_INFO_TO_BED {
     val add_ref_seqs
 
     output:
-    path "panel_info.bed", emit: panel_info_bed
-    path "versions.yml", emit: versions
+    path "panel_info.bed" , emit: panel_info_bed
+    path "versions.yml"   , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

@@ -4,7 +4,6 @@
  */
 
 process ESTIMATE_ALLELE_FREQUENCY_NAIVE {
-
     tag "${aa_calls.name}"
     label 'process_single'
 
@@ -18,8 +17,8 @@ process ESTIMATE_ALLELE_FREQUENCY_NAIVE {
     val method
 
     output:
-    tuple val("${aa_calls.getBaseName(3)}"), path("${aa_calls.getBaseName(3)}.aa_slaf.tsv"), emit: slaf
-    path "versions.yml", emit: versions
+    tuple val("${aa_calls.getBaseName(3)}"), path("${aa_calls.getBaseName(3)}.aa_slaf.tsv") , emit: slaf
+    path "versions.yml"                                                                     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

@@ -4,7 +4,6 @@
  */
 
 process MERGE_TABLES {
-
     tag "${pop_index}"
     label 'process_single'
 
@@ -18,10 +17,10 @@ process MERGE_TABLES {
     path population_index_lookup
 
     output:
-    path "${pop_index}.sl_summary.tsv", emit: sl_summary
-    path "${pop_index}.ml_summary.tsv", emit: ml_summary
-    path "${pop_index}.sl_from_ml_summary.tsv", emit: sl_from_ml_summary
-    path "versions.yml", emit: versions
+    path "${pop_index}.sl_summary.tsv"         , emit: sl_summary
+    path "${pop_index}.ml_summary.tsv"         , emit: ml_summary
+    path "${pop_index}.sl_from_ml_summary.tsv" , emit: sl_from_ml_summary
+    path "versions.yml"                        , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

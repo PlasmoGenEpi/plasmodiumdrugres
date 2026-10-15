@@ -4,7 +4,6 @@
  */
 
 process EXTRACT_POPULATION_MAP_FROM_PMO {
-
     tag "${pmo.name}"
     label 'process_single'
 
@@ -19,8 +18,8 @@ process EXTRACT_POPULATION_MAP_FROM_PMO {
     val separator
 
     output:
-    path "population_map.tsv", emit: population_map
-    path "versions.yml", emit: versions
+    path "population_map.tsv" , emit: population_map
+    path "versions.yml"       , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

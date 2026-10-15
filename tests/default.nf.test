@@ -60,6 +60,26 @@ nextflow_pipeline {
         }
     }
 
+    // Two specimens in the allele table are absent from the population assignment
+    test("-profile test with unassigned specimens") {
+
+        when {
+            params {
+                outdir                = "$outputDir"
+                population_assignment = pipelines_testdata_base_path + 'testdata/population_assignment_unassigned.tsv'
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert path("$outputDir/unassigned_specimens.txt").readLines() == ["Vietnam2018-23", "Vietnam2018-24"] },
+                // Warned once mid-run and repeated after completion; nf-test does not capture console log output
+                { assert path("$outputDir/../meta/nextflow.log").readLines().count { line -> line.contains("2 specimen(s) not found in the population assignment") } == 2 }
+            )
+        }
+    }
+
     // Same file is fine; nf-test 0.9.x only allows `profile` on the suite, not per test().
     // Global profile "test" still sets allele_table, so PMO inputs must be set here and
     // allele-table params cleared (mirrors conf/test_pmo.config).

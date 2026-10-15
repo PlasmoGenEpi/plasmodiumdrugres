@@ -16,7 +16,6 @@ workflow ESTIMATE_MLAF {
     loci_groups
 
     main:
-    // TODO: These estimates should also include prev output
     ch_versions = channel.empty()
     if (method == "MLBM") {
         MLBM_WRAPPER(amino_acid_calls, loci_groups)

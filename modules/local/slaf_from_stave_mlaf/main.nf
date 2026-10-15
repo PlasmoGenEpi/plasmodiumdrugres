@@ -4,7 +4,6 @@
  */
 
 process SLAF_FROM_STAVE_MLAF {
-
     tag "${mlaf_base}"
     label 'process_single'
 
@@ -17,8 +16,8 @@ process SLAF_FROM_STAVE_MLAF {
     tuple val(mlaf_base), path(mlaf_input)
 
     output:
-    tuple val("${mlaf_input.getBaseName(3)}"), path("${mlaf_input.getBaseName(3)}.aa_sl_from_ml.tsv"), emit: slaf
-    path "versions.yml", emit: versions
+    tuple val("${mlaf_input.getBaseName(3)}"), path("${mlaf_input.getBaseName(3)}.aa_sl_from_ml.tsv") , emit: slaf
+    path "versions.yml"                                                                               , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

@@ -4,7 +4,6 @@
  */
 
 process IDM_WRAPPER {
-
     tag "${aa_calls_input.name}"
     label 'process_single'
 
@@ -17,8 +16,8 @@ process IDM_WRAPPER {
     path aa_calls_input
 
     output:
-    tuple val("${aa_calls_input.getBaseName(3)}"), path("${aa_calls_input.getBaseName(3)}.aa_slaf.tsv"), emit: slaf
-    path "versions.yml", emit: versions
+    tuple val("${aa_calls_input.getBaseName(3)}"), path("${aa_calls_input.getBaseName(3)}.aa_slaf.tsv") , emit: slaf
+    path "versions.yml"                                                                                 , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

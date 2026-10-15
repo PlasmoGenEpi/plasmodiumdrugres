@@ -63,6 +63,7 @@ workflow {
         params.plaintext_email,
         params.outdir,
         params.monochrome_logs,
+        NFCORE_PLASMODIUMDRUGRES.out.unassigned_count,
     )
 }
 
@@ -104,4 +105,6 @@ workflow NFCORE_PLASMODIUMDRUGRES {
         ch_versions
     )
 
+    emit:
+    unassigned_count = PLASMODIUMDRUGRES.out.unassigned_count
 }
