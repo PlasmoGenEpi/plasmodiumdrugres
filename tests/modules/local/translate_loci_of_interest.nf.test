@@ -7,6 +7,9 @@ nextflow_process {
     test("Should run without failures") {
 
         when {
+            params {
+                collapse_calls_by_summing = false
+            }
             process {
                 """
                 input[0] = file(params.pipelines_testdata_base_path + 'testdata/allele_table.tsv', checkIfExists: true)
