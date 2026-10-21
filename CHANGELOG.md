@@ -3,6 +3,15 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.1.0dev - [unreleased]
+
+### `Fixed`
+
+- `TRANSLATE_LOCI_OF_INTEREST` takes `--translate_loci_extra_args` and `--collapse_calls_by_summing` through `ext.args` (set in `conf/tools.config`) like the other wrappers, instead of a `val` input
+- Add `tag` and `when: task.ext.when == null || task.ext.when` to all local modules
+- Report `dplyr`, `readr`, `tibble` and `optparse` versions for the tidyverse-based local modules, drop `N/A` fallbacks from `versions.yml` and report the bare `pmotools-python` version number
+- Pin all local module conda dependencies to the versions in their lock files
+
 ## v1.0.0 - [2026-10-09]
 
 Initial release of nf-core/plasmodiumdrugres, created with the [nf-core](https://nf-co.re/) template.

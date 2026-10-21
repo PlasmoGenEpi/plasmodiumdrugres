@@ -3,7 +3,10 @@
         "content": [
             {
                 "CONCAT_TABLES": {
-                    "r-base": "4.4.3"
+                    "r-base": "4.4.3",
+                    "r-dplyr": "1.2.1",
+                    "r-readr": "2.2.0",
+                    "r-optparse": "1.8.2"
                 },
                 "ESTIMATE_ALLELE_FREQUENCY_NAIVE": {
                     "r-base": "4.5.3",
@@ -14,7 +17,10 @@
                     "r-pgecore": "0.1.0"
                 },
                 "MERGE_TABLES": {
-                    "r-base": "4.4.3"
+                    "r-base": "4.4.3",
+                    "r-dplyr": "1.2.1",
+                    "r-readr": "2.2.0",
+                    "r-optparse": "1.8.2"
                 },
                 "TRANSLATE_LOCI_OF_INTEREST": {
                     "r-base": "4.5.3",
@@ -62,7 +68,10 @@
         "content": [
             {
                 "CONCAT_TABLES": {
-                    "r-base": "4.4.3"
+                    "r-base": "4.4.3",
+                    "r-dplyr": "1.2.1",
+                    "r-readr": "2.2.0",
+                    "r-optparse": "1.8.2"
                 },
                 "ESTIMATE_ALLELE_FREQUENCY_NAIVE": {
                     "r-base": "4.5.3",
@@ -77,22 +86,33 @@
                     "r-pgecore": "0.1.0"
                 },
                 "EXTRACT_ALLELE_TABLE": {
-                    "pmotools-python": "pmotools-python 1.1.0"
+                    "pmotools-python": "1.1.0"
                 },
                 "EXTRACT_PANEL_INFO_TO_BED": {
-                    "pmotools-python": "pmotools-python 1.1.0"
+                    "pmotools-python": "1.1.0"
                 },
                 "EXTRACT_POPULATION_MAP_FROM_PMO": {
-                    "pmotools-python": "pmotools-python 1.1.0"
+                    "pmotools-python": "1.1.0"
                 },
                 "INDEX_POPULATION_ASSIGNMENT": {
-                    "r-base": "4.4.3"
+                    "r-base": "4.4.3",
+                    "r-dplyr": "1.2.1",
+                    "r-readr": "2.2.0",
+                    "r-tibble": "3.3.1",
+                    "r-optparse": "1.8.2"
                 },
                 "MERGE_TABLES": {
-                    "r-base": "4.4.3"
+                    "r-base": "4.4.3",
+                    "r-dplyr": "1.2.1",
+                    "r-readr": "2.2.0",
+                    "r-optparse": "1.8.2"
                 },
                 "SPLIT_AA_TABLE_BY_POP": {
-                    "r-base": "4.4.3"
+                    "r-base": "4.4.3",
+                    "r-dplyr": "1.2.1",
+                    "r-readr": "2.2.0",
+                    "r-tibble": "3.3.1",
+                    "r-optparse": "1.8.2"
                 },
                 "TRANSLATE_LOCI_OF_INTEREST": {
                     "r-base": "4.5.3",
@@ -140,7 +160,10 @@
         "content": [
             {
                 "CONCAT_TABLES": {
-                    "r-base": "4.4.3"
+                    "r-base": "4.4.3",
+                    "r-dplyr": "1.2.1",
+                    "r-readr": "2.2.0",
+                    "r-optparse": "1.8.2"
                 },
                 "ESTIMATE_ALLELE_FREQUENCY_NAIVE": {
                     "r-base": "4.5.3",
@@ -155,7 +178,10 @@
                     "r-pgecore": "0.1.0"
                 },
                 "MERGE_TABLES": {
-                    "r-base": "4.4.3"
+                    "r-base": "4.4.3",
+                    "r-dplyr": "1.2.1",
+                    "r-readr": "2.2.0",
+                    "r-optparse": "1.8.2"
                 },
                 "TRANSLATE_LOCI_OF_INTEREST": {
                     "r-base": "4.5.3",

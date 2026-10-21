@@ -47,7 +47,6 @@ workflow {
         PIPELINE_INITIALISATION.out.allele_table_ch,
         PIPELINE_INITIALISATION.out.panel_info_bed_ch,
         params.loci_of_interest_bed,
-        [params.collapse_calls_by_summing ? '--collapse_calls_by_summing' : '', params.translate_loci_extra_args ?: ''].join(' ').trim(),
         PIPELINE_INITIALISATION.out.population_assignment_ch,
         PIPELINE_INITIALISATION.out.population_index_lookup_ch,
         params.mlaf_method,
@@ -82,7 +81,6 @@ workflow NFCORE_PLASMODIUMDRUGRES {
     allele_table_ch
     panel_info_bed_ch
     loci_of_interest_bed
-    translate_loci_extra_args
     population_assignment_ch
     population_index_lookup_ch
     mlaf_method
@@ -99,7 +97,6 @@ workflow NFCORE_PLASMODIUMDRUGRES {
         allele_table_ch,
         panel_info_bed_ch,
         loci_of_interest_bed,
-        translate_loci_extra_args,
         population_assignment_ch,
         population_index_lookup_ch,
         mlaf_method,
