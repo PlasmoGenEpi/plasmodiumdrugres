@@ -25,7 +25,7 @@ process INDEX_POPULATION_ASSIGNMENT {
 
     script:
     """
-    Rscript ${projectDir}/bin/index_population_assignment.R \
+    index_population_assignment.R \
         --population_map ${population_map} \
         --population_col population \
         --identifier_col specimen_name \
