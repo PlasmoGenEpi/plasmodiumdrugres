@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
-- HTML report of quality-control, sanity-check and results plots (`report/plasmodiumdrugres_report.html`). Interactive Plotly figures are the default; `--report_interactive false` writes static ggplot PNGs. `--skip_report` omits the report.
+- HTML report of quality-control, sanity-check and results plots (`plasmodiumdrugres_report.html` at the top of `--outdir`). Interactive Plotly figures are the default; `--report_interactive false` writes static ggplot PNGs to `figures/`. `--skip_report` omits the report.
 
 ### `Fixed`
 

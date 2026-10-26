@@ -192,7 +192,7 @@ Only `FEM` adds columns:
 
 ## HTML report
 
-After the summaries are written, the pipeline renders a self-contained HTML report. Interactive Plotly figures are the default; `--report_interactive false` embeds static ggplot PNGs instead (also written to `report/figures/` for slides). `--skip_report` omits this step.
+After the summaries are written, the pipeline renders a self-contained HTML report at the top of the output directory. Interactive Plotly figures are the default; `--report_interactive false` embeds static ggplot PNGs instead (also written to `figures/` for slides). `--skip_report` omits this step.
 
 Quality control plots: locus coverage (including loci with no covering panel target), locus coverage by population when more than one population was assigned, and unassigned specimens.
 
@@ -205,9 +205,8 @@ Interactive HTML can be large when there are many populations or haplotypes.
 <details markdown="1">
 <summary>Output files</summary>
 
-- `report/`
-  - `plasmodiumdrugres_report.html`: Self-contained HTML report.
-  - `figures/`: Static PNGs, only when `--report_interactive false`.
+- `plasmodiumdrugres_report.html`: Self-contained HTML report.
+- `figures/`: Static PNGs, only when `--report_interactive false`.
 
 </details>
 

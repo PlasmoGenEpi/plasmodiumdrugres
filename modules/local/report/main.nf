@@ -23,9 +23,9 @@ process REPORT {
     path population_assignment
 
     output:
-    path "report/plasmodiumdrugres_report.html" , emit: report
-    path "report/figures/*"                     , optional: true, emit: figures
-    path "versions.yml"                         , emit: versions
+    path "plasmodiumdrugres_report.html" , emit: report
+    path "figures/*"                     , optional: true, emit: figures
+    path "versions.yml"                  , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -34,7 +34,7 @@ process REPORT {
     def args = task.ext.args ?: '--interactive TRUE'
     def pop_label = params.population_label ?: 'pop1'
     """
-    mkdir -p tmp report/figures
+    mkdir -p tmp figures
     export HOME="\$PWD"
     export TMPDIR="\$PWD/tmp"
     export TMP="\$PWD/tmp"
@@ -52,8 +52,8 @@ process REPORT {
         --loci_coverage ${loci_coverage} \\
         --aa_calls ${aa_calls} \\
         --template report.Rmd \\
-        --output report/plasmodiumdrugres_report.html \\
-        --figures_dir report/figures \\
+        --output plasmodiumdrugres_report.html \\
+        --figures_dir figures \\
         --population_label ${pop_label} \\
         --unassigned ${unassigned_specimens} \\
         --population_assignment ${population_assignment} \\

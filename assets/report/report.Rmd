@@ -19,7 +19,7 @@ params:
   unassigned: NULL
   population_assignment: NULL
   population_label: "pop1"
-  figures_dir: "report/figures"
+  figures_dir: "figures"
 ---
 
 ```{r setup, include=FALSE}

@@ -15,8 +15,8 @@ opts <- list(
   make_option("--population_assignment", type = "character", default = NULL, help = "Population assignment TSV"),
   make_option("--population_label", type = "character", default = "pop1"),
   make_option("--template", type = "character", default = "report.Rmd"),
-  make_option("--output", type = "character", default = "report/plasmodiumdrugres_report.html"),
-  make_option("--figures_dir", type = "character", default = "report/figures"),
+  make_option("--output", type = "character", default = "plasmodiumdrugres_report.html"),
+  make_option("--figures_dir", type = "character", default = "figures"),
   make_option(
     "--interactive",
     type = "logical",

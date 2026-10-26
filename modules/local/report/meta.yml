@@ -52,15 +52,15 @@ input:
       pattern: "*.tsv"
 output:
   - report:
-      - report/plasmodiumdrugres_report.html:
+      - plasmodiumdrugres_report.html:
           type: file
-          description: Self-contained HTML report
-          pattern: report/plasmodiumdrugres_report.html
+          description: Self-contained HTML report, published at the top of the output directory
+          pattern: plasmodiumdrugres_report.html
   - figures:
-      - "report/figures/*":
+      - "figures/*":
           type: file
           description: Static PNG figures (only when interactive rendering is off)
-          pattern: report/figures/*
+          pattern: figures/*
   - versions:
       - versions.yml:
           type: file
