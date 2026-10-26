@@ -1,0 +1,19 @@
+# Sanity checks
+
+## Single-locus vs haplotype-derived frequencies
+
+Each point is an amino acid. The x-axis is the single-locus frequency; the y-axis is the SL-from-ML frequency (single-locus frequencies recovered by summing haplotypes that carry that amino acid). Panels are square and the same size so distance from the dashed `y = x` line is comparable. Open circles are staggered along that line when several loci groups land on the same coordinate; marker size is the number of alleles at that coordinate.
+
+RMSE is the root-mean-square distance from `y = x`, in frequency units. If recovered frequencies disagree with the single-locus estimates, one of the two is likely wrong and those results should be interpreted with care. This comparison is skipped when multi-locus estimation was not run.
+
+```{r sl-vs-ml, fig.height=max(4.8, 3.6 * sanity_dims$nrow + 1.2), fig.width=max(4.8, 3.4 * sanity_dims$ncol + 0.6)}
+print_plot(
+  plot_sl_vs_ml(sl_summary, sl_from_ml, interactive = interactive),
+  interactive = interactive,
+  file = file.path(figures_dir, "sl_vs_ml.png"),
+  width = max(4.8, 3.4 * sanity_dims$ncol + 0.6),
+  height = max(4.8, 3.6 * sanity_dims$nrow + 1.2),
+  rotate_x = FALSE,
+  hovermode = "closest"
+)
+```
