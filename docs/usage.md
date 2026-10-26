@@ -70,7 +70,7 @@ Pf3D7_08_v3 550211  550214  PF3D7_0810800.1-AA613 3 + dhps  613 PF3D7_0810800.1
 | `name`        | Unique identifier for the locus.                                                                                                          |
 | `length`      | Length in base pairs. (e.g. 3 for a standard codon)                                                                                       |
 | `strand`      | Strand orientation (+ or -) relative to the reference genome.                                                                             |
-| `gene`        | Short gene name or symbol (e.g., dhfr-ts, mdr1, crt).                                                                                     |
+| `gene`        | Short gene name or symbol (e.g., dhfr-ts, mdr1, crt). Optional. When present, it is added to `sl_summary.tsv` and `ml_summary.tsv`. Multi-locus rows list one name per gene block in the variant string, separated by `;` and in that same order. |
 | `gene_id`     | Full PlasmoDB gene model identifier (e.g., PF3D7_0417200.1).                                                                              |
 | `aa_position` | Amino acid position within the protein where the codon is located.                                                                        |
 
