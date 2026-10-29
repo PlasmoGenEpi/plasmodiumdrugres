@@ -226,6 +226,9 @@ freq_y_scale <- function(stacked = FALSE) {
     breaks = seq(0, 1, 0.25),
     labels = function(x) format(x, nsmall = 2, trim = TRUE),
     limits = c(0, 1),
+    # A locus can sum to 1 plus a floating-point epsilon. Default censoring
+    # then drops the stacked segment that crosses 1, so squish it to the limit.
+    oob = scales::oob_squish,
     expand = if (isTRUE(stacked)) c(0, 0) else c(0, 0.02)
   )
 }
