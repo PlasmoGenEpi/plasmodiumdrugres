@@ -70,10 +70,13 @@ missing_chr <- function(x) {
 }
 
 # gene:aa_position when gene is present; otherwise gene_id:aa_position.
+# Recycle to a common length first. ifelse() otherwise keeps only the first
+# gene_id when gene is a length-1 missing value.
 locus_label <- function(gene, gene_id, aa_position) {
-  gene <- as.character(gene)
-  gene_id <- as.character(gene_id)
-  aa_position <- as.character(aa_position)
+  n <- max(length(gene), length(gene_id), length(aa_position), 1L)
+  gene <- rep_len(as.character(gene), n)
+  gene_id <- rep_len(as.character(gene_id), n)
+  aa_position <- rep_len(as.character(aa_position), n)
   prefix <- ifelse(missing_chr(gene), gene_id, gene)
   ifelse(missing_chr(aa_position), prefix, paste0(prefix, ":", aa_position))
 }
@@ -199,6 +202,135 @@ haplotype_label <- function(variant, gene_lookup = tibble(), max_chars = 80) {
   }, character(1), USE.NAMES = FALSE)
 }
 
+POP_PAGE_SIZE <- 10L
+
+population_names <- function(df) {
+  if (is.null(df) || nrow(df) == 0 || !"population" %in% names(df)) {
+    return(character())
+  }
+  unique(as.character(df$population))
+}
+
+population_pages <- function(populations, page_size = POP_PAGE_SIZE) {
+  populations <- unique(as.character(populations))
+  populations <- populations[!is.na(populations) & nzchar(populations)]
+  if (length(populations) == 0) {
+    return(list(character()))
+  }
+  if (length(populations) <= page_size) {
+    return(list(populations))
+  }
+  unname(split(populations, ceiling(seq_along(populations) / page_size)))
+}
+
+filter_populations <- function(df, populations) {
+  if (is.null(df) || nrow(df) == 0 || !"population" %in% names(df) || length(populations) == 0) {
+    return(df)
+  }
+  df[as.character(df$population) %in% populations, , drop = FALSE]
+}
+
+# Give a Plotly widget an explicit pixel size. Otherwise knitr sizes every
+# widget in the chunk from that chunk's fig.width / fig.height.
+size_widget <- function(widget, width_in, height_in) {
+  if (!inherits(widget, "htmlwidget")) {
+    return(widget)
+  }
+  px_w <- as.integer(round(as.numeric(width_in) * 96))
+  px_h <- as.integer(round(as.numeric(height_in) * 96))
+  lay <- widget$x$layout
+  if (!is.null(lay$width)) {
+    px_w <- as.integer(round(lay$width))
+  }
+  if (!is.null(lay$height)) {
+    px_h <- as.integer(round(lay$height))
+  }
+  widget$width <- px_w
+  widget$height <- px_h
+  if (is.null(widget$x$layout)) {
+    widget$x$layout <- list()
+  }
+  widget$x$layout$width <- px_w
+  widget$x$layout$height <- px_h
+  widget
+}
+
+# One figure when there are 10 or fewer populations. A figure that draws one
+# panel per population is split into numbered tabs of 10 above that.
+# Returns a widget, image, or htmltools tag list for the chunk to print.
+render_population_tabs <- function(populations, id, make_plot, interactive = TRUE, file = NULL, width = 9, height = 5, ...) {
+  pages <- population_pages(populations)
+  dots <- list(...)
+  page_number <- function(spec, pops) {
+    value <- if (is.function(spec)) spec(pops) else spec
+    as.numeric(value)[1]
+  }
+  page_file_for <- function(i) {
+    if (is.null(file) || length(pages) == 1) {
+      return(file)
+    }
+    sub("\\.png$", sprintf("_%02d.png", i), file)
+  }
+  draw_page <- function(i, pops) {
+    page_width <- page_number(width, pops)
+    page_height <- page_number(height, pops)
+    page_file <- page_file_for(i)
+    args <- c(
+      list(
+        make_plot(pops),
+        interactive = interactive,
+        file = page_file,
+        width = page_width,
+        height = page_height
+      ),
+      dots
+    )
+    drawn <- do.call(print_plot, args)
+    if (inherits(drawn, "htmlwidget")) {
+      return(size_widget(drawn, page_width, page_height))
+    }
+    if (length(pages) > 1 && !is.null(page_file) && file.exists(page_file)) {
+      return(htmltools::tags$img(
+        src = knitr::image_uri(page_file),
+        alt = "",
+        style = sprintf("max-width:100%%;width:%sin;", page_width)
+      ))
+    }
+    drawn
+  }
+
+  if (length(pages) == 1) {
+    return(draw_page(1L, pages[[1]]))
+  }
+
+  htmltools::tags$div(
+    class = "report-tabs",
+    htmltools::tags$ul(
+      class = "nav nav-tabs",
+      lapply(seq_along(pages), function(i) {
+        htmltools::tags$li(
+          class = if (i == 1L) "active" else NULL,
+          htmltools::tags$a(
+            href = sprintf("#%s-%d", id, i),
+            `data-toggle` = "tab",
+            as.character(i)
+          )
+        )
+      })
+    ),
+    htmltools::tags$div(
+      class = "tab-content",
+      lapply(seq_along(pages), function(i) {
+        htmltools::tags$div(
+          id = sprintf("%s-%d", id, i),
+          class = if (i == 1L) "tab-pane fade in active" else "tab-pane fade",
+          draw_page(i, pages[[i]])
+        )
+      })
+    )
+  )
+}
+
 empty_plot <- function(message) {
   ggplot() +
     annotate("text", x = 0, y = 0, label = message, size = 4) +
@@ -259,7 +391,167 @@ shared_x_across_groups <- function(df, group_col, x_col) {
   length(unique(sets)) <= 1
 }
 
-style_plotly_axes <- function(gp, equal_axes = FALSE, rotate_x = TRUE, hovermode = "x", xlab = NULL, ylab = NULL) {
+# A bottom legend at a fixed paper offset sits on diagonal category labels
+# when the figure is short. Drop it below those labels and grow the margin
+# so the legend is still on the page.
+drop_legend_below_ticks <- function(gp, lay, fig_width, fig_height) {
+  leg <- lay$legend
+  if (is.null(leg) || is.null(gp$x$data)) {
+    return(lay)
+  }
+  y <- suppressWarnings(as.numeric(leg$y)[1])
+  if (length(y) != 1 || is.na(y) || y > 0) {
+    return(lay)
+  }
+  plot_h <- as.numeric(fig_height) * 96
+  plot_w <- as.numeric(fig_width) * 96
+  if (!is.finite(plot_h) || plot_h < 50 || !is.finite(plot_w) || plot_w < 50) {
+    return(lay)
+  }
+  labels <- character()
+  legend_names <- character()
+  for (nm in names(lay)) {
+    if (!grepl("^xaxis", nm) || !is.list(lay[[nm]])) {
+      next
+    }
+    labels <- c(labels, as.character(lay[[nm]]$ticktext), as.character(lay[[nm]]$categoryarray))
+  }
+  for (tr in gp$x$data) {
+    if (is.character(tr$x) || is.factor(tr$x)) {
+      labels <- c(labels, as.character(tr$x))
+    }
+    if (!is.null(tr$name)) {
+      legend_names <- c(legend_names, as.character(tr$name))
+    }
+  }
+  labels <- unique(labels[!is.na(labels) & nzchar(labels)])
+  if (length(labels) == 0) {
+    return(lay)
+  }
+  label_px <- max(nchar(labels)) * 12 * 0.48 + 36
+  if ((-y * plot_h) >= label_px + 8) {
+    return(lay)
+  }
+  legend_names <- unique(legend_names[!is.na(legend_names) & nzchar(legend_names)])
+  item_px <- if (length(legend_names)) 36 + max(nchar(legend_names)) * 6.5 else 80
+  legend_rows <- max(1L, ceiling(length(legend_names) * item_px / plot_w))
+  legend_px <- legend_rows * 22 + 26
+  leg$y <- -(label_px + 10) / plot_h
+  leg$yanchor <- "top"
+  lay$legend <- leg
+  lay$margin$b <- max(as.numeric(lay$margin$b), label_px + legend_px + 16, na.rm = TRUE)
+  lay
+}
+
+# ggplotly's facet subplot gives the first and last rows a taller domain than
+# the middle rows, and parks a large gap between them. A single column of
+# facets (by-population and by-locus bar charts) is rewritten onto equal
+# pixel heights with one strip band between panels. Grids such as the sanity
+# check have more than one x axis and are left alone.
+equalize_vertical_facets <- function(lay, fig_height) {
+  axis_names <- function(prefix) {
+    nms <- names(lay)
+    nms[grepl(paste0("^", prefix, "[0-9]*$"), nms)]
+  }
+  y_names <- axis_names("yaxis")
+  x_names <- axis_names("xaxis")
+  if (length(y_names) < 2 || length(x_names) != 1) {
+    return(lay)
+  }
+  boxes <- lapply(y_names, function(nm) {
+    d <- lay[[nm]]$domain
+    if (length(d) != 2 || any(!is.finite(as.numeric(d)))) {
+      return(NULL)
+    }
+    list(name = nm, y0 = as.numeric(d)[1], y1 = as.numeric(d)[2])
+  })
+  if (any(vapply(boxes, is.null, logical(1)))) {
+    return(lay)
+  }
+  boxes <- boxes[order(vapply(boxes, function(b) b$y1, numeric(1)), decreasing = TRUE)]
+  for (i in seq_len(length(boxes) - 1L)) {
+    if (boxes[[i]]$y0 < boxes[[i + 1L]]$y1 - 1e-6) {
+      return(lay)
+    }
+  }
+  n <- length(boxes)
+  margin_t <- suppressWarnings(as.numeric(lay$margin$t)[1])
+  margin_b <- suppressWarnings(as.numeric(lay$margin$b)[1])
+  if (!is.finite(margin_t)) {
+    margin_t <- 70
+  }
+  if (!is.finite(margin_b)) {
+    margin_b <- 90
+  }
+  fig_h <- as.numeric(fig_height) * 96
+  inner_h <- fig_h - margin_t - margin_b
+  strip_px <- 36
+  if (!is.finite(inner_h) || inner_h < n * (strip_px + 48)) {
+    return(lay)
+  }
+  panel_px <- (inner_h - n * strip_px) / n
+  updated <- lapply(seq_len(n), function(i) {
+    top_px <- (i - 1) * (strip_px + panel_px) + strip_px
+    y1 <- 1 - top_px / inner_h
+    y0 <- y1 - panel_px / inner_h
+    list(y0 = y0, y1 = y1)
+  })
+  tol <- 1e-4
+  match_top <- function(y) {
+    y <- suppressWarnings(as.numeric(y)[1])
+    if (length(y) != 1 || !is.finite(y)) {
+      return(NA_integer_)
+    }
+    tops <- vapply(boxes, function(b) b$y1, numeric(1))
+    delta <- abs(tops - y)
+    if (min(delta) <= tol) which.min(delta) else NA_integer_
+  }
+  for (i in seq_len(n)) {
+    nm <- boxes[[i]]$name
+    lay[[nm]]$domain <- c(updated[[i]]$y0, updated[[i]]$y1)
+    lay[[nm]]$automargin <- FALSE
+  }
+  lay[[x_names]]$automargin <- FALSE
+  if (length(lay$annotations)) {
+    for (i in seq_along(lay$annotations)) {
+      ann <- lay$annotations[[i]]
+      if (!identical(ann$yref, "paper") || !identical(ann$yanchor, "bottom")) {
+        next
+      }
+      hit <- match_top(ann$y)
+      if (!is.na(hit)) {
+        lay$annotations[[i]]$y <- updated[[hit]]$y1
+      }
+    }
+  }
+  if (length(lay$shapes)) {
+    for (i in seq_along(lay$shapes)) {
+      shape <- lay$shapes[[i]]
+      if (!identical(shape$yref, "paper")) {
+        next
+      }
+      if (identical(shape$ysizemode, "pixel")) {
+        hit <- match_top(shape$yanchor)
+        if (!is.na(hit)) {
+          lay$shapes[[i]]$yanchor <- updated[[hit]]$y1
+        }
+      } else {
+        y0 <- suppressWarnings(as.numeric(shape$y0)[1])
+        y1 <- suppressWarnings(as.numeric(shape$y1)[1])
+        for (j in seq_len(n)) {
+          if (abs(boxes[[j]]$y0 - y0) <= tol && abs(boxes[[j]]$y1 - y1) <= tol) {
+            lay$shapes[[i]]$y0 <- updated[[j]]$y0
+            lay$shapes[[i]]$y1 <- updated[[j]]$y1
+            break
+          }
+        }
+      }
+    }
+  }
+  lay
+}
+
+style_plotly_axes <- function(gp, equal_axes = FALSE, rotate_x = TRUE, hovermode = "x", xlab = NULL, ylab = NULL, fig_width = 9, fig_height = 5) {
   lay <- gp$x$layout
   if (is.null(lay)) {
     lay <- list()
@@ -335,22 +627,26 @@ style_plotly_axes <- function(gp, equal_axes = FALSE, rotate_x = TRUE, hovermode
       }
     }
   }
-  # ggplotly duplicates axis titles as paper-referenced annotations.
+  # ggplotly also stores the axis title as an annotation. Drop that copy so
+  # the title stays on the axis. Do not move other annotations: on a tall
+  # faceted figure the last panel's title sits near y = 0 and a paper-fraction
+  # shift drops it far below the panel.
+  plain_ann <- function(txt) {
+    txt <- gsub("<[^>]+>", "", as.character(txt)[1])
+    trimws(txt)
+  }
   if (length(lay$annotations)) {
     for (i in seq_along(lay$annotations)) {
-      ann <- lay$annotations[[i]]
-      txt <- ann$text
-      if (!is.null(txt) && (( !is.null(xlab) && identical(txt, xlab)) || ( !is.null(ylab) && identical(txt, ylab)))) {
+      txt <- plain_ann(lay$annotations[[i]]$text)
+      if (nzchar(txt) && (identical(txt, xlab) || identical(txt, ylab))) {
         lay$annotations[[i]]$text <- ""
-        next
-      }
-      y <- ann$y
-      yref <- ann$yref
-      if (!is.null(y) && is.numeric(y) && (is.null(yref) || identical(yref, "paper")) && y < 0.08) {
-        lay$annotations[[i]]$y <- if (isTRUE(rotate_x)) -0.12 else -0.06
       }
     }
   }
+  if (isTRUE(rotate_x)) {
+    lay <- drop_legend_below_ticks(gp, lay, fig_width, fig_height)
+  }
+  lay <- equalize_vertical_facets(lay, fig_height)
   gp$x$layout <- lay
   gp
 }
@@ -370,7 +666,16 @@ print_plot <- function(p, interactive = TRUE, file = NULL, width = 9, height = 5
     } else {
       gp <- plotly::plotly_build(plotly::ggplotly(p, tooltip = "text"))
     }
-    return(style_plotly_axes(gp, equal_axes = equal_axes, rotate_x = rotate_x, hovermode = hovermode, xlab = xlab, ylab = ylab))
+    return(style_plotly_axes(
+      gp,
+      equal_axes = equal_axes,
+      rotate_x = rotate_x,
+      hovermode = hovermode,
+      xlab = xlab,
+      ylab = ylab,
+      fig_width = width,
+      fig_height = height
+    ))
   }
   if (!is.null(file)) {
     dir.create(dirname(file), recursive = TRUE, showWarnings = FALSE)
@@ -425,16 +730,26 @@ plot_coverage_by_population <- function(aa_calls, population_assignment = tibble
   if (!all(needed %in% names(aa_calls))) {
     return(empty_plot("Amino acid calls are missing specimen_name / aa_position."))
   }
-  gene <- if ("gene" %in% names(aa_calls)) aa_calls$gene else NA_character_
-  gene_id <- if ("gene_id" %in% names(aa_calls)) aa_calls$gene_id else NA_character_
-  calls <- aa_calls %>%
-    mutate(locus = locus_label(gene, gene_id, .data$aa_position)) %>%
+  lookup <- collect_gene_lookup(aa_calls, coverage)
+  gene_id <- if ("gene_id" %in% names(aa_calls)) as.character(aa_calls$gene_id) else NA_character_
+  gene <- gene_name_for_id(gene_id, lookup)
+  if ("gene" %in% names(aa_calls)) {
+    own <- as.character(aa_calls$gene)
+    gene <- ifelse(missing_chr(own), gene, own)
+  }
+  calls <- aa_calls
+  calls$locus <- locus_label(gene, gene_id, aa_calls$aa_position)
+  calls <- calls %>%
     distinct(.data$specimen_name, .data$locus)
 
   loci <- unique(calls$locus)
   if (nrow(coverage) > 0) {
-    cov_gene <- if ("gene" %in% names(coverage)) coverage$gene else NA_character_
-    cov_gene_id <- if ("gene_id" %in% names(coverage)) coverage$gene_id else NA_character_
+    cov_gene_id <- if ("gene_id" %in% names(coverage)) as.character(coverage$gene_id) else NA_character_
+    cov_gene <- gene_name_for_id(cov_gene_id, lookup)
+    if ("gene" %in% names(coverage)) {
+      own <- as.character(coverage$gene)
+      cov_gene <- ifelse(missing_chr(own), cov_gene, own)
+    }
     cov_pos <- if ("aa_position" %in% names(coverage)) coverage$aa_position else seq_len(nrow(coverage))
     loci <- unique(c(loci, locus_label(cov_gene, cov_gene_id, cov_pos)))
   }
@@ -514,7 +829,7 @@ plot_coverage_by_population <- function(aa_calls, population_assignment = tibble
       ) %>%
         plotly::layout(
           title = "Locus coverage by population",
-          xaxis = list(title = "Population", tickangle = 0, automargin = TRUE),
+          xaxis = list(title = "Population", tickangle = -45, automargin = TRUE),
           yaxis = list(
             title = "Locus",
             automargin = TRUE,
@@ -751,27 +1066,57 @@ plot_sl_vs_ml_plotly <- function(df, stats) {
     nrows = dims$nrow,
     shareX = FALSE,
     shareY = FALSE,
-    titleX = TRUE,
-    titleY = TRUE,
-    margin = if (dims$n_slots > 1) 0.06 else 0.04,
+    titleX = FALSE,
+    titleY = FALSE,
+    margin = 0,
     widths = rep(1 / dims$ncol, dims$ncol),
     heights = rep(1 / dims$nrow, dims$nrow)
   )
+  # subplot()'s margin makes the first and last rows taller than the middle
+  # rows. Domains are fractions of the area inside the figure margin, so the
+  # margin is only the outer title and legend. Every plot box is the same
+  # number of pixels, with a title band above it and a tick band below it.
+  panel_px <- 230
+  gap_x <- 52
+  gap_title <- 26
+  gap_ticks <- 32
+  margin_l <- 76
+  margin_r <- 16
+  margin_t <- 46
+  margin_b <- 40
+  inner_w <- dims$ncol * panel_px + max(0L, dims$ncol - 1L) * gap_x
+  inner_h <- dims$nrow * (gap_title + panel_px + gap_ticks)
+  fig_w <- inner_w + margin_l + margin_r
+  fig_h <- inner_h + margin_t + margin_b
+  panel_box <- function(row, col) {
+    x0_px <- (col - 1L) * (panel_px + gap_x)
+    top_px <- (row - 1L) * (gap_title + panel_px + gap_ticks) + gap_title
+    x0 <- x0_px / inner_w
+    x1 <- (x0_px + panel_px) / inner_w
+    y1 <- 1 - top_px / inner_h
+    y0 <- y1 - panel_px / inner_h
+    list(x0 = x0, x1 = x1, y0 = y0, y1 = y1)
+  }
   anns <- list()
   axis_base <- list(
     range = c(-0.02, 1.02),
     constrain = "domain",
+    automargin = FALSE,
     zeroline = FALSE,
     ticks = "outside",
-    dtick = 0.25
+    ticklen = 4,
+    tickfont = list(size = 10),
+    dtick = 0.25,
+    scaleanchor = NULL,
+    scaleratio = NULL
   )
   lay <- list(
     title = list(text = "Single-locus frequency vs SL-from-ML"),
-    legend = list(orientation = "h", y = -0.12),
+    legend = list(orientation = "h", y = -0.04),
     hovermode = "closest",
-    margin = list(t = 80, b = 80, l = 70, r = 20),
-    width = 220 + 260 * dims$ncol,
-    height = 140 + 280 * dims$nrow
+    margin = list(t = margin_t, b = margin_b, l = margin_l, r = margin_r),
+    width = fig_w,
+    height = fig_h
   )
   for (i in seq_len(dims$n_slots)) {
     xnm <- if (i == 1) "xaxis" else paste0("xaxis", i)
@@ -780,39 +1125,39 @@ plot_sl_vs_ml_plotly <- function(df, stats) {
     y_id <- if (i == 1) "y" else paste0("y", i)
     col <- ((i - 1L) %% dims$ncol) + 1L
     row <- ((i - 1L) %/% dims$ncol) + 1L
+    box <- panel_box(row, col)
     is_real <- i <= length(pops)
     if (!is_real) {
-      lay[[xnm]] <- empty_sanity_axis()
-      lay[[ynm]] <- empty_sanity_axis()
+      lay[[xnm]] <- c(empty_sanity_axis(), list(domain = c(box$x0, box$x1), automargin = FALSE))
+      lay[[ynm]] <- c(empty_sanity_axis(), list(domain = c(box$y0, box$y1), automargin = FALSE))
       next
     }
     lay[[xnm]] <- modifyList(
       axis_base,
       list(
-        title = if (row == dims$nrow) "Single-locus frequency" else "",
+        domain = c(box$x0, box$x1),
+        title = if (row == dims$nrow) list(text = "Single-locus frequency", standoff = 8) else list(text = ""),
         showticklabels = TRUE,
-        showgrid = TRUE,
-        scaleanchor = NULL
+        showgrid = TRUE
       )
     )
     lay[[ynm]] <- modifyList(
       axis_base,
       list(
-        title = if (col == 1L) "SL-from-ML" else "",
+        domain = c(box$y0, box$y1),
+        title = if (col == 1L) list(text = "SL-from-ML", standoff = 8) else list(text = ""),
         showticklabels = TRUE,
-        showgrid = TRUE,
-        scaleanchor = x_id,
-        scaleratio = 1
+        showgrid = TRUE
       )
     )
     st <- stats[stats$population == pops[[i]], , drop = FALSE]
     anns <- c(
       anns,
       list(list(
-        x = 0.5,
-        y = 1.08,
-        xref = paste0(x_id, " domain"),
-        yref = paste0(y_id, " domain"),
+        x = (box$x0 + box$x1) / 2,
+        y = box$y1 + 2 / inner_h,
+        xref = "paper",
+        yref = "paper",
         text = pops[[i]],
         showarrow = FALSE,
         xanchor = "center",

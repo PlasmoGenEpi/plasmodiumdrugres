@@ -17,13 +17,13 @@ cat("## Locus coverage by population\n\n")
 cat("Proportion of specimens with an amino acid call for each locus, split by population if a population assignment was provided.\n")
 ```
 
-```{r coverage-by-pop, eval = n_populations > 1, fig.height=max(5, 1.6 + 0.45 * max(1, nrow(distinct(aa_calls, aa_position)))), fig.width=9}
+```{r coverage-by-pop, eval = n_populations > 1, fig.height=max(6, 0.48 * max(1, n_loci) + 1.6), fig.width=max(9, 0.36 * max(1, n_populations))}
 print_plot(
   plot_coverage_by_population(aa_calls, population_assignment, loci_coverage, params[["population_label"]], interactive = interactive),
   interactive = interactive,
   file = file.path(figures_dir, "coverage_by_population.png"),
-  height = max(5, 1.6 + 0.45 * max(1, nrow(distinct(aa_calls, aa_position)))),
-  rotate_x = FALSE
+  width = max(9, 0.36 * max(1, n_populations)),
+  height = max(6, 0.48 * max(1, n_loci) + 1.6)
 )
 ```
 
